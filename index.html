@@ -99,6 +99,7 @@
     <button class="tab" data-tab="satellite">SATELLITE</button>
     <button class="tab" data-tab="metar">METAR/TAF/ATIS</button>
     <button class="tab" data-tab="tafcharts">JMA TAF</button>
+    <button class="tab" data-tab="radar">RADAR</button>
   </nav>
 </header>
 
@@ -213,6 +214,20 @@
     <div class="card-label">Maiji FL390<span class="ts" id="maiji-fl390-ts"></span></div>
     <div class="img-wrap"><img class="wx-img maiji-f" data-code="139" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+
+  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 縦断図 — BKK-NRT</div>
+  <div class="card">
+    <div class="card-label">与那国-高松 (BKK-NRT)<span class="ts" id="maiji-c108-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="108" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">石垣-東京 (BKK-NRT)<span class="ts" id="maiji-c107-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="107" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">東経122.5° (BKK-NRT)<span class="ts" id="maiji-c159-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="159" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
 </div><!-- /upper -->
 
 
@@ -291,6 +306,60 @@
   </div>
 </div><!-- /tafcharts -->
 
+
+<!-- ╔═ RADAR ═╗ -->
+<div class="section" id="section-radar">
+
+  <div class="grp">気象レーダー (Windy)</div>
+  <div class="card" style="overflow:hidden">
+    <div class="card-label">日本周辺 気象レーダー (Windy)</div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden">
+      <iframe
+        src="https://embed.windy.com/embed2.html?lat=34&lon=137&detailLat=34&detailLon=137&zoom=5&level=surface&overlay=radar&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=kn&metricTemp=%C2%B0C&radarRange=-1"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"
+        allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="card" style="overflow:hidden">
+    <div class="card-label">太平洋・SE Asia レーダー (Windy)</div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden">
+      <iframe
+        src="https://embed.windy.com/embed2.html?lat=20&lon=120&detailLat=20&detailLon=120&zoom=4&level=surface&overlay=radar&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=kn&metricTemp=%C2%B0C&radarRange=-1"
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"
+        allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="grp" style="margin-top:4px">外部リンク（Safariで開く）</div>
+
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <a href="https://www.windy.com/ja/-気象レーダー-radar?radar,37.165,141.257,6"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">Windy 気象レーダー ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">日本周辺レーダー・風・気圧</div>
+    </a>
+
+    <a href="https://www.jma.go.jp/bosai/map.html#4/34.38/141.592/&elem=vis&contents=himawari"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA ひまわり可視画像 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 防災情報 — ひまわり可視光</div>
+    </a>
+
+    <a href="https://www.jma.go.jp/bosai/map.html#5/34.38/141.592/&elem=rain&contents=radar"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA 降水ナウキャスト ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 降水レーダー＋予測</div>
+    </a>
+  </div>
+
+</div><!-- /radar -->
+
 </main>
 <div id="footer">— —</div>
 
@@ -353,15 +422,16 @@ function setNkishou(imgEl, tsEl, code, validJstHours) {
   tryNext();
 }
 
-// ── Maiji: try 1–4 hours back ──
-function setMaiji(imgEl, tsEl, code) {
+// ── Maiji: try 1–4 hours back (type='F' 平面図 / type='C' 縦断図) ──
+function setMaiji(imgEl, tsEl, code, type) {
+  type = type || 'F';
   const cands = [];
   for (let back = 1; back <= 4; back++) {
     const d = new Date(Date.now() - back * 3600000);
     d.setUTCMinutes(0, 0, 0);
     const y = d.getUTCFullYear(), mo = pad(d.getUTCMonth()+1), dd = pad(d.getUTCDate()), hh = pad(d.getUTCHours());
     const ts = y+mo+dd+hh+'0000';
-    cands.push({ url:'https://www.data.jma.go.jp/airinfo/data/pict/maiji/WANLF'+code+'_RJTD_'+ts+'.PNG',
+    cands.push({ url:'https://www.data.jma.go.jp/airinfo/data/pict/maiji/WANL'+type+code+'_RJTD_'+ts+'.PNG',
                  ts: y+'/'+mo+'/'+dd+' '+hh+':00Z' });
   }
   let idx = 0;
@@ -438,11 +508,18 @@ function setDynamicUrls() {
     tryHi();
   });
 
-  // Maiji with fallback
+  // Maiji 平面図 (F) with fallback
   const flMap = [{code:'129',tsId:'maiji-fl290-ts'},{code:'133',tsId:'maiji-fl330-ts'},
                  {code:'135',tsId:'maiji-fl350-ts'},{code:'139',tsId:'maiji-fl390-ts'}];
   document.querySelectorAll('.maiji-f').forEach((img, i) => {
-    setMaiji(img, document.getElementById(flMap[i].tsId), img.dataset.code);
+    setMaiji(img, document.getElementById(flMap[i].tsId), img.dataset.code, 'F');
+  });
+
+  // Maiji 縦断図 (C) BKK-NRT with fallback
+  const cMap = [{code:'108',tsId:'maiji-c108-ts'},{code:'107',tsId:'maiji-c107-ts'},
+                {code:'159',tsId:'maiji-c159-ts'}];
+  document.querySelectorAll('.maiji-c').forEach((img, i) => {
+    setMaiji(img, document.getElementById(cMap[i].tsId), img.dataset.code, 'C');
   });
 
   // Add cache-bust to static images
@@ -455,16 +532,18 @@ function setDynamicUrls() {
 
 // ── METAR/TAF/ATIS from JSON (generated by GitHub Actions) ──
 const AP_GROUPS = [
-  { label:'NRT / HND',       airports:['RJAA','RJTT'] },
-  { label:'Alaska',          airports:['PANC','PAFA','PAED'] },
-  { label:'US West Coast',   airports:['KLAX','KSFO','KSEA','KONT'] },
-  { label:'US Central/East', airports:['KDFW','KIAH','KORD','KJFK'] },
-  { label:'Asia',            airports:['VHHH','RCTP','ZSPD','ZSSS','WSSS','WMKK'] },
-  { label:'Europe',          airports:['EHAM','EDDF','EBBR','LIMC','LSZH'] },
-  { label:'Japan (Alt)',     airports:['RJFR','RJGG','RJBB','RJCC','ROAH'] },
+  { label:'NRT / HND',          airports:['RJAA','RJTT'] },
+  { label:'SE Asia (BKK-NRT)',   airports:['VTBS','VTBU','VVDN','VVLT'] },
+  { label:'Alaska',             airports:['PANC','PAFA','PAED'] },
+  { label:'US West Coast',      airports:['KLAX','KSFO','KSEA','KONT'] },
+  { label:'US Central/East',    airports:['KDFW','KIAH','KORD','KJFK'] },
+  { label:'Asia',               airports:['VHHH','RCTP','ZSPD','ZSSS','WSSS','WMKK'] },
+  { label:'Europe',             airports:['EHAM','EDDF','EBBR','LIMC','LSZH'] },
+  { label:'Japan (Alt)',        airports:['RJFR','RJGG','RJBB','RJCC','ROAH'] },
 ];
 const AP_NAMES = {
   RJAA:'成田',RJTT:'羽田',PANC:'Anchorage',PAFA:'Fairbanks',PAED:'Elmendorf',
+  VTBS:'Bangkok (Suvarnabhumi)',VTBU:'U-Tapao',VVDN:'Da Nang',VVLT:'Lien Khuong',
   KLAX:'Los Angeles',KSFO:'San Francisco',KSEA:'Seattle',KONT:'Ontario CA',
   KDFW:'Dallas/FW',KIAH:'Houston',KORD:'Chicago',KJFK:'New York JFK',
   VHHH:'Hong Kong',RCTP:'Taipei',ZSPD:'Shanghai PVG',ZSSS:'Shanghai SHA',
