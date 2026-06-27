@@ -333,6 +333,16 @@
     </div>
   </div>
 
+  <div class="grp">HKO レーダー — 香港天文台</div>
+  <div class="card">
+    <div class="card-label">256km range<span class="ts" id="hko-256-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="hko-256-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">128km range<span class="ts" id="hko-128-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="hko-128-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+
   <div class="grp" style="margin-top:4px">外部リンク（Safariで開く）</div>
 
   <div style="display:flex;flex-direction:column;gap:10px">
@@ -355,6 +365,20 @@
        style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
       <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA 降水ナウキャスト ↗</div>
       <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 降水レーダー＋予測</div>
+    </a>
+
+    <a href="https://www.hko.gov.hk/tc/wxinfo/radars/radar.htm"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">HKO レーダー アニメーション ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">香港天文台 — 全範囲レーダーアニメーション</div>
+    </a>
+
+    <a href="http://www.sattmet.tmd.go.th/satmet/asian/ir_enh/ir_enh_se.html"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">TMD SE Asia 赤外線衛星 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">タイ気象局 — 東南アジア赤外線衛星画像（HTTP）</div>
     </a>
   </div>
 
@@ -455,6 +479,33 @@ function himawariUrl(area, element) {
            ts: hhmm.substring(0,2)+':'+hhmm.substring(2)+'Z' };
 }
 
+// ── HKO Radar (Hong Kong Observatory) — HKT timestamps, 6-min interval ──
+function setHkoRadar(imgEl, tsEl, range) {
+  const HKT_MS = 8 * 3600000;
+  const STEP = 6 * 60000;
+  let t = Date.now() + HKT_MS;
+  t -= t % STEP;
+  const cands = [];
+  for (let i = 0; i < 6; i++) {
+    const d = new Date(t - i * STEP);
+    const y = d.getUTCFullYear(), mo = pad(d.getUTCMonth()+1), dd = pad(d.getUTCDate());
+    const hh = pad(d.getUTCHours()), mm = pad(d.getUTCMinutes());
+    cands.push({
+      url: 'https://www.hko.gov.hk/wxinfo/radars/rad_'+range+'_png/2d'+range+'nradar_'+y+mo+dd+hh+mm+'.jpg',
+      ts: y+'/'+mo+'/'+dd+' '+hh+':'+mm+' HKT'
+    });
+  }
+  let idx = 0;
+  function tryNext() {
+    if (idx >= cands.length) { imgErr(imgEl); return; }
+    const c = cands[idx++];
+    imgEl.onload = () => { if (tsEl) tsEl.textContent = c.ts; imgEl.onload = null; imgEl.onerror = null; };
+    imgEl.onerror = tryNext;
+    imgEl.src = c.url;
+  }
+  tryNext();
+}
+
 // ── PGDE14: most recent 00/06/12/18Z ──
 function pgde14Url() {
   let d = new Date(); d.setUTCMinutes(0,0,0);
@@ -514,6 +565,10 @@ function setDynamicUrls() {
   document.querySelectorAll('.maiji-f').forEach((img, i) => {
     setMaiji(img, document.getElementById(flMap[i].tsId), img.dataset.code, 'F');
   });
+
+  // HKO radar
+  setHkoRadar(document.getElementById('hko-256-img'), document.getElementById('hko-256-ts'), '256');
+  setHkoRadar(document.getElementById('hko-128-img'), document.getElementById('hko-128-ts'), '128');
 
   // Maiji 縦断図 (C) BKK-NRT with fallback
   const cMap = [{code:'108',tsId:'maiji-c108-ts'},{code:'107',tsId:'maiji-c107-ts'},
