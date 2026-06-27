@@ -83,8 +83,9 @@
 
     #footer{text-align:center;font-size:11px;color:#374151;padding:12px 0 env(safe-area-inset-bottom,12px)}
 
-    /* Maiji 縦断図 — white background for legibility on dark theme */
-    .img-wrap:has(.maiji-c) { background:#fff; padding:4px; border-radius:4px; }
+    /* Maiji 平面図・縦断図 — white background for legibility on dark theme */
+    .img-wrap:has(.maiji-c),
+    .img-wrap:has(.maiji-f) { background:#fff; padding:4px; border-radius:4px; }
   </style>
 </head>
 <body>
@@ -694,10 +695,16 @@ async function loadVaac() {
         if (e.psn) html += ' &nbsp;<span style="font-weight:400;text-transform:none;color:var(--muted)">' + esc(e.psn) + '</span>';
         html += '<span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted);font-size:10px">' + issued + '</span>';
         html += '</div>';
-        // VAGFN image (Tokyo only)
+        // VAGFN forecast image
         if (e.img_url) {
           html += '<div style="background:#fff;padding:4px">';
           html += '<img src="' + esc(e.img_url) + '" style="width:100%;height:auto;display:block" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
+          html += '</div>';
+        }
+        // SAT IR image (most recent, if available)
+        if (e.sat_img_url) {
+          html += '<div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:6px 12px 2px">SAT IR</div>';
+          html += '<div><img src="' + esc(e.sat_img_url) + '" style="width:100%;height:auto;display:block" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
           html += '</div>';
         }
         // Advisory text
