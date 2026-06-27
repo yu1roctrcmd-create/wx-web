@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>WX Briefing</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0e1a;--card:#111827;--border:#1e293b;--text:#e2e8f0;
+      --muted:#64748b;--accent:#3b82f6;--green:#22c55e;--mono:'SF Mono','Courier New',monospace;
+    }
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:14px;-webkit-text-size-adjust:100%}
+
+    /* ── Header ── */
+    header{
+      position:sticky;top:0;z-index:200;
+      background:#07091acc;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border);
+      padding:env(safe-area-inset-top,0) 0 0;
+    }
+    .header-inner{display:flex;align-items:center;gap:10px;padding:10px 14px}
+    header h1{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--accent);flex:1}
+    #utc-clock{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .btn-refresh{
+      background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);
+      padding:6px 11px;border-radius:7px;font-size:12px;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;white-space:nowrap;
+    }
+    .btn-refresh:active{opacity:.6}
+
+    /* ── Nav ── */
+    nav{
+      display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+      border-bottom:1px solid var(--border);background:#07091acc;
+    }
+    nav::-webkit-scrollbar{display:none}
+    .tab{
+      flex-shrink:0;padding:9px 15px;font-size:12px;font-weight:600;letter-spacing:.06em;
+      color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;
+      cursor:pointer;-webkit-tap-highlight-color:transparent;
+    }
+    .tab.active{color:var(--text);border-bottom-color:var(--accent)}
+
+    /* ── Sections ── */
+    .section{display:none;padding:14px 14px 60px}
+    .section.active{display:block}
+
+    /* ── Chart card ── */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px}
+    .card-label{
+      padding:8px 12px;font-size:11px;font-weight:600;letter-spacing:.07em;
+      color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border);
+    }
+    .card-label span.ts{font-weight:400;text-transform:none;margin-left:6px;color:#4b5563}
+    .img-wrap{position:relative;min-height:60px;display:flex;align-items:center;justify-content:center}
+    .wx-img{width:100%;height:auto;display:block}
+    .err{padding:20px;text-align:center;color:var(--muted);font-size:12px;display:none}
+    .loading-ph{padding:20px;text-align:center;color:var(--muted);font-size:12px}
+
+    /* ── Group header ── */
+    .grp{
+      font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);
+      text-transform:uppercase;margin:4px 0 10px;padding-bottom:6px;
+      border-bottom:1px solid var(--border);
+    }
+
+    /* ── METAR / TAF ── */
+    .ap-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px}
+    .ap-head{
+      display:flex;align-items:baseline;gap:8px;
+      padding:9px 12px;background:#0d1424;border-bottom:1px solid var(--border);
+    }
+    .ap-icao{font-size:17px;font-weight:700;color:var(--accent);font-family:var(--mono)}
+    .ap-name{font-size:11px;color:var(--muted)}
+    .ap-body{padding:10px 12px}
+    .wx-section-label{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);margin-bottom:3px}
+    .wx-raw{
+      font-family:var(--mono);font-size:11px;color:#b8cfe8;line-height:1.65;
+      white-space:pre-wrap;word-break:break-all;
+    }
+    hr.wx-hr{border:none;border-top:1px solid var(--border);margin:8px 0}
+    .no-data{font-size:11px;color:var(--muted);font-style:italic}
+
+    #metar-status{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+
+    /* ── Footer ── */
+    #footer{text-align:center;font-size:11px;color:#374151;padding:12px 0 env(safe-area-inset-bottom,12px)}
+
+    /* ── Landscape hint ── */
+    @media (orientation:landscape) and (max-height:500px){
+      header h1{font-size:13px}
+      .section{padding:10px 10px 40px}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>✈ WX BRIEFING</h1>
+    <span id="utc-clock">--:--:-- Z</span>
+    <button class="btn-refresh" onclick="refreshAll()">↻ Refresh</button>
+  </div>
+  <nav>
+    <button class="tab active" data-tab="sigwx">SIGWX</button>
+    <button class="tab" data-tab="surface">SURFACE</button>
+    <button class="tab" data-tab="upper">UPPER AIR</button>
+    <button class="tab" data-tab="satellite">SATELLITE</button>
+    <button class="tab" data-tab="metar">METAR/TAF</button>
+    <button class="tab" data-tab="tafcharts">JMA TAF</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ╔═ SIGWX ═╗ -->
+<div class="section active" id="section-sigwx">
+
+  <div class="card">
+    <div class="card-label">JMA SIGWX High FL250–600 — Asia/Pacific</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/fbjp/fbjp.png"
+           referrerpolicy="no-referrer" loading="lazy"
+           onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">JMA Low-level SIGWX — East Japan (FBTK03)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/low-level_sigwx/fbtk03.png"
+           referrerpolicy="no-referrer" loading="lazy"
+           onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">JMA Low-level SIGWX — West Japan (FBOS03)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/low-level_sigwx/fbos03.png"
+           referrerpolicy="no-referrer" loading="lazy"
+           onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Euro/NAT Mid-level SIGWX (AWC F24)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://aviationweather.gov/data/products/fax/F24_sigwx_mid_eur.gif"
+           referrerpolicy="no-referrer" loading="lazy"
+           onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">North Atlantic SIGWX — PGDE14 (Iceland Met)<span class="ts" id="pgde14-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img" id="pgde14-img" referrerpolicy="no-referrer" loading="lazy"
+           onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+</div><!-- /sigwx -->
+
+
+<!-- ╔═ SURFACE ═╗ -->
+<div class="section" id="section-surface">
+
+  <div class="card">
+    <div class="card-label">地上天気図 実況 ASAS<span class="ts" id="asas-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img" id="asas-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">地上天気図 24h予報 FSAS24<span class="ts" id="fsas24-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img" id="fsas24-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">太平洋地上天気図 (NOAA OPC)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://ocean.weather.gov/P_sfc_full_ocean_color.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">北大西洋地上天気図 (NOAA OPC)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://ocean.weather.gov/A_sfc_full_ocean_color.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">アジア地上天気予報図 AXJP140<span class="ts" id="axjp140-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img" id="axjp140-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">アジア地上天気予報図 FXJP106<span class="ts" id="fxjp106-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img" id="fxjp106-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">欧州地上天気図 実況 (DWD)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.dwd.de/DWD/wetter/wv_spez/hobbymet/wetterkarten/bwk_bodendruck_na_ana.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">欧州地上天気図 36h予報 (DWD)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.dwd.de/DWD/wetter/wv_spez/hobbymet/wetterkarten/ico_tkboden_na_036.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">欧州地上天気図 (WetterZentrale / DWD)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.wetterzentrale.de/maps/DWDEU_0.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">ユーラシア地上天気図 (Meteoinfo Russia)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://meteoinfo.ru/hmc-input/mapsynop/Analiz.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+</div><!-- /surface -->
+
+
+<!-- ╔═ UPPER AIR ═╗ -->
+<div class="section" id="section-upper">
+
+  <div class="card">
+    <div class="card-label">500hPa 高層天気図 AUPQ35<span class="ts" id="aupq35-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img" id="aupq35-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">200hPa 高層天気図 00Z (imocwx.com)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.imocwx.com/wxfax/aupa20_00.gif"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">200hPa 高層天気図 12Z (imocwx.com)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.imocwx.com/wxfax/aupa20_12.gif"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">250hPa 高層天気図 00Z (imocwx.com)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.imocwx.com/wxfax/aupa25_00.gif"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">250hPa 高層天気図 12Z (imocwx.com)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.imocwx.com/wxfax/aupa25_12.gif"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 平面図</div>
+
+  <div class="card">
+    <div class="card-label">Maiji 平面図 FL290<span class="ts" id="maiji-fl290-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img maiji-f" data-code="129" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Maiji 平面図 FL330<span class="ts" id="maiji-fl330-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img maiji-f" data-code="133" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Maiji 平面図 FL350<span class="ts" id="maiji-fl350-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img maiji-f" data-code="135" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Maiji 平面図 FL390<span class="ts" id="maiji-fl390-ts"></span></div>
+    <div class="img-wrap">
+      <img class="wx-img maiji-f" data-code="139" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+</div><!-- /upper -->
+
+
+<!-- ╔═ SATELLITE ═╗ -->
+<div class="section" id="section-satellite">
+
+  <div class="grp">ひまわり (JMA Himawari-9)<span class="ts" id="himawari-ts" style="text-transform:none;font-weight:400;margin-left:6px;color:#4b5563"></span></div>
+
+  <div class="card">
+    <div class="card-label">日本周辺 赤外線 (B13)</div>
+    <div class="img-wrap">
+      <img class="wx-img himawari-img" data-area="jpn" data-element="b13"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">日本周辺 トゥルーカラー</div>
+    <div class="img-wrap">
+      <img class="wx-img himawari-img" data-area="jpn" data-element="trm"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">東南アジア 赤外線 (B13)</div>
+    <div class="img-wrap">
+      <img class="wx-img himawari-img" data-area="se1" data-element="b13"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">東南アジア 降水ポテンシャル (HRP)</div>
+    <div class="img-wrap">
+      <img class="wx-img himawari-img" data-area="r2s" data-element="hrp"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="grp">North America / Europe</div>
+
+  <div class="card">
+    <div class="card-label">北米 赤外線衛星 (WISC Mosaic)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://tropic.ssec.wisc.edu/real-time/mosaic/images/moswir.jpg"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">欧州 水蒸気衛星 (MSG/Meteosat WV)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://img.allmetsat.com/sat/anim-msg-europe_central-wv.gif"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">欧州 カラー衛星 (MSG/Meteosat RGB)</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://img.allmetsat.com/sat/anim-msg-europe_central-rgb.gif"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+</div><!-- /satellite -->
+
+
+<!-- ╔═ METAR / TAF ═╗ -->
+<div class="section" id="section-metar">
+  <div id="metar-status">METAR/TAF を取得中...</div>
+  <div id="metar-content"></div>
+</div>
+
+
+<!-- ╔═ JMA TAF CHARTS ═╗ -->
+<div class="section" id="section-tafcharts">
+
+  <div class="card">
+    <div class="card-label">RJAA 成田 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJAA.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RJTT 羽田 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJTT.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RJBB 関西 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJBB.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RJCC 千歳 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJCC.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RJFR 北九州 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJFR.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">RJGG 名古屋 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJGG.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">ROAH 那覇 — JMA 飛行場時系列予報</div>
+    <div class="img-wrap">
+      <img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_ROAH.png"
+           referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)">
+      <div class="err">取得できませんでした</div>
+    </div>
+  </div>
+
+</div><!-- /tafcharts -->
+
+</main>
+
+<div id="footer">— —</div>
+
+<script>
+// ──────────────────────────────────────────────
+// Tab navigation
+// ──────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('section-' + btn.dataset.tab).classList.add('active');
+    // Load METAR/TAF on first visit
+    if (btn.dataset.tab === 'metar' && !window._metarLoaded) loadMetar();
+  });
+});
+
+// ──────────────────────────────────────────────
+// Clock
+// ──────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getUTCHours()).padStart(2,'0');
+  const m = String(now.getUTCMinutes()).padStart(2,'0');
+  const s = String(now.getUTCSeconds()).padStart(2,'0');
+  document.getElementById('utc-clock').textContent = h+':'+m+':'+s+' Z';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ──────────────────────────────────────────────
+// Image error handler
+// ──────────────────────────────────────────────
+function imgErr(img) {
+  img.style.display = 'none';
+  const errDiv = img.nextElementSibling;
+  if (errDiv && errDiv.classList.contains('err')) errDiv.style.display = 'block';
+}
+
+// ──────────────────────────────────────────────
+// URL helpers
+// ──────────────────────────────────────────────
+
+// n-kishou.com: search backward for most recent valid JST hour
+function nkishouUrl(code, validJstHours) {
+  const JST_MS = 9 * 3600 * 1000;
+  // Start at current JST hour, floor to hour boundary
+  let jstMs = Date.now() + JST_MS;
+  jstMs = jstMs - (jstMs % 3600000); // floor to hour in ms
+  for (let i = 0; i < 72; i++) {
+    const d = new Date(jstMs);
+    const h = d.getUTCHours(); // treated as JST hour
+    if (validJstHours.indexOf(h) >= 0) {
+      const y  = d.getUTCFullYear();
+      const mo = pad(d.getUTCMonth() + 1);
+      const dd = pad(d.getUTCDate());
+      const hh = pad(h);
+      return {
+        url: 'https://n-kishou.com/ee/image4/lfax/' + code + '_' + y + mo + dd + hh + '00.png',
+        ts:  y + '/' + mo + '/' + dd + ' ' + hh + ':00 JST'
+      };
+    }
+    jstMs -= 3600000;
+  }
+  return null;
+}
+
+// Himawari: observation_time = file_time + 10 min, latest ≈ now - 15 min floored to 10 min
+function himawariUrl(area, element) {
+  let t = Date.now() - 15 * 60000;
+  t = t - (t % 600000); // floor to 10 min
+  const d = new Date(t);
+  const hh = pad(d.getUTCHours());
+  const mm = pad(d.getUTCMinutes());
+  return {
+    url: 'https://www.data.jma.go.jp/mscweb/data/himawari/img/' + area + '/' + area + '_' + element + '_' + hh + mm + '.jpg',
+    ts: hh + ':' + mm + 'Z'
+  };
+}
+
+// Maiji: 1 hour back from current UTC, floored to hour
+function maijiUrl(code, type) {
+  const t = new Date(Date.now() - 3600000);
+  t.setUTCMinutes(0, 0, 0);
+  const y  = t.getUTCFullYear();
+  const mo = pad(t.getUTCMonth() + 1);
+  const dd = pad(t.getUTCDate());
+  const hh = pad(t.getUTCHours());
+  const ts = y + mo + dd + hh + '0000';
+  return {
+    url: 'https://www.data.jma.go.jp/airinfo/data/pict/maiji/WANL' + type + code + '_RJTD_' + ts + '.PNG',
+    ts: y + '/' + mo + '/' + dd + ' ' + hh + ':00Z'
+  };
+}
+
+// PGDE14: most recent 00/06/12/18Z
+function pgde14Url() {
+  const synoptic = [18, 12, 6, 0];
+  let t = new Date();
+  t.setUTCMinutes(0, 0, 0);
+  for (let i = 0; i < 24; i++) {
+    if (synoptic.indexOf(t.getUTCHours()) >= 0) {
+      const hh = pad(t.getUTCHours());
+      return {
+        url: 'http://www.vedur.is/photos/flugkort/PGDE14_EGRR_' + hh + '00.png',
+        ts: hh + ':00Z'
+      };
+    }
+    t = new Date(t.getTime() - 3600000);
+  }
+  return null;
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+// ──────────────────────────────────────────────
+// Set dynamic image URLs on page load
+// ──────────────────────────────────────────────
+function setDynamicUrls() {
+  const cb = '?_=' + Math.floor(Date.now() / 300000); // cache-bust every 5 min
+
+  // PGDE14
+  const p = pgde14Url();
+  if (p) {
+    document.getElementById('pgde14-img').src = p.url + cb;
+    document.getElementById('pgde14-ts').textContent = p.ts;
+  }
+
+  // n-kishou.com charts
+  const nkMap = [
+    { code:'asas',    hours:[3,9,15,21], imgId:'asas-img',    tsId:'asas-ts'    },
+    { code:'fsas24',  hours:[3,9,15,21], imgId:'fsas24-img',  tsId:'fsas24-ts'  },
+    { code:'aupq35',  hours:[9,21],      imgId:'aupq35-img',  tsId:'aupq35-ts'  },
+    { code:'axjp140', hours:[9,21],      imgId:'axjp140-img', tsId:'axjp140-ts' },
+    { code:'fxjp106', hours:[0,12],      imgId:'fxjp106-img', tsId:'fxjp106-ts' },
+  ];
+  nkMap.forEach(c => {
+    const r = nkishouUrl(c.code, c.hours);
+    if (!r) return;
+    const img = document.getElementById(c.imgId);
+    if (img) img.src = r.url + cb;
+    const ts = document.getElementById(c.tsId);
+    if (ts) ts.textContent = r.ts;
+  });
+
+  // Himawari
+  const hiTs = himawariUrl('jpn','b13').ts;
+  document.getElementById('himawari-ts').textContent = hiTs + 'Z';
+  document.querySelectorAll('.himawari-img').forEach(img => {
+    const r = himawariUrl(img.dataset.area, img.dataset.element);
+    img.src = r.url + cb;
+  });
+
+  // Maiji 平面図
+  const flMap = [
+    {code:'129', tsId:'maiji-fl290-ts'},
+    {code:'133', tsId:'maiji-fl330-ts'},
+    {code:'135', tsId:'maiji-fl350-ts'},
+    {code:'139', tsId:'maiji-fl390-ts'},
+  ];
+  document.querySelectorAll('.maiji-f').forEach((img, i) => {
+    const r = maijiUrl(img.dataset.code, 'F');
+    img.src = r.url + cb;
+    const ts = document.getElementById(flMap[i].tsId);
+    if (ts) ts.textContent = r.ts;
+  });
+
+  // Add cache-bust to static images (force reload on refresh)
+  document.querySelectorAll('.wx-img:not([id])').forEach(img => {
+    if (img.src && !img.src.includes('_=')) {
+      img.src = img.src + cb;
+    }
+  });
+}
+
+// ──────────────────────────────────────────────
+// METAR / TAF via NOAA AWC API
+// ──────────────────────────────────────────────
+const AP_GROUPS = [
+  { label:'NRT / HND',       airports:['RJAA','RJTT'] },
+  { label:'Alaska',          airports:['PANC','PAFA','PAED'] },
+  { label:'US West Coast',   airports:['KLAX','KSFO','KSEA','KONT'] },
+  { label:'US Central/East', airports:['KDFW','KIAH','KORD','KJFK'] },
+  { label:'Asia',            airports:['VHHH','RCTP','ZSPD','ZSSS','WSSS','WMKK'] },
+  { label:'Europe',          airports:['EHAM','EDDF','EBBR','LIMC','LSZH'] },
+  { label:'Japan (Alt)',     airports:['RJFR','RJGG','RJBB','RJCC','ROAH'] },
+];
+
+const AP_NAMES = {
+  RJAA:'成田',RJTT:'羽田',PANC:'Anchorage',PAFA:'Fairbanks',PAED:'Elmendorf',
+  KLAX:'Los Angeles',KSFO:'San Francisco',KSEA:'Seattle',KONT:'Ontario CA',
+  KDFW:'Dallas/FW',KIAH:'Houston',KORD:'Chicago',KJFK:'New York JFK',
+  VHHH:'Hong Kong',RCTP:'Taipei',ZSPD:'Shanghai PVG',ZSSS:'Shanghai SHA',
+  WSSS:'Singapore',WMKK:'Kuala Lumpur',EHAM:'Amsterdam',EDDF:'Frankfurt',
+  EBBR:'Brussels',LIMC:'Milan',LSZH:'Zurich',
+  RJFR:'北九州',RJGG:'名古屋',RJBB:'関西',RJCC:'千歳',ROAH:'那覇',
+};
+
+async function loadMetar() {
+  window._metarLoaded = true;
+  const el = document.getElementById('metar-content');
+  const status = document.getElementById('metar-status');
+  status.textContent = 'METAR/TAF を取得中...';
+
+  const all = AP_GROUPS.flatMap(g => g.airports);
+  const ids = all.join(',');
+
+  try {
+    const [mRes, tRes] = await Promise.all([
+      fetch('https://aviationweather.gov/api/data/metar?ids=' + ids + '&format=json&hours=3'),
+      fetch('https://aviationweather.gov/api/data/taf?ids=' + ids + '&format=json&hoursBeforeNow=1')
+    ]);
+
+    const metars = await mRes.json();
+    const tafs   = await tRes.json();
+
+    // Index by station
+    const metarMap = {};
+    metars.forEach(m => { if (!metarMap[m.icaoId] || m.reportTime > metarMap[m.icaoId].reportTime) metarMap[m.icaoId] = m; });
+    const tafMap = {};
+    tafs.forEach(t => { if (t.icaoId) tafMap[t.icaoId] = t; });
+
+    let html = '';
+    AP_GROUPS.forEach(g => {
+      html += '<div class="grp">' + g.label + '</div>';
+      g.airports.forEach(icao => {
+        const m = metarMap[icao];
+        const t = tafMap[icao];
+        const name = AP_NAMES[icao] || '';
+        html += '<div class="ap-card">';
+        html += '<div class="ap-head"><span class="ap-icao">' + icao + '</span><span class="ap-name">' + name + '</span></div>';
+        html += '<div class="ap-body">';
+        if (m) {
+          html += '<div class="wx-section-label">METAR</div>';
+          html += '<div class="wx-raw">' + esc(m.rawOb || m.rawObservation || '—') + '</div>';
+        } else {
+          html += '<div class="no-data">METAR なし</div>';
+        }
+        if (t) {
+          const raw = t.rawTAF || (t.fcsts ? formatTaf(t) : null);
+          if (raw) {
+            html += '<hr class="wx-hr">';
+            html += '<div class="wx-section-label">TAF</div>';
+            html += '<div class="wx-raw">' + esc(raw) + '</div>';
+          }
+        }
+        html += '</div></div>';
+      });
+    });
+
+    el.innerHTML = html;
+    status.style.display = 'none';
+    el.style.display = 'block';
+  } catch(e) {
+    status.textContent = 'データ取得に失敗しました: ' + e.message;
+  }
+}
+
+function formatTaf(t) {
+  if (t.rawTAF) return t.rawTAF;
+  try {
+    let s = t.stationId + ' ' + (t.issueTime || '') + '\n';
+    (t.fcsts || []).forEach(f => { s += '  ' + JSON.stringify(f) + '\n'; });
+    return s;
+  } catch(_) { return '—'; }
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ──────────────────────────────────────────────
+// Refresh
+// ──────────────────────────────────────────────
+function refreshAll() {
+  // Reset all images
+  document.querySelectorAll('.wx-img').forEach(img => {
+    img.style.display = '';
+    const err = img.nextElementSibling;
+    if (err && err.classList.contains('err')) err.style.display = 'none';
+  });
+  setDynamicUrls();
+  // Reload METAR/TAF if tab is active
+  window._metarLoaded = false;
+  const metarActive = document.getElementById('section-metar').classList.contains('active');
+  if (metarActive) loadMetar();
+  updateFooter();
+}
+
+function updateFooter() {
+  const now = new Date();
+  const y=now.getUTCFullYear(), mo=pad(now.getUTCMonth()+1), d=pad(now.getUTCDate());
+  const h=pad(now.getUTCHours()), m=pad(now.getUTCMinutes());
+  document.getElementById('footer').textContent = '最終更新: ' + y+'/'+mo+'/'+d+' '+h+':'+m+'Z';
+}
+
+// Auto-refresh every 15 min
+setInterval(() => { refreshAll(); }, 15 * 60 * 1000);
+
+// ──────────────────────────────────────────────
+// Init
+// ──────────────────────────────────────────────
+setDynamicUrls();
+updateFooter();
+</script>
+</body>
+</html>
