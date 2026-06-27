@@ -103,6 +103,7 @@
     <button class="tab" data-tab="metar">METAR/TAF/ATIS</button>
     <button class="tab" data-tab="tafcharts">JMA TAF</button>
     <button class="tab" data-tab="radar">RADAR</button>
+    <button class="tab" data-tab="vaac">VAAC</button>
   </nav>
 </header>
 
@@ -426,6 +427,33 @@
 
 </div><!-- /radar -->
 
+
+<!-- ╔═ VAAC ═╗ -->
+<div class="section" id="section-vaac">
+
+  <div id="vaac-banner" style="display:none;background:#7f1d1d;border:1px solid #991b1b;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-weight:700;font-size:13px;color:#fca5a5">
+    ⚠ Active Volcanic Ash Advisory
+  </div>
+
+  <div class="grp">Tokyo VAAC — 火山灰情報</div>
+  <div id="vaac-status" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">読み込み中...</div>
+  <div id="vaac-tokyo-content"></div>
+
+  <div class="grp" style="margin-top:6px">Alaska VAAC</div>
+  <div id="vaac-alaska-content"></div>
+
+  <div class="grp" style="margin-top:6px">外部リンク</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <a href="https://ds.data.jma.go.jp/svd/vaac/data/vaac_list.html"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">Tokyo VAAC 一覧 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 — Volcanic Ash Advisories 発行リスト</div>
+    </a>
+  </div>
+
+</div><!-- /vaac -->
+
 </main>
 <div id="footer">— —</div>
 
@@ -438,6 +466,7 @@ document.querySelectorAll('.tab').forEach(btn => {
     btn.classList.add('active');
     document.getElementById('section-' + btn.dataset.tab).classList.add('active');
     if (btn.dataset.tab === 'metar' && !window._metarLoaded) loadMetar();
+    if (btn.dataset.tab === 'vaac'  && !window._vaacLoaded)  loadVaac();
   });
 });
 
@@ -623,6 +652,76 @@ function setDynamicUrls() {
       img.src = img.src + cb;
     }
   });
+}
+
+// ── VAAC ──
+async function loadVaac() {
+  window._vaacLoaded = true;
+  const status = document.getElementById('vaac-status');
+  try {
+    const resp = await fetch('metar_latest.json?_=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+
+    status.style.display = 'none';
+
+    const tokyo  = data.vaac_tokyo  || [];
+    const alaska = data.vaac_alaska || [];
+
+    // Banner: show if any advisory is NOT "no further advisories"
+    const hasActive = [...tokyo, ...alaska].some(e =>
+      !/NO FURTHER ADV/i.test(e.text || '') &&
+      !/NXT ADVISORY: NO FURTHER/i.test(e.text || '')
+    );
+    if (hasActive) document.getElementById('vaac-banner').style.display = 'block';
+
+    function renderEntries(entries, containerId) {
+      const el = document.getElementById(containerId);
+      if (!entries.length) {
+        el.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px 0">データなし</div>';
+        return;
+      }
+      let html = '';
+      entries.forEach(e => {
+        const isActive = !/NXT ADVISORY: NO FURTHER/i.test(e.text || '');
+        const titleColor = isActive ? 'var(--warn)' : 'var(--green)';
+        const issued = e.issued
+          ? e.issued.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3')
+          : (e.issued_utc || '');
+        html += '<div class="card" style="margin-bottom:14px">';
+        html += '<div class="card-label" style="color:' + titleColor + '">';
+        html += (e.volcano || 'Unknown Volcano').toUpperCase();
+        if (e.psn) html += ' &nbsp;<span style="font-weight:400;text-transform:none;color:var(--muted)">' + esc(e.psn) + '</span>';
+        html += '<span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted);font-size:10px">' + issued + '</span>';
+        html += '</div>';
+        // VAGFN image (Tokyo only)
+        if (e.img_url) {
+          html += '<div style="background:#fff;padding:4px">';
+          html += '<img src="' + esc(e.img_url) + '" style="width:100%;height:auto;display:block" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
+          html += '</div>';
+        }
+        // Advisory text
+        if (e.text) {
+          html += '<pre style="margin:0;padding:10px;font-size:11px;line-height:1.6;overflow-x:auto;';
+          html += 'background:transparent;color:var(--text);white-space:pre;font-family:\'Courier New\',monospace">';
+          html += esc(e.text) + '</pre>';
+        }
+        html += '<div style="padding:6px 12px 8px;border-top:1px solid var(--border)">';
+        if (e.text_url) html += '<a href="' + esc(e.text_url) + '" target="_blank" style="font-size:11px;color:var(--accent)">Text ↗</a>';
+        html += '</div>';
+        html += '</div>';
+      });
+      el.innerHTML = html;
+    }
+
+    renderEntries(tokyo,  'vaac-tokyo-content');
+    renderEntries(alaska, 'vaac-alaska-content');
+
+  } catch(e) {
+    status.innerHTML =
+      '<b>データ未生成</b><br>' +
+      '<small>GitHub Actions の次回実行後に利用可能になります。</small>';
+  }
 }
 
 // ── FD Wind/Temp Aloft — Alaska ──
