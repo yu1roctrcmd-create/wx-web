@@ -82,6 +82,9 @@
     #data-ts{text-align:center;font-size:11px;color:#374151;padding:0 0 10px}
 
     #footer{text-align:center;font-size:11px;color:#374151;padding:12px 0 env(safe-area-inset-bottom,12px)}
+
+    /* Maiji 縦断図 — white background for legibility on dark theme */
+    .img-wrap:has(.maiji-c) { background:#fff; padding:4px; border-radius:4px; }
   </style>
 </head>
 <body>
@@ -234,6 +237,40 @@
   <div class="card">
     <div class="card-label">東経122.5° (BKK-NRT)<span class="ts" id="maiji-c159-ts"></span></div>
     <div class="img-wrap"><img class="wx-img maiji-c" data-code="159" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+
+  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 縦断図 — 全ルート</div>
+  <div class="card">
+    <div class="card-label">与那国-稚内<span class="ts" id="maiji-c199-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="199" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">福岡-釧路<span class="ts" id="maiji-c101-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="101" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">福岡-紋別<span class="ts" id="maiji-c102-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="102" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">東京-稚内<span class="ts" id="maiji-c103-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="103" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">東京-女満別<span class="ts" id="maiji-c104-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="104" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">福岡-東京<span class="ts" id="maiji-c105-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="105" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">鹿児島-東京<span class="ts" id="maiji-c106-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="106" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">与那国-福岡<span class="ts" id="maiji-c109-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" data-code="109" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 </div><!-- /upper -->
 
@@ -577,11 +614,9 @@ function setDynamicUrls() {
   setHkoRadar(document.getElementById('hko-256-img'), document.getElementById('hko-256-ts'), '256');
   setHkoRadar(document.getElementById('hko-128-img'), document.getElementById('hko-128-ts'), '128');
 
-  // Maiji 縦断図 (C) BKK-NRT with fallback
-  const cMap = [{code:'108',tsId:'maiji-c108-ts'},{code:'107',tsId:'maiji-c107-ts'},
-                {code:'159',tsId:'maiji-c159-ts'}];
-  document.querySelectorAll('.maiji-c').forEach((img, i) => {
-    setMaiji(img, document.getElementById(cMap[i].tsId), img.dataset.code, 'C');
+  // Maiji 縦断図 (C) — all routes
+  document.querySelectorAll('.maiji-c').forEach(img => {
+    setMaiji(img, document.getElementById('maiji-c' + img.dataset.code + '-ts'), img.dataset.code, 'C');
   });
 
   // Add cache-bust to static images
