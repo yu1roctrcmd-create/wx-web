@@ -105,6 +105,7 @@
     <button class="tab" data-tab="tafcharts">JMA TAF</button>
     <button class="tab" data-tab="radar">RADAR</button>
     <button class="tab" data-tab="vaac">VAAC</button>
+    <button class="tab" data-tab="hf">HF</button>
   </nav>
 </header>
 
@@ -497,6 +498,43 @@
 
 </div><!-- /vaac -->
 
+
+<!-- ╔═ HF ═╗ -->
+<div class="section" id="section-hf">
+
+  <div class="grp">外部リンク</div>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+    <a href="https://radio.arinc.net/pacific/" target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">ARINC Pacific HF Radio ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">北太平洋 HF SELCAL / 無線局情報</div>
+    </a>
+    <a href="https://www.windy.com/?42.844,-149.326,4" target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">Windy — 北太平洋 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">風・気圧・波高 (42.8N 149.3W)</div>
+    </a>
+  </div>
+
+  <div class="grp">Sunrise / Sunset — UTC &amp; Local</div>
+  <div class="card" style="overflow-x:auto">
+    <table id="sun-table" style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--mono)">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em">
+          <th style="padding:8px 10px;text-align:left;font-weight:600">Airport</th>
+          <th style="padding:8px 6px;text-align:center;font-weight:600">Sunrise<br><span style="font-weight:400">LT</span></th>
+          <th style="padding:8px 6px;text-align:center;font-weight:600">Sunset<br><span style="font-weight:400">LT</span></th>
+          <th style="padding:8px 6px;text-align:center;font-weight:600">Sunrise<br><span style="font-weight:400">UTC</span></th>
+          <th style="padding:8px 6px;text-align:center;font-weight:600">Sunset<br><span style="font-weight:400">UTC</span></th>
+          <th style="padding:8px 6px;text-align:center;font-weight:600">Day<br><span style="font-weight:400">Length</span></th>
+        </tr>
+      </thead>
+      <tbody id="sun-tbody"></tbody>
+    </table>
+  </div>
+  <div style="text-align:right;font-size:10px;color:var(--muted);margin-top:6px" id="sun-date-label"></div>
+
+</div><!-- /hf -->
 </main>
 <div id="footer">— —</div>
 
@@ -907,11 +945,114 @@ function updateFooter() {
 // Auto-refresh every 15 min
 setInterval(refreshAll, 15*60*1000);
 
+
+// ── Sunrise / Sunset ──
+const SUN_AIRPORTS = [
+  {icao:'NRT', name:'Narita',        lat:35.772, lon:140.393, tz:'Asia/Tokyo'},
+  {icao:'PVG', name:'Shanghai',      lat:31.143, lon:121.805, tz:'Asia/Shanghai'},
+  {icao:'HKG', name:'Hong Kong',     lat:22.308, lon:113.919, tz:'Asia/Hong_Kong'},
+  {icao:'TPE', name:'Taipei',        lat:25.078, lon:121.233, tz:'Asia/Taipei'},
+  {icao:'SIN', name:'Singapore',     lat:1.350,  lon:103.994, tz:'Asia/Singapore'},
+  {icao:'ANC', name:'Anchorage',     lat:61.174, lon:-149.996,tz:'America/Anchorage'},
+  {icao:'ORD', name:'Chicago',       lat:41.980, lon:-87.905, tz:'America/Chicago'},
+  {icao:'LAX', name:'Los Angeles',   lat:33.943, lon:-118.408,tz:'America/Los_Angeles'},
+  {icao:'JFK', name:'New York',      lat:40.641, lon:-73.778, tz:'America/New_York'},
+  {icao:'DFW', name:'Dallas/FW',     lat:32.900, lon:-97.040, tz:'America/Chicago'},
+  {icao:'AMS', name:'Amsterdam',     lat:52.310, lon:4.768,   tz:'Europe/Amsterdam'},
+  {icao:'MXP', name:'Milan',         lat:45.631, lon:8.728,   tz:'Europe/Rome'},
+  {icao:'FRA', name:'Frankfurt',     lat:50.038, lon:8.562,   tz:'Europe/Berlin'},
+];
+
+function calcSun(date, lat, lon) {
+  // NOAA sunrise/sunset algorithm
+  const rad = Math.PI / 180;
+  const deg = 180 / Math.PI;
+  const JD  = date.getTime() / 86400000 + 2440587.5;
+
+  const n   = JD - 2451545.0;
+  const L   = (280.460 + 0.9856474 * n) % 360;
+  const g   = (357.528 + 0.9856003 * n) % 360;
+  const lam = L + 1.915 * Math.sin(g * rad) + 0.020 * Math.sin(2 * g * rad);
+  const eps = 23.439 - 0.0000004 * n;
+  const sinD = Math.sin(eps * rad) * Math.sin(lam * rad);
+  const decl = Math.asin(sinD) * deg;
+
+  const cosH = (Math.sin(-0.8333 * rad) - Math.sin(lat * rad) * Math.sin(decl * rad))
+             / (Math.cos(lat * rad) * Math.cos(decl * rad));
+  if (cosH < -1) return {sunrise: null, sunset: null}; // polar day
+  if (cosH >  1) return {sunrise: null, sunset: null}; // polar night
+  const H = Math.acos(cosH) * deg;
+
+  const RA  = Math.atan2(Math.cos(eps * rad) * Math.sin(lam * rad), Math.cos(lam * rad)) * deg / 15;
+  const RA2 = ((RA % 24) + 24) % 24;
+
+  const EqT = ((L - (-0.0057183 + RA2 * 15 + (360 - lam) * (19.9 / 360))) / 15 * 60) % 60;
+  const noon = 12 - lon / 15 - EqT / 60;
+  const riseH = noon - H / 15;
+  const setH  = noon + H / 15;
+  return { sunrise: riseH, sunset: setH };
+}
+
+function hToUtc(h) {
+  if (h == null) return null;
+  const totalMin = Math.round(((h % 24) + 24) % 24 * 60);
+  return new Date(Date.UTC(0,0,1,0, totalMin));
+}
+
+function fmtTime(d) {
+  if (!d) return '——';
+  return pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+}
+
+function fmtLocal(utcDate, tz) {
+  if (!utcDate) return '——';
+  const today = new Date();
+  const combined = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(),
+                                     utcDate.getUTCHours(), utcDate.getUTCMinutes()));
+  return combined.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone: tz});
+}
+
+function renderSunTable() {
+  const today = new Date();
+  today.setUTCHours(12, 0, 0, 0); // noon UTC for today's calculation
+
+  document.getElementById('sun-date-label').textContent =
+    'Date: ' + today.toISOString().slice(0, 10) + ' UTC';
+
+  let html = '';
+  SUN_AIRPORTS.forEach(ap => {
+    const s = calcSun(today, ap.lat, ap.lon);
+    const riseUtc = hToUtc(s.sunrise);
+    const setUtc  = hToUtc(s.sunset);
+
+    let dayLen = '——';
+    if (s.sunrise != null && s.sunset != null) {
+      const mins = Math.round((s.sunset - s.sunrise) * 60);
+      dayLen = Math.floor(mins / 60) + 'h' + pad(mins % 60) + 'm';
+    }
+
+    // Highlight NRT row
+    const bg = ap.icao === 'NRT' ? 'background:#1e3a5f' : '';
+
+    html += '<tr style="border-bottom:1px solid var(--border);' + bg + '">';
+    html += '<td style="padding:7px 10px;color:var(--accent);font-weight:700">' + ap.icao + '</td>';
+    html += '<td style="padding:7px 6px;text-align:center;color:var(--green)">'  + fmtLocal(riseUtc, ap.tz) + '</td>';
+    html += '<td style="padding:7px 6px;text-align:center;color:var(--warn)">'   + fmtLocal(setUtc,  ap.tz) + '</td>';
+    html += '<td style="padding:7px 6px;text-align:center;color:#94a3b8">'       + fmtTime(riseUtc) + 'Z</td>';
+    html += '<td style="padding:7px 6px;text-align:center;color:#94a3b8">'       + fmtTime(setUtc)  + 'Z</td>';
+    html += '<td style="padding:7px 6px;text-align:center;color:var(--muted)">'  + dayLen + '</td>';
+    html += '</tr>';
+  });
+  document.getElementById('sun-tbody').innerHTML = html;
+}
+
 // Init
 setDynamicUrls();
 loadWindtemp();
+renderSunTable();
 updateFooter();
 </script>
 </body>
 </html>
+
 
