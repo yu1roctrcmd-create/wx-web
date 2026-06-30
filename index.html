@@ -81,6 +81,13 @@
     #metar-status{text-align:center;padding:32px;color:var(--muted);font-size:13px}
     #data-ts{text-align:center;font-size:11px;color:#374151;padding:0 0 10px}
 
+    /* METAR jump bar */
+    .ap-jump{display:flex;flex-wrap:wrap;gap:5px 6px;margin-bottom:14px;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px}
+    .ap-jump-lbl{width:100%;font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:2px;margin-top:6px}
+    .ap-jump-lbl:first-child{margin-top:0}
+    .ap-jump a{font-size:11px;font-weight:700;font-family:var(--mono);color:var(--accent);text-decoration:none;padding:3px 7px;border:1px solid rgba(59,130,246,.3);border-radius:5px;background:rgba(59,130,246,.08);cursor:pointer}
+    .ap-jump a:active{opacity:.6}
+
     #footer{text-align:center;font-size:11px;color:#374151;padding:12px 0 env(safe-area-inset-bottom,12px)}
 
     /* Maiji 平面図・縦断図 — white background for legibility on dark theme */
@@ -155,14 +162,6 @@
     <div class="img-wrap"><img class="wx-img" src="https://ocean.weather.gov/A_sfc_full_ocean_color.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
-    <div class="card-label">アジア地上天気予報図 AXJP140<span class="ts" id="axjp140-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img" id="axjp140-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">アジア地上天気予報図 FXJP106<span class="ts" id="fxjp106-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img" id="fxjp106-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
     <div class="card-label">欧州地上天気図 実況 (DWD)</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.dwd.de/DWD/wetter/wv_spez/hobbymet/wetterkarten/bwk_bodendruck_na_ana.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
@@ -210,6 +209,16 @@
     <div class="card-label">250hPa 高層天気図 12Z (imocwx.com)</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.imocwx.com/wxfax/aupa25_12.gif" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  <div class="grp" style="margin-top:6px">アジア地上天気予報図</div>
+  <div class="card">
+    <div class="card-label">アジア地上天気予報図 AXJP140<span class="ts" id="axjp140-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="axjp140-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">アジア地上天気予報図 FXJP106<span class="ts" id="fxjp106-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="fxjp106-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+
   <div class="grp" style="margin-top:6px">JMA 三十分大気解析 平面図</div>
   <div class="card">
     <div class="card-label">Maiji FL290<span class="ts" id="maiji-fl290-ts"></span></div>
@@ -872,6 +881,13 @@ async function loadMetar() {
     tsEl.textContent = 'データ更新: ' + (data.updated_utc || '—');
     tsEl.style.display = 'block';
 
+    let jump = '<div class="ap-jump">';
+    AP_GROUPS.forEach(g => {
+      jump += '<span class="ap-jump-lbl">' + g.label + '</span>';
+      g.airports.forEach(icao => { jump += '<a onclick="scrollToAp(\''+icao+'\')">' + icao + '</a>'; });
+    });
+    jump += '</div>';
+
     let html = '';
     AP_GROUPS.forEach(g => {
       html += '<div class="grp">' + g.label + '</div>';
@@ -879,7 +895,7 @@ async function loadMetar() {
         const metar = (data.metar||{})[icao];
         const taf   = (data.taf||{})[icao];
         const atis  = (data.atis||{})[icao];
-        html += '<div class="ap-card">';
+        html += '<div class="ap-card" id="ap-'+icao+'">';
         html += '<div class="ap-head">';
         html += '<span class="ap-icao">' + icao + '</span>';
         html += '<span class="ap-name">' + (AP_NAMES[icao]||'') + '</span>';
@@ -905,7 +921,7 @@ async function loadMetar() {
       });
     });
 
-    el.innerHTML = html;
+    el.innerHTML = jump + html;
     status.style.display = 'none';
     el.style.display = 'block';
   } catch(e) {
@@ -918,6 +934,15 @@ async function loadMetar() {
 
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function scrollToAp(icao) {
+  const el = document.getElementById('ap-' + icao);
+  if (!el) return;
+  const hdr = document.querySelector('header');
+  const offset = hdr ? hdr.offsetHeight : 0;
+  const y = el.getBoundingClientRect().top + window.scrollY - offset - 8;
+  window.scrollTo({top: y, behavior: 'smooth'});
 }
 
 // ── Refresh ──
@@ -1054,5 +1079,6 @@ updateFooter();
 </script>
 </body>
 </html>
+
 
 
