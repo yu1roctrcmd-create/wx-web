@@ -79,7 +79,11 @@
     hr.wx-hr{border:none;border-top:1px solid var(--border);margin:8px 0}
     .no-data{font-size:11px;color:var(--muted);font-style:italic}
     #metar-status{text-align:center;padding:32px;color:var(--muted);font-size:13px}
-    #data-ts{text-align:center;font-size:11px;color:#374151;padding:0 0 10px}
+    #metar-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 0 12px}
+    #data-ts{font-size:11px;color:var(--muted);flex:1}
+    #data-ts .ts-age{color:var(--warn);margin-left:6px;font-weight:600}
+    .btn-metar-reload{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);padding:5px 11px;border-radius:7px;font-size:11px;cursor:pointer;flex-shrink:0}
+    .btn-metar-reload:active{opacity:.6}
 
     /* METAR jump bar */
     .ap-jump{display:flex;flex-wrap:wrap;gap:5px 6px;margin-bottom:14px;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px}
@@ -323,7 +327,10 @@
 <!-- ╔═ METAR/TAF/ATIS ═╗ -->
 <div class="section" id="section-metar">
   <div id="metar-status">METAR/TAF/ATIS を取得中...</div>
-  <div id="data-ts" style="display:none"></div>
+  <div id="metar-bar" style="display:none">
+    <span id="data-ts"></span>
+    <button class="btn-metar-reload" onclick="reloadMetar()">↻ 再取得</button>
+  </div>
   <div id="metar-content" style="display:none"></div>
 </div>
 
@@ -871,15 +878,18 @@ async function loadMetar() {
   const el = document.getElementById('metar-content');
   const status = document.getElementById('metar-status');
   const tsEl = document.getElementById('data-ts');
+  const barEl = document.getElementById('metar-bar');
   status.textContent = 'METAR/TAF/ATIS を取得中...';
+  barEl.style.display = 'none';
 
   try {
     const resp = await fetch('metar_latest.json?_=' + Date.now());
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const data = await resp.json();
 
-    tsEl.textContent = 'データ更新: ' + (data.updated_utc || '—');
-    tsEl.style.display = 'block';
+    const upd = data.updated_utc || '';
+    tsEl.innerHTML = 'データ更新: ' + (upd || '—') + '<span class="ts-age">' + formatAge(upd) + '</span>';
+    barEl.style.display = 'flex';
 
     let jump = '<div class="ap-jump">';
     AP_GROUPS.forEach(g => {
@@ -934,6 +944,22 @@ async function loadMetar() {
 
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatAge(utcStr) {
+  if (!utcStr) return '';
+  const d = new Date(utcStr.trim().replace(' UTC','Z').replace(' ','T'));
+  if (isNaN(d)) return '';
+  const mins = Math.round((Date.now() - d.getTime()) / 60000);
+  if (mins < 1) return 'たった今';
+  if (mins < 60) return mins + '分前';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return h + '時間' + (m ? m + '分' : '') + '前';
+}
+
+function reloadMetar() {
+  window._metarLoaded = false;
+  loadMetar();
 }
 
 function scrollToAp(icao) {
