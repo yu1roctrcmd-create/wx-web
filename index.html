@@ -880,66 +880,92 @@ async function loadMetar() {
   const tsEl = document.getElementById('data-ts');
   const barEl = document.getElementById('metar-bar');
   status.textContent = 'METAR/TAF/ATIS を取得中...';
+  status.style.display = 'block';
+  el.style.display = 'none';
   barEl.style.display = 'none';
 
-  try {
-    const resp = await fetch('metar_latest.json?_=' + Date.now());
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
+  const allIcaos = AP_GROUPS.flatMap(g => g.airports);
+  const ids = allIcaos.join(',');
+  const AWC = 'https://aviationweather.gov/api/data/';
 
-    const upd = data.updated_utc || '';
-    tsEl.innerHTML = 'データ更新: ' + (upd || '—') + '<span class="ts-age">' + formatAge(upd) + '</span>';
-    barEl.style.display = 'flex';
+  const [jsonRes, metarRes, tafRes] = await Promise.allSettled([
+    fetch('metar_latest.json?_=' + Date.now()).then(r => r.json()),
+    fetch(AWC + 'metar?ids=' + ids + '&format=raw&hours=2').then(r => r.text()),
+    fetch(AWC + 'taf?ids=' + ids + '&format=raw').then(r => r.text()),
+  ]);
 
-    let jump = '<div class="ap-jump">';
-    AP_GROUPS.forEach(g => {
-      jump += '<span class="ap-jump-lbl">' + g.label + '</span>';
-      g.airports.forEach(icao => { jump += '<a onclick="scrollToAp(\''+icao+'\')">' + icao + '</a>'; });
+  const jsonData  = jsonRes.status  === 'fulfilled' ? jsonRes.value  : {};
+  const metarTxt  = metarRes.status === 'fulfilled' ? metarRes.value : '';
+  const tafTxt    = tafRes.status   === 'fulfilled' ? tafRes.value   : '';
+
+  // Parse AWC METAR (one record per line, starts with ICAO)
+  const awcMetar = {};
+  metarTxt.split('\n').forEach(line => {
+    line = line.trim();
+    if (/^[A-Z]{4}\s/.test(line)) awcMetar[line.slice(0,4)] = line;
+  });
+
+  // Parse AWC TAF (blocks starting with "TAF")
+  const awcTaf = {};
+  tafTxt.split(/\n(?=TAF\s)/).forEach(block => {
+    const m = block.match(/^TAF\s+(?:AMD\s+|COR\s+)?([A-Z]{4})\b/);
+    if (m) awcTaf[m[1]] = block.trim();
+  });
+
+  const jsonMetar = jsonData.metar || {};
+  const jsonTaf   = jsonData.taf   || {};
+  const atisData  = jsonData.atis  || {};
+
+  const nowUtc = new Date().toISOString().slice(0,16).replace('T',' ') + ' UTC';
+  const atisAge = jsonData.updated_utc
+    ? 'ATIS: <span class="ts-age">' + formatAge(jsonData.updated_utc) + '</span>'
+    : '';
+  tsEl.innerHTML = 'METAR/TAF: ' + nowUtc + (atisAge ? '&ensp;|&ensp;' + atisAge : '');
+  barEl.style.display = 'flex';
+
+  let jump = '<div class="ap-jump">';
+  AP_GROUPS.forEach(g => {
+    jump += '<span class="ap-jump-lbl">' + g.label + '</span>';
+    g.airports.forEach(icao => { jump += '<a onclick="scrollToAp(\''+icao+'\')">' + icao + '</a>'; });
+  });
+  jump += '</div>';
+
+  let html = '';
+  AP_GROUPS.forEach(g => {
+    html += '<div class="grp">' + g.label + '</div>';
+    g.airports.forEach(icao => {
+      const metar = awcMetar[icao] || jsonMetar[icao];
+      const taf   = awcTaf[icao]   || jsonTaf[icao];
+      const atis  = atisData[icao];
+      html += '<div class="ap-card" id="ap-'+icao+'">';
+      html += '<div class="ap-head">';
+      html += '<span class="ap-icao">' + icao + '</span>';
+      html += '<span class="ap-name">' + (AP_NAMES[icao]||'') + '</span>';
+      html += '<a class="ap-link" href="https://atis.guru/atis/'+icao+'" target="_blank">atis.guru ↗</a>';
+      html += '</div><div class="ap-body">';
+      if (atis) {
+        html += '<div class="wx-lbl">ATIS</div>';
+        html += '<div class="wx-raw wx-atis">' + esc(atis) + '</div>';
+        html += '<hr class="wx-hr">';
+      }
+      if (metar) {
+        html += '<div class="wx-lbl">METAR</div>';
+        html += '<div class="wx-raw">' + esc(metar) + '</div>';
+      } else {
+        html += '<div class="no-data">METAR なし</div>';
+      }
+      if (taf) {
+        html += '<hr class="wx-hr">';
+        html += '<div class="wx-lbl">TAF</div>';
+        html += '<div class="wx-raw">' + esc(taf) + '</div>';
+      }
+      html += '</div></div>';
     });
-    jump += '</div>';
+  });
 
-    let html = '';
-    AP_GROUPS.forEach(g => {
-      html += '<div class="grp">' + g.label + '</div>';
-      g.airports.forEach(icao => {
-        const metar = (data.metar||{})[icao];
-        const taf   = (data.taf||{})[icao];
-        const atis  = (data.atis||{})[icao];
-        html += '<div class="ap-card" id="ap-'+icao+'">';
-        html += '<div class="ap-head">';
-        html += '<span class="ap-icao">' + icao + '</span>';
-        html += '<span class="ap-name">' + (AP_NAMES[icao]||'') + '</span>';
-        html += '<a class="ap-link" href="https://atis.guru/atis/'+icao+'" target="_blank">atis.guru ↗</a>';
-        html += '</div><div class="ap-body">';
-        if (atis) {
-          html += '<div class="wx-lbl">ATIS</div>';
-          html += '<div class="wx-raw wx-atis">' + esc(atis) + '</div>';
-          html += '<hr class="wx-hr">';
-        }
-        if (metar) {
-          html += '<div class="wx-lbl">METAR</div>';
-          html += '<div class="wx-raw">' + esc(metar) + '</div>';
-        } else {
-          html += '<div class="no-data">METAR なし</div>';
-        }
-        if (taf) {
-          html += '<hr class="wx-hr">';
-          html += '<div class="wx-lbl">TAF</div>';
-          html += '<div class="wx-raw">' + esc(taf) + '</div>';
-        }
-        html += '</div></div>';
-      });
-    });
-
-    el.innerHTML = jump + html;
-    status.style.display = 'none';
-    el.style.display = 'block';
-  } catch(e) {
-    status.innerHTML =
-      '<b>データ未生成</b><br>' +
-      '<small>GitHub Actions の次回実行後に利用可能になります。<br>' +
-      '（3時間ごとに自動更新）</small>';
-  }
+  el.innerHTML = jump + html;
+  status.style.display = 'none';
+  el.style.display = 'block';
 }
 
 function esc(s) {
