@@ -357,12 +357,20 @@
 
 <!-- ╔═ JMA TAF CHARTS ═╗ -->
 <div class="section" id="section-tafcharts">
-  <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html#contents_area2"
-     target="_blank"
-     style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト一覧 ↗</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — 日本空港テキスト TAF</div>
-  </a>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+    <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト Part 1 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（国内空港）</div>
+    </a>
+    <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html#contents_area2"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト Part 2 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（Part 2）</div>
+    </a>
+  </div>
   <div class="card">
     <div class="card-label">RJAA 成田</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJAA.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
