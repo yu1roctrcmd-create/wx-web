@@ -78,7 +78,14 @@
 
     /* Maiji 平面図・縦断図 — white background for legibility on dark theme */
     .img-wrap:has(.maiji-c),
-    .img-wrap:has(.maiji-f) { background:#fff; padding:4px; border-radius:4px; }
+    .img-wrap:has(.maiji-f),
+    .img-wrap:has(.maiji-int) { background:#fff; padding:4px; border-radius:4px; }
+
+    /* MAIJI interactive selector */
+    .maiji-sel{display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px;border-top:1px solid var(--border)}
+    .maiji-sel button{font-size:11px;font-weight:600;font-family:var(--mono);color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:5px 9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .maiji-sel button.active{color:var(--text);border-color:var(--accent);background:rgba(59,130,246,.12)}
+    .maiji-sel button:active{opacity:.6}
   </style>
 </head>
 <body>
@@ -207,23 +214,45 @@
 
   <div class="grp" style="margin-top:6px">JMA 三十分大気解析 平面図</div>
   <div class="card">
-    <div class="card-label">Maiji FL290<span class="ts" id="maiji-fl290-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-f" data-code="129" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">Maiji FL330<span class="ts" id="maiji-fl330-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-f" data-code="133" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">Maiji FL350<span class="ts" id="maiji-fl350-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-f" data-code="135" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">Maiji FL390<span class="ts" id="maiji-fl390-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-f" data-code="139" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="card-label">平面図<span class="ts" id="maiji-fl-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-int" id="maiji-fl-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="maiji-fl-sel">
+      <button onclick="selMaijiF(105,this)">FL050</button>
+      <button onclick="selMaijiF(107,this)">FL070</button>
+      <button onclick="selMaijiF(110,this)">FL100</button>
+      <button onclick="selMaijiF(114,this)">FL140</button>
+      <button onclick="selMaijiF(117,this)">FL170</button>
+      <button onclick="selMaijiF(120,this)">FL200</button>
+      <button onclick="selMaijiF(124,this)">FL240</button>
+      <button onclick="selMaijiF(127,this)">FL270</button>
+      <button onclick="selMaijiF(129,this)" class="active">FL290</button>
+      <button onclick="selMaijiF(133,this)">FL330</button>
+      <button onclick="selMaijiF(135,this)">FL350</button>
+      <button onclick="selMaijiF(139,this)">FL390</button>
+      <button onclick="selMaijiF(141,this)">FL410</button>
+      <button onclick="selMaijiF(145,this)">FL450</button>
+    </div>
   </div>
 
-  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 縦断図</div>
+  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 断面図 (経度選択)</div>
+  <div class="card">
+    <div class="card-label">断面図<span class="ts" id="maiji-cs-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img maiji-int" id="maiji-cs-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="maiji-cs-sel">
+      <button onclick="selMaijiC(148,this)">150°E</button>
+      <button onclick="selMaijiC(150,this)" class="active">145°E</button>
+      <button onclick="selMaijiC(152,this)">140°E</button>
+      <button onclick="selMaijiC(154,this)">135°E</button>
+      <button onclick="selMaijiC(156,this)">130°E</button>
+      <button onclick="selMaijiC(158,this)">125°E</button>
+      <button onclick="selMaijiC(160,this)">120°E</button>
+      <button onclick="selMaijiC(162,this)">115°E</button>
+      <button onclick="selMaijiC(164,this)">110°E</button>
+      <button onclick="selMaijiC(166,this)">105°E</button>
+    </div>
+  </div>
+
+  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 縦断図 (ルート別)</div>
   <div class="card">
     <div class="card-label">東京-福岡<span class="ts" id="maiji-c105-ts"></span></div>
     <div class="img-wrap"><img class="wx-img maiji-c" data-code="105" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
@@ -239,34 +268,6 @@
   <div class="card">
     <div class="card-label">石垣-東京<span class="ts" id="maiji-c107-ts"></span></div>
     <div class="img-wrap"><img class="wx-img maiji-c" data-code="107" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経145°<span class="ts" id="maiji-c150-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="150" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経142.5°<span class="ts" id="maiji-c151-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="151" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経140°<span class="ts" id="maiji-c152-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="152" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経130°<span class="ts" id="maiji-c156-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="156" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経127.5°<span class="ts" id="maiji-c157-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="157" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経125°<span class="ts" id="maiji-c158-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="158" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">東経122.5°<span class="ts" id="maiji-c159-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="159" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 </div><!-- /upper -->
 
@@ -593,6 +594,17 @@ function setNkishou(imgEl, tsEl, code, validJstHours) {
 }
 
 // ── Maiji: try 1–4 hours back (type='F' 平面図 / type='C' 縦断図) ──
+function selMaijiF(code, btn) {
+  document.querySelectorAll('#maiji-fl-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setMaiji(document.getElementById('maiji-fl-img'), document.getElementById('maiji-fl-ts'), String(code), 'F');
+}
+function selMaijiC(code, btn) {
+  document.querySelectorAll('#maiji-cs-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setMaiji(document.getElementById('maiji-cs-img'), document.getElementById('maiji-cs-ts'), String(code), 'C');
+}
+
 function setMaiji(imgEl, tsEl, code, type) {
   type = type || 'F';
   const cands = [];
@@ -705,12 +717,9 @@ function setDynamicUrls() {
     tryHi();
   });
 
-  // Maiji 平面図 (F) with fallback
-  const flMap = [{code:'129',tsId:'maiji-fl290-ts'},{code:'133',tsId:'maiji-fl330-ts'},
-                 {code:'135',tsId:'maiji-fl350-ts'},{code:'139',tsId:'maiji-fl390-ts'}];
-  document.querySelectorAll('.maiji-f').forEach((img, i) => {
-    setMaiji(img, document.getElementById(flMap[i].tsId), img.dataset.code, 'F');
-  });
+  // Maiji interactive viewers
+  setMaiji(document.getElementById('maiji-fl-img'), document.getElementById('maiji-fl-ts'), '129', 'F');
+  setMaiji(document.getElementById('maiji-cs-img'), document.getElementById('maiji-cs-ts'), '150', 'C');
 
   // HKO radar
   setHkoRadar(document.getElementById('hko-256-img'), document.getElementById('hko-256-ts'), '256');
