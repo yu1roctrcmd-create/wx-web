@@ -483,6 +483,16 @@
     </div>
   </div>
 
+  <div class="grp" style="margin-top:6px">アメダス降水量 (iMOC)</div>
+  <div class="card">
+    <div class="card-label">アメダス 1時間降水量</div>
+    <div class="img-wrap"><img class="wx-img maiji-int" id="amedas-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="amedas-sel">
+      <button class="active" onclick="selAmedas('hns',this)">本州域★</button>
+      <button onclick="selAmedas('snj',this)">南日本域</button>
+    </div>
+  </div>
+
   <div class="grp" style="margin-top:4px">外部リンク（Safariで開く）</div>
 
   <div style="display:flex;flex-direction:column;gap:10px">
@@ -526,6 +536,13 @@
        style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
       <div style="font-size:13px;font-weight:600;color:var(--accent)">TMD SE Asia 赤外線衛星 ↗</div>
       <div style="font-size:11px;color:var(--muted);margin-top:3px">タイ気象局 — 東南アジア赤外線衛星画像（HTTP）</div>
+    </a>
+
+    <a href="https://www.jma.go.jp/bosai/amedas/"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA アメダス ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 — 降水量・気温・風速・積雪（インタラクティブ）</div>
     </a>
   </div>
 
@@ -716,6 +733,12 @@ function setHimawariJpn(elem) {
   }
   trySlot();
 }
+function selAmedas(area, btn) {
+  document.querySelectorAll('#amedas-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('amedas-img').src = 'https://www.imocwx.com/wxfax/amds_p1h_' + area + '.gif?_=' + Date.now();
+}
+
 function selHimawari(elem, btn) {
   document.querySelectorAll('#himawari-jpn-sel button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -815,6 +838,10 @@ function setDynamicUrls() {
   // Maiji interactive viewers
   setMaiji(document.getElementById('maiji-fl-img'), document.getElementById('maiji-fl-ts'), '129', 'F');
   setMaiji(document.getElementById('maiji-cs-img'), document.getElementById('maiji-cs-ts'), '150', 'C');
+
+  // AMeDAS
+  const amedasImg = document.getElementById('amedas-img');
+  if (amedasImg) amedasImg.src = 'https://www.imocwx.com/wxfax/amds_p1h_hns.gif' + cb;
 
   // HKO radar
   setHkoRadar(document.getElementById('hko-256-img'), document.getElementById('hko-256-ts'), '256');
