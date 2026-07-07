@@ -290,12 +290,15 @@
 <div class="section" id="section-satellite">
   <div class="grp">ひまわり (JMA Himawari-9)<span id="himawari-ts" style="text-transform:none;font-weight:400;margin-left:6px;color:#374151;font-size:10px"></span></div>
   <div class="card">
-    <div class="card-label">日本周辺 赤外線 (B13)</div>
-    <div class="img-wrap"><img class="wx-img himawari-img" data-area="jpn" data-element="b13" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">日本周辺 トゥルーカラー</div>
-    <div class="img-wrap"><img class="wx-img himawari-img" data-area="jpn" data-element="trm" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="card-label">日本周辺<span class="ts" id="himawari-jpn-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="himawari-jpn-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="himawari-jpn-sel">
+      <button onclick="selHimawari('b13',this)" class="active">赤外(B13)</button>
+      <button onclick="selHimawari('vis',this)">可視(VIR)</button>
+      <button onclick="selHimawari('b08',this)">水蒸気(B08)</button>
+      <button onclick="selHimawari('snd',this)">雲頂強調(SND)</button>
+      <button onclick="selHimawari('trm',this)">トゥルーカラー</button>
+    </div>
   </div>
   <div class="card">
     <div class="card-label">東南アジア 赤外線 (B13)</div>
@@ -696,6 +699,29 @@ function setMaiji(imgEl, tsEl, code, type) {
 }
 
 // ── Himawari ──
+function setHimawariJpn(elem) {
+  const img = document.getElementById('himawari-jpn-img');
+  const tsEl = document.getElementById('himawari-jpn-ts');
+  let tried = 0;
+  function trySlot() {
+    if (tried >= 3) { imgErr(img); return; }
+    const tOff = Date.now() - (15 + tried * 10) * 60000;
+    const tFloor = tOff - (tOff % 600000);
+    const d2 = new Date(tFloor);
+    const hhmm = pad(d2.getUTCHours()) + pad(d2.getUTCMinutes());
+    img.onload = () => { if (tsEl) tsEl.textContent = hhmm.slice(0,2)+':'+hhmm.slice(2)+'Z'; img.onload = null; img.onerror = null; };
+    img.onerror = () => { tried++; trySlot(); };
+    img.src = 'https://www.data.jma.go.jp/mscweb/data/himawari/img/jpn/jpn_'+elem+'_'+hhmm+'.jpg';
+    tried++;
+  }
+  trySlot();
+}
+function selHimawari(elem, btn) {
+  document.querySelectorAll('#himawari-jpn-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setHimawariJpn(elem);
+}
+
 function himawariUrl(area, element) {
   let t = Date.now() - 15 * 60000;
   t -= t % 600000;
@@ -764,7 +790,8 @@ function setDynamicUrls() {
   setNkishou(document.getElementById('axjp140-img'), document.getElementById('axjp140-ts'), 'axjp140', [9,21]);
   setNkishou(document.getElementById('fxjp106-img'), document.getElementById('fxjp106-ts'), 'fxjp106', [0,12]);
 
-  // Himawari with fallback (try up to 3 slots)
+  // Himawari Japan interactive viewer
+  setHimawariJpn('b13');
   const hiBase = himawariUrl('jpn','b13');
   document.getElementById('himawari-ts').textContent = hiBase.ts;
   document.querySelectorAll('.himawari-img').forEach(img => {
