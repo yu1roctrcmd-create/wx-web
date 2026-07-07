@@ -101,9 +101,9 @@
     <button class="tab" data-tab="surface">SURFACE</button>
     <button class="tab" data-tab="upper">UPPER AIR</button>
     <button class="tab" data-tab="satellite">SATELLITE</button>
+    <button class="tab" data-tab="radar">RADAR</button>
     <button class="tab" data-tab="metar">METAR/TAF/ATIS</button>
     <button class="tab" data-tab="tafcharts">JMA TAF</button>
-    <button class="tab" data-tab="radar">RADAR</button>
     <button class="tab" data-tab="vaac">VAAC</button>
     <button class="tab" data-tab="hf">HF</button>
   </nav>
@@ -350,61 +350,6 @@
   </div>
 </div><!-- /satellite -->
 
-
-<!-- ╔═ METAR/TAF/ATIS ═╗ -->
-<div class="section" id="section-metar">
-  <div id="metar-status"></div>
-  <div id="metar-content"></div>
-</div>
-
-
-<!-- ╔═ JMA TAF CHARTS ═╗ -->
-<div class="section" id="section-tafcharts">
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
-    <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html"
-       target="_blank"
-       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
-      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト Part 1 ↗</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（国内空港）</div>
-    </a>
-    <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html#contents_area2"
-       target="_blank"
-       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
-      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト Part 2 ↗</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（Part 2）</div>
-    </a>
-  </div>
-  <div class="card">
-    <div class="card-label">RJAA 成田</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJAA.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">RJTT 羽田</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJTT.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">RJBB 関西</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJBB.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">RJCC 千歳</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJCC.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">RJFR 北九州</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJFR.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">RJGG 名古屋</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJGG.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">ROAH 那覇</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_ROAH.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-</div><!-- /tafcharts -->
-
-
 <!-- ╔═ RADAR ═╗ -->
 <div class="section" id="section-radar">
 
@@ -547,6 +492,61 @@
   </div>
 
 </div><!-- /radar -->
+
+
+<!-- ╔═ METAR/TAF/ATIS ═╗ -->
+<div class="section" id="section-metar">
+  <div id="metar-status"></div>
+  <div id="metar-content"></div>
+</div>
+
+
+<!-- ╔═ JMA TAF CHARTS ═╗ -->
+<div class="section" id="section-tafcharts">
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+    <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト Part 1 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（国内空港）</div>
+    </a>
+    <a href="https://www.data.jma.go.jp/airinfo/data/awfo_taf.html#contents_area2"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">JMA TAF テキスト Part 2 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（Part 2）</div>
+    </a>
+  </div>
+  <div class="card">
+    <div class="card-label">RJAA 成田</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJAA.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">RJTT 羽田</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJTT.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">RJBB 関西</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJBB.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">RJCC 千歳</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJCC.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">RJFR 北九州</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJFR.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">RJGG 名古屋</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJGG.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">ROAH 那覇</div>
+    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_ROAH.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+</div><!-- /tafcharts -->
+
 
 
 <!-- ╔═ VAAC ═╗ -->
