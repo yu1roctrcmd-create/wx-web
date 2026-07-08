@@ -94,6 +94,7 @@
   <div class="header-inner">
     <h1>✈ WX BRIEFING</h1>
     <span id="utc-clock">--:--:-- Z</span>
+    <button class="btn-refresh" id="btn-save" onclick="saveOffline()">⬇ 保存</button>
     <button class="btn-refresh" onclick="refreshAll()">↻ Refresh</button>
   </div>
   <nav>
@@ -1161,6 +1162,51 @@ function updateFooter() {
   document.getElementById('footer').textContent = '最終更新: '+y+'/'+mo+'/'+dd+' '+h+':'+m+'Z';
 }
 
+// ── オフライン保存: 全タブの画像を読み込み Service Worker にキャッシュさせる ──
+async function saveOffline() {
+  const btn = document.getElementById('btn-save');
+  if (btn.dataset.busy) return;
+  btn.dataset.busy = '1';
+  const orig = btn.textContent;
+
+  if (!navigator.onLine) {
+    btn.textContent = '⚠ オフライン中';
+    setTimeout(() => { btn.textContent = orig; delete btn.dataset.busy; }, 2500);
+    return;
+  }
+
+  // 遅延ロードのタブも先に初期化
+  if (!window._vaacLoaded) { try { await loadVaac(); } catch(e){} }
+  setDynamicUrls();
+
+  // 全 <img> を eager にして読み込ませる（非表示タブ含む）
+  const imgs = Array.from(document.querySelectorAll('img')).filter(i => i.getAttribute('src'));
+  let done = 0;
+  const total = imgs.length;
+  btn.textContent = '保存中 0/' + total;
+
+  await Promise.all(imgs.map(img => new Promise(res => {
+    const finish = () => { done++; btn.textContent = '保存中 ' + done + '/' + total; res(); };
+    img.loading = 'eager';
+    if (img.complete && img.naturalWidth > 0) { finish(); return; }
+    const to = setTimeout(finish, 15000);
+    img.addEventListener('load',  () => { clearTimeout(to); finish(); }, { once:true });
+    img.addEventListener('error', () => { clearTimeout(to); finish(); }, { once:true });
+    // 再フェッチを促す
+    const s = img.getAttribute('src');
+    img.setAttribute('src', s);
+  })));
+
+  // ページ本体も明示キャッシュ
+  try {
+    const c = await caches.open('wx-v2');
+    await c.addAll(['./', './index.html']);
+  } catch(e){}
+
+  btn.textContent = '✓ 保存完了';
+  setTimeout(() => { btn.textContent = orig; delete btn.dataset.busy; }, 3000);
+}
+
 // Auto-refresh every 15 min
 setInterval(refreshAll, 15*60*1000);
 
@@ -1274,7 +1320,17 @@ updateFooter();
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js');
+  navigator.serviceWorker.register('./service-worker.js').then(reg => {
+    // 新しい SW を検知したら自動で有効化
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (nw) nw.addEventListener('statechange', () => {
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+          // 次回リロードで新バージョン適用
+        }
+      });
+    });
+  });
 }
 </script>
 </body>
