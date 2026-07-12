@@ -77,6 +77,10 @@
     .lnk-atis{font-size:11px;font-weight:600;color:var(--warn);text-decoration:none;padding:4px 9px;border:1px solid rgba(245,158,11,.35);border-radius:5px;background:rgba(245,158,11,.08);white-space:nowrap}
     .lnk-wx{font-size:11px;font-weight:600;color:var(--accent);text-decoration:none;padding:4px 9px;border:1px solid rgba(59,130,246,.35);border-radius:5px;background:rgba(59,130,246,.08);white-space:nowrap}
     .lnk-atis:active,.lnk-wx:active{opacity:.6}
+    .atis-body{padding:2px 12px 10px}
+    .atis-meta{font-size:10px;font-weight:700;color:var(--green);padding:3px 0 5px;letter-spacing:.04em}
+    .atis-meta.stale{color:var(--muted)}
+    .atis-pre{margin:0;padding:8px 10px;font-size:11px;line-height:1.55;background:rgba(255,255,255,.03);border-radius:6px;white-space:pre-wrap;font-family:var(--mono);color:var(--text)}
 
     #footer{text-align:center;font-size:11px;color:#374151;padding:12px 0 env(safe-area-inset-bottom,12px)}
 
@@ -770,7 +774,7 @@ document.querySelectorAll('.tab').forEach(btn => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('section-' + btn.dataset.tab).classList.add('active');
-    if (btn.dataset.tab === 'metar' && !window._metarLoaded) loadMetar();
+    if (btn.dataset.tab === 'metar') { if (!window._metarLoaded) loadMetar(); else loadAtisData(); }
     if (btn.dataset.tab === 'vaac'  && !window._vaacLoaded)  loadVaac();
   });
 });
@@ -1240,10 +1244,41 @@ function loadMetar() {
       html += '<a class="lnk-atis" href="https://atis.guru/atis/' + icao + '" target="_blank">ATIS ↗</a>';
       html += '<a class="lnk-wx" href="' + metarUrl + '" target="_blank">METAR/TAF ↗</a>';
       html += '</div></div>';
+      html += '<div class="atis-body" data-atis-icao="' + icao + '" style="display:none"></div>';
     });
     html += '</div>';
   });
   el.innerHTML = html;
+  loadAtisData();
+}
+
+// ── D-ATIS: 常に最新（atis.info API, CORS対応）。米国D-ATIS空港のみ本文表示 ──
+async function loadAtisData() {
+  let map = {};
+  try {
+    const resp = await fetch('https://atis.info/api/all?_=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const arr = await resp.json();
+    arr.forEach(a => { if (a && a.airport) map[a.airport] = a; });
+  } catch(e) {
+    return;  // オフライン等 → 従来リンクのまま
+  }
+  document.querySelectorAll('[data-atis-icao]').forEach(el => {
+    const a = map[el.dataset.atisIcao];
+    if (!a || !a.datis) { el.style.display = 'none'; return; }
+    const upd = Date.parse(a.updatedAt);
+    let ageStr = '', stale = false;
+    if (!isNaN(upd)) {
+      const ageMin = Math.round((Date.now() - upd) / 60000);
+      ageStr = ageMin < 1 ? 'たった今' : (ageMin < 60 ? ageMin + '分前' : Math.floor(ageMin/60) + '時間' + (ageMin%60) + '分前');
+      stale = ageMin >= 60;
+    }
+    el.style.display = 'block';
+    el.innerHTML =
+      '<div class="atis-meta' + (stale ? ' stale' : '') + '">INFO ' + esc(a.code || '') + ' ' + esc(a.time || '') + 'Z'
+      + (ageStr ? ' · ' + ageStr : '') + '</div>'
+      + '<pre class="atis-pre">' + esc(a.datis) + '</pre>';
+  });
 }
 
 function esc(s) {
