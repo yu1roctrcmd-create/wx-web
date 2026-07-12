@@ -682,6 +682,8 @@
     ⚠ Active Volcanic Ash Advisory
   </div>
 
+  <div id="vaac-freshness" style="display:none;margin-bottom:14px"></div>
+
   <div class="grp">Tokyo VAAC — 火山灰情報</div>
   <div id="vaac-status" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">読み込み中...</div>
   <div id="vaac-tokyo-content"></div>
@@ -997,6 +999,35 @@ async function loadVaac() {
 
     status.style.display = 'none';
 
+    // ── データ鮮度チェック（自動更新遅延の検知）──
+    const fresh = document.getElementById('vaac-freshness');
+    let iso = data.updated_utc || '';
+    if (/T\d{2}:\d{2}Z$/.test(iso)) iso = iso.replace('Z', ':00Z');
+    const updMs = Date.parse(iso);
+    if (!isNaN(updMs)) {
+      const ageMin = Math.round((Date.now() - updMs) / 60000);
+      const ageStr = ageMin < 60
+        ? ageMin + '分前'
+        : Math.floor(ageMin / 60) + '時間' + (ageMin % 60) + '分前';
+      const stale = ageMin >= 90;
+      fresh.style.display = 'block';
+      if (stale) {
+        fresh.innerHTML =
+          '<div style="background:#7f1d1d;border:1px solid #991b1b;border-radius:10px;padding:12px 16px;color:#fca5a5;font-size:12px;line-height:1.7">'
+          + '<b>⚠ 自動更新が遅延しています</b><br>'
+          + 'データ生成: ' + esc(data.updated_utc) + '（' + ageStr + '）<br>'
+          + '自動取得が滞っている可能性があります。<b>フライト前は必ず公式で最新をご確認ください。</b>'
+          + '<div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">'
+          + '<a href="https://ds.data.jma.go.jp/svd/vaac/data/vaac_list.html" target="_blank" style="color:#fecaca;font-weight:700">→ Tokyo VAAC 公式で確認 ↗</a>'
+          + '<a href="https://avo.alaska.edu/volcano/index" target="_blank" style="color:#fecaca;font-weight:700">→ Alaska VAAC (AVO) 公式で確認 ↗</a>'
+          + '</div></div>';
+      } else {
+        fresh.innerHTML =
+          '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--muted);font-size:11px">'
+          + 'データ生成: ' + esc(data.updated_utc) + '（' + ageStr + '）</div>';
+      }
+    }
+
     const tokyo  = data.vaac_tokyo  || [];
     const alaska = data.vaac_alaska || [];
 
@@ -1057,8 +1088,13 @@ async function loadVaac() {
 
   } catch(e) {
     status.innerHTML =
-      '<b>データ未生成</b><br>' +
-      '<small>GitHub Actions の次回実行後に利用可能になります。</small>';
+      '<div style="background:#7f1d1d;border:1px solid #991b1b;border-radius:10px;padding:14px 16px;color:#fca5a5;font-size:12px;line-height:1.7;text-align:left">'
+      + '<b>⚠ データを取得できませんでした</b><br>'
+      + 'オフライン、または自動更新データが未生成です。<b>公式で最新をご確認ください。</b>'
+      + '<div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">'
+      + '<a href="https://ds.data.jma.go.jp/svd/vaac/data/vaac_list.html" target="_blank" style="color:#fecaca;font-weight:700">→ Tokyo VAAC 公式 ↗</a>'
+      + '<a href="https://avo.alaska.edu/volcano/index" target="_blank" style="color:#fecaca;font-weight:700">→ Alaska VAAC (AVO) 公式 ↗</a>'
+      + '</div></div>';
   }
 }
 
