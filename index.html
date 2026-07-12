@@ -6,6 +6,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>WX Briefing</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -684,7 +688,16 @@
 
   <div id="vaac-freshness" style="display:none;margin-bottom:14px"></div>
 
-  <div class="grp">Tokyo VAAC — 火山灰情報</div>
+  <div class="grp">東京VAAC 情報表示マップ — Active火山</div>
+  <div class="card" style="overflow:hidden;padding:0">
+    <div id="vaac-map" style="width:100%;height:300px;background:#0d1117"></div>
+    <div style="font-size:10px;color:var(--muted);padding:6px 12px">🔺 VAA発表中の火山（indexj.html 準拠）</div>
+  </div>
+
+  <div class="grp" style="margin-top:6px">🔴 Active — VAA発表中の火山</div>
+  <div id="vaac-active-content"></div>
+
+  <div class="grp" style="margin-top:6px">Tokyo VAAC — 火山灰情報（予測図）</div>
   <div id="vaac-status" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">読み込み中...</div>
   <div id="vaac-tokyo-content"></div>
 
@@ -1030,13 +1043,17 @@ async function loadVaac() {
 
     const tokyo  = data.vaac_tokyo  || [];
     const alaska = data.vaac_alaska || [];
+    const active = data.vaac_active || [];
+
+    // Active volcanoes (indexj.html red triangles) → map + list
+    renderActive(active);
 
     // Banner: show if any advisory is NOT "no further advisories"
     const hasActive = [...tokyo, ...alaska].some(e =>
       !/NO FURTHER ADV/i.test(e.text || '') &&
       !/NXT ADVISORY: NO FURTHER/i.test(e.text || '')
     );
-    if (hasActive) document.getElementById('vaac-banner').style.display = 'block';
+    if (hasActive || active.length) document.getElementById('vaac-banner').style.display = 'block';
 
     function renderEntries(entries, containerId) {
       const el = document.getElementById(containerId);
@@ -1096,6 +1113,63 @@ async function loadVaac() {
       + '<a href="https://avo.alaska.edu/volcano/index" target="_blank" style="color:#fecaca;font-weight:700">→ Alaska VAAC (AVO) 公式 ↗</a>'
       + '</div></div>';
   }
+}
+
+// ── Active volcanoes (indexj.html red triangles): list + Leaflet map ──
+function renderActive(entries) {
+  const el = document.getElementById('vaac-active-content');
+  if (!entries || !entries.length) {
+    el.innerHTML = '<div style="color:var(--green);font-size:12px;padding:10px 0">現在 VAA発表中の火山はありません</div>';
+  } else {
+    let html = '';
+    entries.forEach(e => {
+      html += '<div class="card" style="margin-bottom:10px">';
+      html += '<div class="card-label" style="color:var(--warn)">🔺 ' + esc(e.volcano || '?');
+      if (e.volcano_jp) html += ' <span style="font-weight:400;text-transform:none;color:var(--muted)">' + esc(e.volcano_jp) + '</span>';
+      html += '<span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted);font-size:10px">' + esc(e.advisory_nr || '') + '</span></div>';
+      html += '<div style="padding:8px 12px;font-size:11px;color:var(--muted);line-height:1.7">';
+      if (e.obs_time)    html += '現象時刻: ' + esc(e.obs_time) + '<br>';
+      if (e.issued_time) html += '発表時刻: ' + esc(e.issued_time) + '<br>';
+      if (e.lat != null && e.lon != null) html += '位置: ' + e.lat + ', ' + e.lon;
+      html += '</div>';
+      if (e.text) {
+        html += '<pre style="margin:0;padding:10px;font-size:11px;line-height:1.6;overflow-x:auto;background:transparent;color:var(--text);white-space:pre-wrap;font-family:\'Courier New\',monospace">' + esc(e.text) + '</pre>';
+      }
+      html += '<div style="padding:6px 12px 8px;border-top:1px solid var(--border)">';
+      if (e.text_url) html += '<a href="' + esc(e.text_url) + '" target="_blank" style="font-size:11px;color:var(--accent)">Text ↗</a>';
+      html += '</div></div>';
+    });
+    el.innerHTML = html;
+  }
+  renderVaacMap(entries || []);
+}
+
+function renderVaacMap(entries) {
+  if (typeof L === 'undefined') return;
+  const pts = entries.filter(e => e.lat != null && e.lon != null);
+  if (!window._vaacMap) {
+    const map = L.map('vaac-map', { attributionControl:false, zoomControl:true }).setView([25, 150], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:8, minZoom:1 }).addTo(map);
+    window._vaacMap = map;
+    window._vaacMarkers = [];
+  }
+  const map = window._vaacMap;
+  (window._vaacMarkers || []).forEach(m => map.removeLayer(m));
+  window._vaacMarkers = [];
+  const latlngs = [];
+  pts.forEach(e => {
+    const icon = L.divIcon({
+      html: '<div style="color:#dc2626;font-size:22px;line-height:1;text-shadow:0 0 3px #000">▲</div>',
+      className: '', iconSize: [22,22], iconAnchor: [11,20],
+    });
+    const m = L.marker([e.lat, e.lon], { icon }).addTo(map)
+      .bindPopup('<b>' + esc(e.volcano || '?') + '</b><br>' + esc(e.advisory_nr || '') + '<br>' + esc(e.obs_time || ''));
+    window._vaacMarkers.push(m);
+    latlngs.push([e.lat, e.lon]);
+  });
+  if (latlngs.length === 1)      map.setView(latlngs[0], 4);
+  else if (latlngs.length > 1)   map.fitBounds(latlngs, { padding:[40,40], maxZoom:5 });
+  setTimeout(() => map.invalidateSize(), 120);
 }
 
 // ── FD Wind/Temp Aloft — Alaska ──
