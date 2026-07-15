@@ -808,7 +808,10 @@ document.querySelectorAll('.tab').forEach(btn => {
     btn.classList.add('active');
     document.getElementById('section-' + btn.dataset.tab).classList.add('active');
     if (btn.dataset.tab === 'metar') { if (!window._metarLoaded) loadMetar(); else loadAtisData(); }
-    if (btn.dataset.tab === 'vaac'  && !window._vaacLoaded)  loadVaac();
+    if (btn.dataset.tab === 'vaac') {
+      if (!window._vaacLoaded) loadVaac();
+      else if (window._vaacMap) setTimeout(() => window._vaacMap.invalidateSize(), 150);
+    }
   });
 });
 
@@ -1363,11 +1366,10 @@ function refreshAll() {
     const e = img.nextElementSibling;
     if (e && e.classList.contains('err')) e.style.display = 'none';
   });
-  setDynamicUrls();
-  if (document.getElementById('section-metar').classList.contains('active')) {
-    window._metarLoaded = false;
-    loadMetar();
-  }
+  setDynamicUrls();                          // 画像（衛星/レーダー/天気図/桜島/MAIJI 等）
+  loadWindtemp();                            // FD wind/temp
+  window._vaacLoaded = false; loadVaac();    // VAAC（Active/Tokyo/Alaska）
+  window._metarLoaded = false; loadMetar();  // METAR/TAF リンク + 最新 D-ATIS
   updateFooter();
 }
 
