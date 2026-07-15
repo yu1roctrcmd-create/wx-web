@@ -705,6 +705,21 @@
   <div id="vaac-status" style="text-align:center;padding:32px;color:var(--muted);font-size:13px">読み込み中...</div>
   <div id="vaac-tokyo-content"></div>
 
+  <div class="grp" style="margin-top:6px">桜島 定時拡散・降灰予測図 (VAGFN)<span class="ts" id="sakura-vagfn-ts"></span></div>
+  <div class="card">
+    <div style="background:#fff;padding:4px;border-radius:4px;display:flex;flex-direction:column;gap:4px">
+      <img class="wx-img sakura-vagfn" data-step="00" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="01" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="02" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="03" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="04" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="05" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="06" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+      <img class="wx-img sakura-vagfn" data-step="07" referrerpolicy="no-referrer" loading="lazy" style="display:none" onerror="imgErr(this)">
+    </div>
+    <div style="padding:6px 12px 2px"><a href="https://www.data.jma.go.jp/vaac/data/VAGFNRAF/html/VAAC_QH26.html" target="_blank" style="font-size:11px;color:var(--accent)">JMA 桜島 定時予測図 ↗</a></div>
+  </div>
+
   <div class="grp" style="margin-top:6px">Alaska VAAC</div>
   <div id="vaac-alaska-content"></div>
 
@@ -796,6 +811,42 @@ function imgErr(img) {
 }
 
 function pad(n) { return String(n).padStart(2,'0'); }
+
+// ── 桜島 定時拡散・降灰予測図 (VAGFN QH26) — 6h毎の定時発表を新しい順に探す ──
+function setSakuraVagfn() {
+  const imgs = document.querySelectorAll('.sakura-vagfn');
+  const tsEl = document.getElementById('sakura-vagfn-ts');
+  if (!imgs.length) return;
+  const base = 'https://www.data.jma.go.jp/vaac/data/VAGFNRAF/Images/';
+  // 直近の 00/06/12/18Z スロットを新しい順に列挙（最大 48h 遡る）
+  const seen = new Set(), cands = [];
+  const now = Date.now();
+  for (let back = 0; back <= 8; back++) {
+    const d = new Date(now - back * 6 * 3600000);
+    const slot = Math.floor(d.getUTCHours() / 6) * 6;
+    d.setUTCHours(slot, 0, 0, 0);
+    const ymd = d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate());
+    const hhmm = pad(slot) + '00';
+    const key = ymd + hhmm;
+    if (!seen.has(key)) { seen.add(key); cands.push({ ymd, hhmm }); }
+  }
+  let i = 0;
+  function tryNext() {
+    if (i >= cands.length) return;
+    const c = cands[i++];
+    const probe = new Image();
+    probe.onload = () => {
+      imgs.forEach(im => {
+        im.src = base + c.ymd + '_' + c.hhmm + '_0000_QH26_' + im.dataset.step + '.png';
+        im.style.display = '';
+      });
+      if (tsEl) tsEl.textContent = c.ymd.slice(0,4)+'/'+c.ymd.slice(4,6)+'/'+c.ymd.slice(6,8)+' '+c.hhmm.slice(0,2)+':00Z';
+    };
+    probe.onerror = tryNext;
+    probe.src = base + c.ymd + '_' + c.hhmm + '_0000_QH26_00.png';
+  }
+  tryNext();
+}
 
 // ── n-kishou.com: try up to 3 fallback timestamps ──
 function setNkishou(imgEl, tsEl, code, validJstHours) {
@@ -943,6 +994,8 @@ function pgde14Url() {
 // ── Set all dynamic URLs ──
 function setDynamicUrls() {
   const cb = '?_='+Math.floor(Date.now()/300000);
+
+  setSakuraVagfn();
 
   // PGDE14
   const p = pgde14Url();
