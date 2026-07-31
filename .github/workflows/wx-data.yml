@@ -1,0 +1,53 @@
+name: WX Data
+
+# VAAC / METAR / windtemp を取得して同一リポジトリの metar_latest.json を更新。
+# public リポジトリなので Actions は無料・無制限。同一リポジトリへの push は
+# 自動発行の GITHUB_TOKEN で行うため、個人アクセストークン(PAT)は不要。
+on:
+  schedule:
+    - cron: "0,30 * * * *"     # 30分毎
+  workflow_dispatch:
+
+concurrency:
+  group: wx-data
+  cancel-in-progress: true
+
+permissions:
+  contents: write             # metar_latest.json のコミットに必要
+
+jobs:
+  wx-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install minimal dependencies
+        run: pip install requests Pillow
+
+      - name: Fetch wx-data (VAAC / METAR / windtemp)
+        run: python wx_data.py
+
+      - name: Commit metar_latest.json
+        if: always()
+        run: |
+          if [ -f /tmp/metar_latest.json ]; then
+            cp /tmp/metar_latest.json metar_latest.json
+            git config user.email "github-actions@github.com"
+            git config user.name "GitHub Actions"
+            git add metar_latest.json
+            git diff --cached --quiet || \
+              git commit -m "wx-data: $(date -u '+%Y-%m-%dT%H:%MZ')"
+            git push
+            echo "metar_latest.json updated"
+          else
+            echo "Skipped: /tmp/metar_latest.json not found"
+          fi
