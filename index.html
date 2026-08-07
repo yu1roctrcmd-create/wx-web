@@ -94,6 +94,14 @@
     .maiji-sel button{font-size:11px;font-weight:600;font-family:var(--mono);color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:5px 9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
     .maiji-sel button.active{color:var(--text);border-color:var(--accent);background:rgba(59,130,246,.12)}
     .maiji-sel button:active{opacity:.6}
+    /* サブタブ（各タブ内のグループ切替） */
+    .subtabs{display:flex;gap:6px;overflow-x:auto;padding:6px 0 10px;margin-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .subtabs::-webkit-scrollbar{display:none}
+    .subtab{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:16px;padding:6px 13px;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .subtab.active{color:#fff;background:var(--accent);border-color:var(--accent)}
+    .subtab:active{opacity:.6}
+    .subsec{display:none}
+    .subsec.active{display:block}
   </style>
 </head>
 <body>
@@ -157,6 +165,12 @@
 
 <!-- ╔═ SURFACE ═╗ -->
 <div class="section" id="section-surface">
+  <div class="subtabs" data-sub="surface">
+    <button class="subtab active" onclick="selSub('surface',0)">アジア太平洋</button>
+    <button class="subtab" onclick="selSub('surface',1)">北米・大西洋</button>
+    <button class="subtab" onclick="selSub('surface',2)">欧州・ロシア</button>
+  </div>
+  <div class="subsec active">
   <div class="card">
     <div class="card-label">アジア太平洋域天気概況 (JMA)</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/ajpn_cmnt/qyya86-0.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
@@ -173,6 +187,8 @@
     <div class="card-label">太平洋地上天気図 (NOAA OPC)</div>
     <div class="img-wrap"><img class="wx-img" src="https://ocean.weather.gov/P_sfc_full_ocean_color.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
+  <div class="subsec">
   <div class="card">
     <div class="card-label">北大西洋地上天気図 (NOAA OPC)</div>
     <div class="img-wrap"><img class="wx-img" src="https://ocean.weather.gov/A_sfc_full_ocean_color.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
@@ -185,6 +201,8 @@
     <div class="card-label">北米地上天気図 Day 2 (NOAA WPC)</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.wpc.ncep.noaa.gov/noaa/noaad2.gif" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
+  <div class="subsec">
   <div class="card">
     <div class="card-label">欧州地上天気図 実況 (DWD)</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.dwd.de/DWD/wetter/wv_spez/hobbymet/wetterkarten/bwk_bodendruck_na_ana.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
@@ -201,17 +219,29 @@
     <div class="card-label">ユーラシア地上天気図 (Meteoinfo Russia)</div>
     <div class="img-wrap"><img class="wx-img" src="https://meteoinfo.ru/hmc-input/mapsynop/Analiz.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
 </div><!-- /surface -->
 
 
 <!-- ╔═ UPPER AIR ═╗ -->
 <div class="section" id="section-upper">
+  <div class="subtabs" data-sub="upper">
+    <button class="subtab active" onclick="selSub('upper',0)">FD Wind</button>
+    <button class="subtab" onclick="selSub('upper',1)">高層天気図</button>
+    <button class="subtab" onclick="selSub('upper',2)">アジア地上</button>
+    <button class="subtab" onclick="selSub('upper',3)">平面図</button>
+    <button class="subtab" onclick="selSub('upper',4)">断面図</button>
+    <button class="subtab" onclick="selSub('upper',5)">縦断図</button>
+  </div>
+  <div class="subsec active">
   <div class="grp">FD Wind/Temp Aloft — Alaska</div>
   <div class="card">
     <div class="card-label">FBAK31 Alaska 6h forecast<span class="ts" id="windtemp-alaska-ts"></span></div>
     <pre id="windtemp-alaska-pre" style="margin:0;padding:8px 10px;font-size:11px;line-height:1.6;overflow-x:auto;background:transparent;color:var(--text);white-space:pre;border:0;font-family:'Courier New',Courier,monospace">データなし（GitHub Actions 初回実行後に表示されます）</pre>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">高層天気図</div>
   <div class="card">
     <div class="card-label">500hPa 高層天気図 AUPQ35<span class="ts" id="aupq35-ts"></span></div>
@@ -233,6 +263,8 @@
     <div class="card-label">250hPa 高層天気図 12Z (imocwx.com)</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.imocwx.com/wxfax/aupa25_12.gif" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">アジア地上天気予報図</div>
   <div class="card">
     <div class="card-label">アジア地上天気予報図 AXJP140<span class="ts" id="axjp140-ts"></span></div>
@@ -243,6 +275,8 @@
     <div class="img-wrap"><img class="wx-img" id="fxjp106-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">JMA 三十分大気解析 平面図</div>
   <div class="card">
     <div class="card-label">平面図<span class="ts" id="maiji-fl-ts"></span></div>
@@ -265,6 +299,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">JMA 三十分大気解析 断面図 (経度選択)</div>
   <div class="card">
     <div class="card-label">断面図<span class="ts" id="maiji-cs-ts"></span></div>
@@ -283,6 +319,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">JMA 三十分大気解析 縦断図 (ルート別)</div>
   <div class="card">
     <div class="card-label">東京-福岡<span class="ts" id="maiji-c105-ts"></span></div>
@@ -300,11 +338,18 @@
     <div class="card-label">石垣-東京<span class="ts" id="maiji-c107-ts"></span></div>
     <div class="img-wrap"><img class="wx-img maiji-c" data-code="107" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
 </div><!-- /upper -->
 
 
 <!-- ╔═ SATELLITE ═╗ -->
 <div class="section" id="section-satellite">
+  <div class="subtabs" data-sub="satellite">
+    <button class="subtab active" onclick="selSub('satellite',0)">ひまわり</button>
+    <button class="subtab" onclick="selSub('satellite',1)">北米・欧州</button>
+    <button class="subtab" onclick="selSub('satellite',2)">WU 赤外</button>
+  </div>
+  <div class="subsec active">
   <div class="grp">ひまわり (JMA Himawari-9)<span id="himawari-ts" style="text-transform:none;font-weight:400;margin-left:6px;color:#374151;font-size:10px"></span></div>
   <div class="card">
     <div class="card-label">日本周辺<span class="ts" id="himawari-jpn-ts"></span></div>
@@ -325,6 +370,8 @@
     <div class="card-label">東南アジア 降水ポテンシャル (HRP)</div>
     <div class="img-wrap"><img class="wx-img himawari-img" data-area="r2s" data-element="hrp" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
+  <div class="subsec">
   <div class="grp">North America / Europe</div>
   <div class="card">
     <div class="card-label">北米 赤外線衛星 (WISC Mosaic)</div>
@@ -338,6 +385,8 @@
     <div class="card-label">欧州 カラー衛星 (MSG/Meteosat RGB)</div>
     <div class="img-wrap"><img class="wx-img" src="https://img.allmetsat.com/sat/anim-msg-europe_central-rgb.gif" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">Weather Underground 赤外線衛星</div>
   <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
     <a href="https://www.wunderground.com/maps/satellite/infrared/alaska" target="_blank"
@@ -365,11 +414,23 @@
       <div style="font-size:13px;font-weight:600;color:var(--accent)">North East ↗</div>
     </a>
   </div>
+  </div>
 </div><!-- /satellite -->
 
 <!-- ╔═ RADAR ═╗ -->
 <div class="section" id="section-radar">
-
+  <div class="subtabs" data-sub="radar">
+    <button class="subtab active" onclick="selSub('radar',0)">Windy</button>
+    <button class="subtab" onclick="selSub('radar',1)">HKO 香港</button>
+    <button class="subtab" onclick="selSub('radar',2)">台湾</button>
+    <button class="subtab" onclick="selSub('radar',3)">北米広域</button>
+    <button class="subtab" onclick="selSub('radar',4)">ANC-ORD</button>
+    <button class="subtab" onclick="selSub('radar',5)">ORD-JFK</button>
+    <button class="subtab" onclick="selSub('radar',6)">ANC-DFW</button>
+    <button class="subtab" onclick="selSub('radar',7)">アメダス</button>
+    <button class="subtab" onclick="selSub('radar',8)">リンク</button>
+  </div>
+  <div class="subsec active">
   <div class="grp">気象レーダー (Windy)</div>
   <div class="card" style="overflow:hidden">
     <div class="card-label">日本周辺 気象レーダー (Windy)</div>
@@ -393,6 +454,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp">HKO レーダー — 香港天文台</div>
   <div class="card">
     <div class="card-label">256km range<span class="ts" id="hko-256-ts"></span></div>
@@ -403,6 +466,8 @@
     <div class="img-wrap"><img class="wx-img" id="hko-128-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">台湾レーダー — 中央気象署 (CWA)</div>
   <div class="card">
     <div class="card-label">台湾広域 合成レーダー</div>
@@ -413,6 +478,8 @@
     <div class="img-wrap"><img class="wx-img" src="https://www.cwa.gov.tw/Data/radar/CV1_TW_1000.png" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">広域レーダー (NWS)</div>
   <div class="card" style="overflow:hidden">
     <div class="card-label">北米全体</div>
@@ -439,6 +506,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">US NEXRAD — ANC ⇄ ORD ルート</div>
   <div class="card" style="overflow:hidden">
     <div class="card-label">PAHG — Anchorage / Kenai (AK)</div>
@@ -473,6 +542,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">US NEXRAD — ORD ⇄ JFK ルート</div>
   <div class="card" style="overflow:hidden">
     <div class="card-label">KDTX — Detroit (MI)</div>
@@ -507,6 +578,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">US NEXRAD — ANC ⇄ DFW ルート</div>
   <div class="card" style="overflow:hidden">
     <div class="card-label">PAHG — Anchorage / Kenai (AK)</div>
@@ -541,6 +614,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">アメダス降水量 (iMOC)</div>
   <div class="card">
     <div class="card-label">アメダス 1時間降水量</div>
@@ -551,6 +626,8 @@
     </div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:4px">外部リンク（Safariで開く）</div>
 
   <div style="display:flex;flex-direction:column;gap:10px">
@@ -604,6 +681,7 @@
     </a>
   </div>
 
+  </div>
 </div><!-- /radar -->
 
 
@@ -630,6 +708,11 @@
       <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 飛行場予報 — テキスト TAF（Part 2）</div>
     </a>
   </div>
+  <div class="subtabs" data-sub="tafcharts">
+    <button class="subtab active" onclick="selSub('tafcharts',0)">Short Term</button>
+    <button class="subtab" onclick="selSub('tafcharts',1)">Long Term</button>
+  </div>
+  <div class="subsec active">
   <div class="grp">Short Term Forecast (QMCD98)</div>
   <div class="card">
     <div class="card-label">RJAA 成田</div>
@@ -664,6 +747,8 @@
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCD98_RJFK.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 
+  </div>
+  <div class="subsec">
   <div class="grp" style="margin-top:6px">Long Term Forecast (QMCJ98)</div>
   <div class="card">
     <div class="card-label">RJAA 成田</div>
@@ -696,6 +781,7 @@
   <div class="card">
     <div class="card-label">RJFK 鹿児島</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/taf/QMCJ98_RJFK.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
   </div>
 </div><!-- /tafcharts -->
 
@@ -814,6 +900,16 @@ document.querySelectorAll('.tab').forEach(btn => {
     }
   });
 });
+
+// ── サブタブ切替（各タブ内のグループ）──
+function selSub(sec, i) {
+  const bar = document.querySelector('.subtabs[data-sub="' + sec + '"]');
+  const sect = document.getElementById('section-' + sec);
+  if (!bar || !sect) return;
+  bar.querySelectorAll('.subtab').forEach((b, j) => b.classList.toggle('active', j === i));
+  sect.querySelectorAll(':scope > .subsec').forEach((s, j) => s.classList.toggle('active', j === i));
+  if (window._vaacMap && sec === 'vaac') setTimeout(() => window._vaacMap.invalidateSize(), 150);
+}
 
 // ── Clock ──
 function updateClock() {
