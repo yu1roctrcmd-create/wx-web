@@ -103,7 +103,7 @@
     <h1>✈ WX BRIEFING</h1>
     <span id="utc-clock">--:--:-- Z</span>
     <button class="btn-refresh" id="btn-save" onclick="saveOffline()">⬇ 保存</button>
-    <button class="btn-refresh" onclick="refreshAll()">↻ Refresh</button>
+    <button class="btn-refresh" id="btn-refresh" onclick="refreshAll()">↻ 全更新</button>
   </div>
   <nav>
     <button class="tab active" data-tab="sigwx">SIGWX</button>
@@ -1013,8 +1013,8 @@ function pgde14Url() {
 }
 
 // ── Set all dynamic URLs ──
-function setDynamicUrls() {
-  const cb = '?_='+Math.floor(Date.now()/300000);
+function setDynamicUrls(force) {
+  const cb = '?_='+(force ? Date.now() : Math.floor(Date.now()/300000));
 
   setSakuraVagfn();
 
@@ -1361,16 +1361,40 @@ function esc(s) {
 
 // ── Refresh ──
 function refreshAll() {
-  document.querySelectorAll('.wx-img').forEach(img => {
+  const btn = document.getElementById('btn-refresh');
+  if (btn) { btn.dataset.busy = '1'; btn.textContent = '⟳ 更新中…'; }
+
+  // 全タブの画像を eager 化して即再取得（非表示タブも強制ロード）
+  const imgs = Array.from(document.querySelectorAll('.wx-img'));
+  imgs.forEach(img => {
     img.style.display = '';
     const e = img.nextElementSibling;
     if (e && e.classList.contains('err')) e.style.display = 'none';
+    img.loading = 'eager';
   });
-  setDynamicUrls();                          // 画像（衛星/レーダー/天気図/桜島/MAIJI 等）
-  loadWindtemp();                            // FD wind/temp
-  window._vaacLoaded = false; loadVaac();    // VAAC（Active/Tokyo/Alaska）
-  window._metarLoaded = false; loadMetar();  // METAR/TAF リンク + 最新 D-ATIS
+
+  setDynamicUrls(true);                       // 画像（強制 cache-bust：衛星/レーダー/天気図/桜島/MAIJI 等）
+  loadWindtemp();                             // FD wind/temp
+  window._vaacLoaded = false; loadVaac();     // VAAC（Active/Tokyo/Alaska）
+  window._metarLoaded = false; loadMetar();   // METAR/TAF リンク + 最新 D-ATIS
   updateFooter();
+
+  // 画像の再読み込み完了を待ってボタンを戻す
+  if (btn) {
+    let pending = imgs.length, done = false;
+    const finish = () => { if (done) return; done = true;
+      btn.textContent = '✓ 更新完了';
+      setTimeout(() => { btn.textContent = '↻ 全更新'; delete btn.dataset.busy; }, 2000);
+    };
+    if (!pending) { finish(); return; }
+    const tick = () => { if (--pending <= 0) finish(); };
+    imgs.forEach(img => {
+      if (img.complete) { tick(); return; }
+      img.addEventListener('load',  tick, { once:true });
+      img.addEventListener('error', tick, { once:true });
+    });
+    setTimeout(finish, 12000);   // フォールバック
+  }
 }
 
 function updateFooter() {
