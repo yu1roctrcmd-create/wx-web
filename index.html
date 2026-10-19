@@ -432,7 +432,8 @@
     <button class="subtab" onclick="selSub('radar',5)">ORD-JFK</button>
     <button class="subtab" onclick="selSub('radar',6)">ANC-DFW</button>
     <button class="subtab" onclick="selSub('radar',7)">アメダス</button>
-    <button class="subtab" onclick="selSub('radar',8)">リンク</button>
+    <button class="subtab" onclick="selSub('radar',8)">発雷</button>
+    <button class="subtab" onclick="selSub('radar',9)">リンク</button>
   </div>
   <div class="subsec active">
   <div class="grp">気象レーダー (Windy)</div>
@@ -620,6 +621,14 @@
 
   </div>
   <div class="subsec">
+  <div class="grp" style="margin-top:6px">レーダーアメダス (iMOC) — 前1時間降水量</div>
+  <div class="card">
+    <div class="img-wrap" style="background:#fff;padding:4px;border-radius:4px"><img class="wx-img" id="imoc-rdam-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="imoc-rdam-sel">
+      <button class="active" onclick="selImoc('imoc-rdam-img','imoc-rdam-sel','https://www.imocwx.com/rdam/rdam00_AREA.png','jp',this)">本州域★</button>
+      <button onclick="selImoc('imoc-rdam-img','imoc-rdam-sel','https://www.imocwx.com/rdam/rdam00_AREA.png','sjp',this)">南日本域</button>
+    </div>
+  </div>
   <div class="grp" style="margin-top:6px">アメダス・降水量 (JMA)</div>
   <div style="display:flex;flex-direction:column;gap:10px">
     <a href="https://www.jma.go.jp/bosai/amedas/" target="_blank"
@@ -634,6 +643,23 @@
     </a>
   </div>
 
+  </div>
+  <div class="subsec">
+  <div class="grp" style="margin-top:6px">発雷確率 (iMOC)</div>
+  <div class="card">
+    <div class="img-wrap" style="background:#fff;padding:4px;border-radius:4px"><img class="wx-img" id="imoc-light-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="imoc-light-sel">
+      <button class="active" onclick="selImoc('imoc-light-img','imoc-light-sel','https://www.imocwx.com/guid/gd300AREA.png','jp',this)">本州域★</button>
+      <button onclick="selImoc('imoc-light-img','imoc-light-sel','https://www.imocwx.com/guid/gd300AREA.png','sjp',this)">南日本域</button>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <a href="https://www.jma.go.jp/bosai/nowc/#zoom:5/lat:35.5/lon:138.5/colordepth:normal/elements:thunder" target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--warn)">⚡ JMA 雷ナウキャスト ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">気象庁 — 発雷実況＋1時間先予測（10分毎更新）</div>
+    </a>
+  </div>
   </div>
   <div class="subsec">
   <div class="grp" style="margin-top:4px">外部リンク（Safariで開く）</div>
@@ -926,6 +952,13 @@ function selSub(sec, i) {
   if (window._vaacMap && sec === 'vaac') setTimeout(() => window._vaacMap.invalidateSize(), 150);
 }
 
+// ── iMOC 画像ビューア（エリア切替: 本州域 jp / 南日本域 sjp）──
+function selImoc(imgId, selId, tmpl, area, btn) {
+  document.querySelectorAll('#' + selId + ' button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(imgId).src = tmpl.replace('AREA', area) + '?_=' + Date.now();
+}
+
 // ── Clock ──
 function updateClock() {
   const n = new Date();
@@ -1163,6 +1196,12 @@ function setDynamicUrls(force) {
   // Maiji interactive viewers
   setMaiji(document.getElementById('maiji-fl-img'), document.getElementById('maiji-fl-ts'), '129', 'F');
   setMaiji(document.getElementById('maiji-cs-img'), document.getElementById('maiji-cs-ts'), '150', 'C');
+
+  // iMOC 画像ビューア（初期: 本州域 jp）
+  const imocRd = document.getElementById('imoc-rdam-img');
+  if (imocRd) imocRd.src = 'https://www.imocwx.com/rdam/rdam00_jp.png' + cb;
+  const imocLg = document.getElementById('imoc-light-img');
+  if (imocLg) imocLg.src = 'https://www.imocwx.com/guid/gd300jp.png' + cb;
 
   // HKO radar
   setHkoRadar(document.getElementById('hko-256-img'), document.getElementById('hko-256-ts'), '256');
