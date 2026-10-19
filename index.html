@@ -182,12 +182,13 @@
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/ajpn_cmnt/qyya86-0.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
-    <div class="card-label">地上天気図 実況 ASAS<span class="ts" id="asas-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img" id="asas-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">地上天気図 24h予報 FSAS24<span class="ts" id="fsas24-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img" id="fsas24-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="card-label">アジア太平洋 地上天気図<span class="ts" id="sfc-chart-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="sfc-chart-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="sfc-chart-sel">
+      <button class="active" onclick="selSfcChart('asas',this)">実況 (ASAS)</button>
+      <button onclick="selSfcChart('fsas24',this)">24h予想</button>
+      <button onclick="selSfcChart('fsas48',this)">48h予想</button>
+    </div>
   </div>
   <div class="card">
     <div class="card-label">太平洋地上天気図 (NOAA OPC)</div>
@@ -1063,6 +1064,14 @@ function setSakuraVagfn() {
 }
 
 // ── n-kishou.com: try up to 3 fallback timestamps ──
+// ── アジア太平洋 地上天気図（実況 asas / 24h fsas24 / 48h fsas48 切替）──
+let _sfcChartCode = 'asas';
+function selSfcChart(code, btn) {
+  document.querySelectorAll('#sfc-chart-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _sfcChartCode = code;
+  setNkishou(document.getElementById('sfc-chart-img'), document.getElementById('sfc-chart-ts'), code, [3,9,15,21]);
+}
+
 function setNkishou(imgEl, tsEl, code, validJstHours) {
   const JST_MS = 9 * 3600 * 1000;
   let t = Date.now() + JST_MS;
@@ -1241,8 +1250,7 @@ function setDynamicUrls(force) {
   }
 
   // n-kishou charts with fallback
-  setNkishou(document.getElementById('asas-img'),    document.getElementById('asas-ts'),    'asas',    [3,9,15,21]);
-  setNkishou(document.getElementById('fsas24-img'),  document.getElementById('fsas24-ts'),  'fsas24',  [3,9,15,21]);
+  if (document.getElementById('sfc-chart-img')) setNkishou(document.getElementById('sfc-chart-img'), document.getElementById('sfc-chart-ts'), _sfcChartCode, [3,9,15,21]);
   setNkishou(document.getElementById('aupq35-img'),  document.getElementById('aupq35-ts'),  'aupq35',  [9,21]);
   setNkishou(document.getElementById('axjp140-img'), document.getElementById('axjp140-ts'), 'axjp140', [9,21]);
   setNkishou(document.getElementById('fxjp106-img'), document.getElementById('fxjp106-ts'), 'fxjp106', [0,12]);
