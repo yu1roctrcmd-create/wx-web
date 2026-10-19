@@ -132,17 +132,14 @@
 
 <!-- ╔═ SIGWX ═╗ -->
 <div class="section active" id="section-sigwx">
+  <div class="subtabs" data-sub="sigwx">
+    <button class="subtab active" onclick="selSub('sigwx',0)">高層・国際</button>
+    <button class="subtab" onclick="selSub('sigwx',1)">低高度</button>
+  </div>
+  <div class="subsec active">
   <div class="card">
     <div class="card-label">JMA SIGWX High FL250–600 — Asia/Pacific</div>
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/fbjp/fbjp.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">JMA Low-level SIGWX — East Japan (FBTK03)</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/low-level_sigwx/fbtk03.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-  </div>
-  <div class="card">
-    <div class="card-label">JMA Low-level SIGWX — West Japan (FBOS03)</div>
-    <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/low-level_sigwx/fbos03.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
     <div class="card-label">Pacific High SIGWX FL250–600 (AWC F24)</div>
@@ -166,6 +163,26 @@
     <div style="font-size:13px;font-weight:600;color:var(--accent)">アラスカ SIGMET — AAWU ↗</div>
     <div style="font-size:11px;color:var(--muted);margin-top:3px">Alaska Aviation Weather Unit — Pacific/Alaska SIGMETs（アラスカは静止図なしのため公式リンク）</div>
   </a>
+  </div>
+  <div class="subsec">
+  <div class="grp">低高度 悪天予想図 (JMA FBxx — SFC/FL150)</div>
+  <div class="card">
+    <div class="img-wrap"><img class="wx-img" id="lowlevel-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="ll-area-sel">
+      <button class="active" onclick="llArea('fbtk',this)">東日本</button>
+      <button onclick="llArea('fbsp',this)">北海道</button>
+      <button onclick="llArea('fbsn',this)">東北</button>
+      <button onclick="llArea('fbos',this)">西日本</button>
+      <button onclick="llArea('fbok',this)">沖縄</button>
+    </div>
+    <div class="maiji-sel" id="ll-ft-sel">
+      <button class="active" onclick="llFt('03',this)">FT03</button>
+      <button onclick="llFt('06',this)">FT06</button>
+      <button onclick="llFt('09',this)">FT09</button>
+    </div>
+  </div>
+  <div style="font-size:11px;color:var(--muted);padding:4px 2px">FBTK=東日本 / FBSP=北海道 / FBSN=東北 / FBOS=西日本 / FBOK=沖縄（SFC–FL150, 3時間毎）</div>
+  </div>
 </div><!-- /sigwx -->
 
 
@@ -1064,6 +1081,21 @@ function setSakuraVagfn() {
 }
 
 // ── n-kishou.com: try up to 3 fallback timestamps ──
+// ── 低高度 悪天予想図（エリア fbtk/fbsp/fbsn/fbos/fbok × FT 03/06/09）──
+let _llArea = 'fbtk', _llFt = '03';
+function setLowLevel() {
+  const img = document.getElementById('lowlevel-img');
+  if (img) img.src = 'https://www.data.jma.go.jp/airinfo/data/pict/low-level_sigwx/' + _llArea + _llFt + '.png?_=' + Date.now();
+}
+function llArea(c, btn) {
+  document.querySelectorAll('#ll-area-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _llArea = c; setLowLevel();
+}
+function llFt(f, btn) {
+  document.querySelectorAll('#ll-ft-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _llFt = f; setLowLevel();
+}
+
 // ── アジア太平洋 地上天気図（実況 asas / 24h fsas24 / 48h fsas48 切替）──
 let _sfcChartCode = 'asas';
 function selSfcChart(code, btn) {
@@ -1251,6 +1283,7 @@ function setDynamicUrls(force) {
 
   // n-kishou charts with fallback
   if (document.getElementById('sfc-chart-img')) setNkishou(document.getElementById('sfc-chart-img'), document.getElementById('sfc-chart-ts'), _sfcChartCode, [3,9,15,21]);
+  setLowLevel();
   setNkishou(document.getElementById('aupq35-img'),  document.getElementById('aupq35-ts'),  'aupq35',  [9,21]);
   setNkishou(document.getElementById('axjp140-img'), document.getElementById('axjp140-ts'), 'axjp140', [9,21]);
   setNkishou(document.getElementById('fxjp106-img'), document.getElementById('fxjp106-ts'), 'fxjp106', [0,12]);
