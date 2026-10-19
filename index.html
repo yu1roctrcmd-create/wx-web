@@ -373,10 +373,10 @@
   <div class="card">
     <div class="img-wrap"><img class="wx-img" id="se-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
     <div class="maiji-sel" id="se-area-sel">
-      <button class="active" onclick="selSeArea('se1',this)">大陸部</button>
-      <button onclick="selSeArea('se2',this)">南シナ海</button>
-      <button onclick="selSeArea('se3',this)">マレー・スマトラ</button>
-      <button onclick="selSeArea('se4',this)">インドネシア</button>
+      <button class="active" onclick="selSeArea('se1',this)">インドシナ</button>
+      <button onclick="selSeArea('se2',this)">フィリピン</button>
+      <button onclick="selSeArea('se3',this)">インドネシア</button>
+      <button onclick="selSeArea('se4',this)">ベンガル湾</button>
     </div>
     <div class="maiji-sel" id="se-elem-sel">
       <button class="active" onclick="selSeElem('b13',this)">赤外(B13)</button>
@@ -641,8 +641,13 @@
   <div class="card">
     <div class="img-wrap" style="background:#fff;padding:4px;border-radius:4px"><img class="wx-img" id="imoc-rdam-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
     <div class="maiji-sel" id="imoc-rdam-sel">
-      <button class="active" onclick="selImoc('imoc-rdam-img','imoc-rdam-sel','https://www.imocwx.com/rdam/rdam00_AREA.png','jp',this)">本州域★</button>
-      <button onclick="selImoc('imoc-rdam-img','imoc-rdam-sel','https://www.imocwx.com/rdam/rdam00_AREA.png','sjp',this)">南日本域</button>
+      <button class="active" onclick="rdamArea('jp',this)">本州域</button>
+      <button onclick="rdamArea('sjp',this)">南日本域</button>
+    </div>
+    <div class="maiji-sel">
+      <button onclick="rdamStep(-1)">◀ 前</button>
+      <span id="imoc-rdam-step" style="font-size:11px;font-weight:600;color:var(--accent);align-self:center;min-width:92px;text-align:center">実況</span>
+      <button onclick="rdamStep(1)">次 ▶</button>
     </div>
   </div>
   <div class="grp" style="margin-top:6px">アメダス・降水量 (JMA)</div>
@@ -665,8 +670,13 @@
   <div class="card">
     <div class="img-wrap" style="background:#fff;padding:4px;border-radius:4px"><img class="wx-img" id="imoc-light-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
     <div class="maiji-sel" id="imoc-light-sel">
-      <button class="active" onclick="selImoc('imoc-light-img','imoc-light-sel','https://www.imocwx.com/guid/gd300AREA.png','jp',this)">本州域★</button>
-      <button onclick="selImoc('imoc-light-img','imoc-light-sel','https://www.imocwx.com/guid/gd300AREA.png','sjp',this)">南日本域</button>
+      <button class="active" onclick="lightArea('jp',this)">本州域</button>
+      <button onclick="lightArea('sjp',this)">南日本域</button>
+    </div>
+    <div class="maiji-sel">
+      <button onclick="lightStep(-1)">◀ 前</button>
+      <span id="imoc-light-step" style="font-size:11px;font-weight:600;color:var(--warn);align-self:center;min-width:92px;text-align:center">実況</span>
+      <button onclick="lightStep(1)">次 ▶</button>
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:10px">
@@ -968,12 +978,33 @@ function selSub(sec, i) {
   if (window._vaacMap && sec === 'vaac') setTimeout(() => window._vaacMap.invalidateSize(), 150);
 }
 
-// ── iMOC 画像ビューア（エリア切替: 本州域 jp / 南日本域 sjp）──
-function selImoc(imgId, selId, tmpl, area, btn) {
-  document.querySelectorAll('#' + selId + ' button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById(imgId).src = tmpl.replace('AREA', area) + '?_=' + Date.now();
+// ── iMOC レーダーアメダス（エリア jp/sjp × 予測 0=実況〜15=+15h）──
+let _rdamArea = 'jp', _rdamStep = 0;
+function setRdam() {
+  const img = document.getElementById('imoc-rdam-img');
+  if (img) img.src = 'https://www.imocwx.com/rdam/rdam' + pad(_rdamStep) + '_' + _rdamArea + '.png?_=' + Date.now();
+  const s = document.getElementById('imoc-rdam-step');
+  if (s) s.textContent = _rdamStep === 0 ? '実況' : '+' + _rdamStep + '時間後';
 }
+function rdamArea(a, btn) {
+  document.querySelectorAll('#imoc-rdam-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _rdamArea = a; setRdam();
+}
+function rdamStep(d) { _rdamStep = Math.max(0, Math.min(15, _rdamStep + d)); setRdam(); }
+
+// ── iMOC 発雷確率（エリア jp/sjp × 予測 0=実況〜9）──
+let _lightArea = 'jp', _lightStep = 0;
+function setLight() {
+  const img = document.getElementById('imoc-light-img');
+  if (img) img.src = 'https://www.imocwx.com/guid/gd30' + _lightStep + _lightArea + '.png?_=' + Date.now();
+  const s = document.getElementById('imoc-light-step');
+  if (s) s.textContent = _lightStep === 0 ? '実況' : '予測 +' + _lightStep;
+}
+function lightArea(a, btn) {
+  document.querySelectorAll('#imoc-light-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _lightArea = a; setLight();
+}
+function lightStep(d) { _lightStep = Math.max(0, Math.min(9, _lightStep + d)); setLight(); }
 
 // ── Clock ──
 function updateClock() {
@@ -1243,11 +1274,9 @@ function setDynamicUrls(force) {
   // ひまわり東南アジア（初期: 大陸部 se1 / 赤外 b13）
   setHimawariSE();
 
-  // iMOC 画像ビューア（初期: 本州域 jp）
-  const imocRd = document.getElementById('imoc-rdam-img');
-  if (imocRd) imocRd.src = 'https://www.imocwx.com/rdam/rdam00_jp.png' + cb;
-  const imocLg = document.getElementById('imoc-light-img');
-  if (imocLg) imocLg.src = 'https://www.imocwx.com/guid/gd300jp.png' + cb;
+  // iMOC レーダーアメダス / 発雷（現在のエリア・ステップで再取得）
+  setRdam();
+  setLight();
 
   // HKO radar
   setHkoRadar(document.getElementById('hko-256-img'), document.getElementById('hko-256-ts'), '256');
