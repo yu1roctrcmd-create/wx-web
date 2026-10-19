@@ -350,8 +350,9 @@
 <div class="section" id="section-satellite">
   <div class="subtabs" data-sub="satellite">
     <button class="subtab active" onclick="selSub('satellite',0)">ひまわり</button>
-    <button class="subtab" onclick="selSub('satellite',1)">北米・欧州</button>
-    <button class="subtab" onclick="selSub('satellite',2)">WU 赤外</button>
+    <button class="subtab" onclick="selSub('satellite',1)">東南アジア</button>
+    <button class="subtab" onclick="selSub('satellite',2)">北米・欧州</button>
+    <button class="subtab" onclick="selSub('satellite',3)">WU 赤外</button>
   </div>
   <div class="subsec active">
   <div class="grp">ひまわり (JMA Himawari-9)<span id="himawari-ts" style="text-transform:none;font-weight:400;margin-left:6px;color:#374151;font-size:10px"></span></div>
@@ -366,9 +367,24 @@
       <button onclick="selHimawari('trm',this)">トゥルーカラー</button>
     </div>
   </div>
+  </div>
+  <div class="subsec">
+  <div class="grp">ひまわり 東南アジア (JMA Himawari-9)<span class="ts" id="se-ts"></span></div>
   <div class="card">
-    <div class="card-label">東南アジア 赤外線 (B13)</div>
-    <div class="img-wrap"><img class="wx-img himawari-img" data-area="se1" data-element="b13" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="img-wrap"><img class="wx-img" id="se-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="maiji-sel" id="se-area-sel">
+      <button class="active" onclick="selSeArea('se1',this)">大陸部</button>
+      <button onclick="selSeArea('se2',this)">南シナ海</button>
+      <button onclick="selSeArea('se3',this)">マレー・スマトラ</button>
+      <button onclick="selSeArea('se4',this)">インドネシア</button>
+    </div>
+    <div class="maiji-sel" id="se-elem-sel">
+      <button class="active" onclick="selSeElem('b13',this)">赤外(B13)</button>
+      <button onclick="selSeElem('vir',this)">可視(VIR)</button>
+      <button onclick="selSeElem('b08',this)">水蒸気(B08)</button>
+      <button onclick="selSeElem('snd',this)">雲頂強調(SND)</button>
+      <button onclick="selSeElem('trm',this)">カラー(TRM)</button>
+    </div>
   </div>
   <div class="card">
     <div class="card-label">東南アジア 降水ポテンシャル (HRP)</div>
@@ -1101,6 +1117,33 @@ function selHimawari(elem, btn) {
   setHimawariJpn(elem);
 }
 
+// ── ひまわり 東南アジア（地域 se1-se4 × センサー 切替, 3スロットfallback）──
+let _seArea = 'se1', _seElem = 'b13';
+function setHimawariSE() {
+  const img = document.getElementById('se-img'), tsEl = document.getElementById('se-ts');
+  if (!img) return;
+  let tried = 0;
+  function trySlot() {
+    if (tried >= 3) { imgErr(img); return; }
+    const tOff = Date.now() - (15 + tried * 10) * 60000;
+    const d = new Date(tOff - (tOff % 600000));
+    const hhmm = pad(d.getUTCHours()) + pad(d.getUTCMinutes());
+    img.onload = () => { if (tsEl) tsEl.textContent = hhmm.slice(0,2)+':'+hhmm.slice(2)+'Z'; img.onload = null; img.onerror = null; };
+    img.onerror = () => { tried++; trySlot(); };
+    img.src = 'https://www.data.jma.go.jp/mscweb/data/himawari/img/'+_seArea+'/'+_seArea+'_'+_seElem+'_'+hhmm+'.jpg';
+    tried++;
+  }
+  trySlot();
+}
+function selSeArea(a, btn) {
+  document.querySelectorAll('#se-area-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _seArea = a; setHimawariSE();
+}
+function selSeElem(e, btn) {
+  document.querySelectorAll('#se-elem-sel button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); _seElem = e; setHimawariSE();
+}
+
 function himawariUrl(area, element) {
   let t = Date.now() - 15 * 60000;
   t -= t % 600000;
@@ -1196,6 +1239,9 @@ function setDynamicUrls(force) {
   // Maiji interactive viewers
   setMaiji(document.getElementById('maiji-fl-img'), document.getElementById('maiji-fl-ts'), '129', 'F');
   setMaiji(document.getElementById('maiji-cs-img'), document.getElementById('maiji-cs-ts'), '150', 'C');
+
+  // ひまわり東南アジア（初期: 大陸部 se1 / 赤外 b13）
+  setHimawariSE();
 
   // iMOC 画像ビューア（初期: 本州域 jp）
   const imocRd = document.getElementById('imoc-rdam-img');
