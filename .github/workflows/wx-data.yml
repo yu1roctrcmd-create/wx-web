@@ -45,7 +45,12 @@ jobs:
             git add metar_latest.json
             git diff --cached --quiet || \
               git commit -m "wx-data: $(date -u '+%Y-%m-%dT%H:%MZ')"
-            git push
+            # 他のコミット（index.html デプロイ等）と競合しても rebase して再試行
+            n=0; until git push; do
+              n=$((n+1)); [ "$n" -ge 3 ] && { echo 'push failed after retries'; exit 1; }
+              git fetch origin main && git rebase origin/main
+              sleep 3
+            done
             echo "metar_latest.json updated"
           else
             echo "Skipped: /tmp/metar_latest.json not found"
