@@ -391,7 +391,7 @@
     <div class="img-wrap"><img class="wx-img" id="himawari-jpn-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
     <div class="maiji-sel" id="himawari-jpn-sel">
       <button onclick="selHimawari('b13',this)" class="active">赤外(B13)</button>
-      <button onclick="selHimawari('vis',this)">可視(VIR)</button>
+      <button onclick="selHimawari('vir',this)">可視(VIR)</button>
       <button onclick="selHimawari('b08',this)">水蒸気(B08)</button>
       <button onclick="selHimawari('snd',this)">雲頂強調(SND)</button>
       <button onclick="selHimawari('trm',this)">トゥルーカラー</button>
@@ -1847,7 +1847,7 @@ async function saveOffline() {
 
   // ページ本体も明示キャッシュ
   try {
-    const c = await caches.open('wx-v2');
+    const c = await caches.open('wx-v3');
     await c.addAll(['./', './index.html']);
   } catch(e){}
 
