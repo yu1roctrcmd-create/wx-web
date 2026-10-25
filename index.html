@@ -104,6 +104,14 @@
     .subsec.active{display:block}
     /* 切替ビューアの画像は高さを抑えてボタンを画面内に収める */
     #imoc-rdam-img,#imoc-light-img,#se-img{max-height:55vh;object-fit:contain}
+    /* lightbox（画像タップで拡大） */
+    .wx-img{cursor:zoom-in}
+    #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:9999;overflow:auto;-webkit-overflow-scrolling:touch}
+    #lightbox.open{display:block}
+    #lightbox-img{display:block;min-width:100%;width:100%;max-width:none;max-height:none;height:auto;margin:0 auto;cursor:zoom-in}
+    #lightbox-img.zoom{width:200%;min-width:200%;cursor:zoom-out}
+    #lightbox-close{position:fixed;top:10px;right:14px;color:#fff;font-size:22px;background:rgba(255,255,255,.15);border-radius:50%;width:40px;height:40px;line-height:40px;text-align:center;cursor:pointer}
+    #lightbox-hint{position:fixed;bottom:12px;left:0;right:0;text-align:center;color:#9ca3af;font-size:11px;pointer-events:none}
   </style>
 </head>
 <body>
@@ -989,6 +997,29 @@ document.querySelectorAll('.tab').forEach(btn => {
     }
   });
 });
+
+// ── Lightbox: 画像タップで拡大（1x/2x トグル、背景タップ or ✕ or Esc で閉じる）──
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox'), im = document.getElementById('lightbox-img');
+  if (!lb || !im) return;
+  im.src = src; im.classList.remove('zoom');
+  lb.classList.add('open'); lb.scrollTop = 0; lb.scrollLeft = 0;
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('click', e => {
+  const t = e.target, lb = document.getElementById('lightbox');
+  if (lb && lb.classList.contains('open')) {
+    if (t.id === 'lightbox-img') { t.classList.toggle('zoom'); return; }
+    closeLightbox(); return;
+  }
+  if (t.classList && t.classList.contains('wx-img') && t.src && t.naturalWidth > 0) openLightbox(t.currentSrc || t.src);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 // ── サブタブ切替（各タブ内のグループ）──
 function selSub(sec, i) {
@@ -1877,6 +1908,12 @@ loadWindtemp();
 renderSunTable();
 updateFooter();
 </script>
+
+<div id="lightbox">
+  <img id="lightbox-img" alt="">
+  <div id="lightbox-close">✕</div>
+  <div id="lightbox-hint">画像タップで 1x / 2x 切替 ・ 背景タップで閉じる</div>
+</div>
 
 <script>
 if ('serviceWorker' in navigator) {
