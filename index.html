@@ -112,6 +112,9 @@
     #lightbox-img.zoom{width:200%;min-width:200%;cursor:zoom-out}
     #lightbox-close{position:fixed;top:10px;right:14px;color:#fff;font-size:22px;background:rgba(255,255,255,.15);border-radius:50%;width:40px;height:40px;line-height:40px;text-align:center;cursor:pointer}
     #lightbox-hint{position:fixed;bottom:12px;left:0;right:0;text-align:center;color:#9ca3af;font-size:11px;pointer-events:none}
+    /* 鮮度: 6h以上=黄, 24h以上=赤 */
+    .ts.stale{color:var(--warn)}
+    .ts.old{color:#f87171;font-weight:600}
   </style>
 </head>
 <body>
@@ -997,6 +1000,56 @@ document.querySelectorAll('.tab').forEach(btn => {
     }
   });
 });
+
+// ── 鮮度表示の統一: 全カードに時刻 + 経過時間、古いものは色で警告 ──
+function tsParse(s) {
+  let m;
+  if ((m = s.match(/(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2})\s*(Z|JST|HKT)/))) {
+    const off = m[6] === 'JST' ? 9 : (m[6] === 'HKT' ? 8 : 0);
+    return Date.UTC(+m[1], +m[2]-1, +m[3], +m[4]-off, +m[5]);
+  }
+  if ((m = s.match(/^(\d{2}):(\d{2})Z/))) {
+    const n = new Date();
+    let t = Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate(), +m[1], +m[2]);
+    if (t > Date.now() + 5*60000) t -= 86400000;   // 未来なら前日扱い
+    return t;
+  }
+  return NaN;
+}
+function fmtAge(ms) {
+  const mi = Math.round((Date.now() - ms) / 60000);
+  if (mi < 1) return 'たった今';
+  if (mi < 60) return mi + '分前';
+  const h = Math.floor(mi / 60);
+  return h < 48 ? h + '時間' + (mi % 60) + '分前' : Math.floor(h / 24) + '日前';
+}
+function refreshTs() {
+  document.querySelectorAll('.card-label .ts').forEach(el => {
+    if (el.dataset.load) return;                                   // 読込時刻は対象外
+    const cur = el.textContent;
+    if (el.dataset.base === undefined || !cur.startsWith(el.dataset.base)) {
+      el.dataset.base = cur.replace(/\s*\([^)]*\)\s*$/, '').trim();  // 新しい値に追従
+    }
+    const base = el.dataset.base; if (!base) return;
+    const ms = tsParse(base); if (isNaN(ms)) return;
+    const ageMin = (Date.now() - ms) / 60000;
+    el.textContent = base + ' (' + fmtAge(ms) + ')';
+    el.classList.toggle('stale', ageMin >= 360);
+    el.classList.toggle('old',   ageMin >= 1440);
+  });
+}
+setInterval(refreshTs, 60000);
+// 画像 load 時: 時刻表示が無いカードには「読込 HH:MMZ」を付与、あるものは経過を更新
+document.addEventListener('load', e => {
+  const img = e.target;
+  if (!(img instanceof HTMLImageElement) || !img.classList.contains('wx-img')) return;
+  const card = img.closest('.card'); if (!card) return;
+  const label = card.querySelector('.card-label'); if (!label) return;
+  let ts = label.querySelector('.ts');
+  if (!ts) { ts = document.createElement('span'); ts.className = 'ts'; ts.dataset.load = '1'; label.appendChild(ts); }
+  if (ts.dataset.load) { const n = new Date(); ts.textContent = '読込 ' + pad(n.getUTCHours()) + ':' + pad(n.getUTCMinutes()) + 'Z'; }
+  else refreshTs();
+}, true);
 
 // ── Lightbox: 画像タップで拡大（1x/2x トグル、背景タップ or ✕ or Esc で閉じる）──
 function openLightbox(src) {
