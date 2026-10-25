@@ -1,5 +1,6 @@
-const CACHE = 'wx-v2';
+const CACHE = 'wx-v3';
 const CORE = ['./', './index.html'];
+const NET_TIMEOUT_MS = 15000;   // DWD など遅いサーバでも網羅できる長さ
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
@@ -14,13 +15,30 @@ self.addEventListener('activate', e => {
   );
 });
 
-// 動的画像URLを正規化してキャッシュキーにする
-//  例) jpn_b13_0610.jpg              -> jpn_b13_TS.jpg
-//      WANLF129_RJTD_20260707060000.PNG -> WANLF129_RJTD_TS.PNG
-//      2d256nradar_202607071406.jpg  -> 2d256nradar_TS.jpg
+// 動的画像URLを正規化してキャッシュキーにする（オフライン時に「直近の1枚」を返すため）
+//  例) jpn_b13_0610.jpg -> jpn_b13_TS.jpg / WANLF129_RJTD_20260707060000.PNG -> WANLF129_RJTD_TS.PNG
 //  クエリ(?_=…)も除去。固定URL(aupa20_00.gif 等)は変化しない。
 function imgKey(url) {
   return url.split('?')[0].replace(/_(\d{4,14})(\.\w+)$/i, '_TS$2');
+}
+
+// ネット優先（タイムアウト付き）→ 失敗時はキャッシュ。成功時はキャッシュ更新。
+async function networkFirstImage(req) {
+  const cache = await caches.open(CACHE);
+  const key = imgKey(req.url);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), NET_TIMEOUT_MS);
+  try {
+    const resp = await fetch(req, { signal: ctrl.signal });
+    clearTimeout(timer);
+    if (resp && (resp.ok || resp.type === 'opaque')) cache.put(key, resp.clone());
+    return resp;
+  } catch (err) {
+    clearTimeout(timer);
+    const cached = await cache.match(key);
+    if (cached) return cached;
+    throw err;
+  }
 }
 
 self.addEventListener('fetch', e => {
@@ -60,21 +78,10 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // 画像: stale-while-revalidate（正規化キーでオフライン時も直近画像を表示）
+  // 画像: ネット優先（常に最新を表示）→ オフライン/失敗時はキャッシュ
+  //   ※ 以前は cache-first だったため「全更新」しても古い画像が先に出ていた
   if (req.destination === 'image') {
-    const key = imgKey(req.url);
-    e.respondWith(
-      caches.match(key).then(cached => {
-        const net = fetch(req).then(resp => {
-          if (resp && (resp.ok || resp.type === 'opaque')) {
-            const clone = resp.clone();
-            caches.open(CACHE).then(c => c.put(key, clone));
-          }
-          return resp;
-        }).catch(() => cached);
-        return cached || net;
-      })
-    );
+    e.respondWith(networkFirstImage(req));
     return;
   }
 
