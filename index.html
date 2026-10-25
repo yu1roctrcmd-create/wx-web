@@ -982,7 +982,7 @@ document.querySelectorAll('.tab').forEach(btn => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('section-' + btn.dataset.tab).classList.add('active');
-    if (btn.dataset.tab === 'metar') { if (!window._metarLoaded) loadMetar(); else loadAtisData(); }
+    if (btn.dataset.tab === 'metar') { if (!window._metarLoaded) loadMetar(); else { loadAtisData(); loadWxData(); } }
     if (btn.dataset.tab === 'vaac') {
       if (!window._vaacLoaded) loadVaac();
       else if (window._vaacMap) setTimeout(() => window._vaacMap.invalidateSize(), 150);
@@ -1597,11 +1597,51 @@ function loadMetar() {
       html += '<a class="lnk-wx" href="' + metarUrl + '" target="_blank">METAR/TAF ↗</a>';
       html += '</div></div>';
       html += '<div class="atis-body" data-atis-icao="' + icao + '" style="display:none"></div>';
+      html += '<div class="atis-body" data-wx-icao="' + icao + '" style="display:none"></div>';
     });
     html += '</div>';
   });
   el.innerHTML = html;
   loadAtisData();
+  loadWxData();
+}
+
+// ── METAR/TAF: metar_latest.json（wx-data 30分毎）を各空港行に展開 ──
+async function loadWxData() {
+  const status = document.getElementById('metar-status');
+  let data;
+  try {
+    const resp = await fetch('metar_latest.json?_=' + Date.now());
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    data = await resp.json();
+  } catch(e) {
+    if (status) { status.style.padding = '0 0 10px'; status.innerHTML =
+      '<div style="background:#7f1d1d;border:1px solid #991b1b;border-radius:10px;padding:10px 14px;color:#fca5a5;font-size:12px;text-align:left">⚠ METAR/TAF データを取得できませんでした（オフライン等）— 各空港の METAR/TAF ↗ で公式をご確認ください</div>'; }
+    return;
+  }
+  let iso = data.updated_utc || '';
+  if (/T\d{2}:\d{2}Z$/.test(iso)) iso = iso.replace('Z', ':00Z');
+  const upd = Date.parse(iso);
+  if (status && !isNaN(upd)) {
+    const ageMin = Math.round((Date.now() - upd) / 60000);
+    const ageStr = ageMin < 60 ? ageMin + '分前' : Math.floor(ageMin/60) + '時間' + (ageMin%60) + '分前';
+    const stale = ageMin >= 90;
+    status.style.padding = '0 0 10px';
+    status.innerHTML = stale
+      ? '<div style="background:#7f1d1d;border:1px solid #991b1b;border-radius:10px;padding:10px 14px;color:#fca5a5;font-size:12px;text-align:left"><b>⚠ METAR/TAF 自動更新が遅延</b>（データ生成 ' + esc(data.updated_utc) + ' · ' + ageStr + '）— 最新は各空港の METAR/TAF ↗ で確認</div>'
+      : '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 14px;color:var(--muted);font-size:11px;text-align:left">METAR/TAF データ生成: ' + esc(data.updated_utc) + '（' + ageStr + '）· 30分毎自動更新 · 米国 D-ATIS はリアルタイム</div>';
+  }
+  const metar = data.metar || {}, taf = data.taf || {};
+  document.querySelectorAll('[data-wx-icao]').forEach(el => {
+    const icao = el.dataset.wxIcao;
+    const m = metar[icao], t = taf[icao];
+    if (!m && !t) { el.style.display = 'none'; return; }
+    let h = '';
+    if (m) h += '<div class="atis-meta" style="color:var(--accent)">METAR</div><pre class="atis-pre">' + esc(m) + '</pre>';
+    if (t) h += '<div class="atis-meta" style="color:var(--accent)">TAF</div><pre class="atis-pre">' + esc(t) + '</pre>';
+    el.style.display = 'block';
+    el.innerHTML = h;
+  });
 }
 
 // ── D-ATIS: 常に最新（atis.info API, CORS対応）。米国D-ATIS空港のみ本文表示 ──
