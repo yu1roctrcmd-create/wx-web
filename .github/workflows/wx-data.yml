@@ -5,7 +5,7 @@ name: WX Data
 # 自動発行の GITHUB_TOKEN で行うため、個人アクセストークン(PAT)は不要。
 on:
   schedule:
-    - cron: "0,30 * * * *"     # 30分毎
+    - cron: "13,43 * * * *"   # 30分毎（:00/:30 はGitHubのピークで遅延するため分をずらす）
   workflow_dispatch:
 
 concurrency:
