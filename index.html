@@ -1550,11 +1550,16 @@ async function loadVaac() {
           html += '<img src="' + esc(e.img_url) + '" style="width:100%;height:auto;display:block" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
           html += '</div>';
         }
-        // SAT IR image (most recent, if available)
+        // SAT（東京VAAC公式 Himawari-9: Ash RGB / 赤外 / トゥルーカラー）。初期は火山灰検知向けの Ash RGB
         if (e.sat_img_url) {
-          html += '<div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:6px 12px 2px">SAT IR</div>';
-          html += '<div><img src="' + esc(e.sat_img_url) + '" style="width:100%;height:auto;display:block" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentElement.style.display=\'none\'">';
-          html += '</div>';
+          const sid = 'sat' + Math.random().toString(36).slice(2, 8);
+          const sat = k => esc(e.sat_img_url.replace('09-ir', '09-' + k).replace('_ir.png', '_' + k + '.png'));
+          html += '<div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);padding:6px 12px 2px">SAT — Himawari-9（東京VAAC）</div>';
+          html += '<div style="background:#fff;padding:4px"><img class="wx-img" id="' + sid + '" src="' + sat('as') + '" style="width:100%;height:auto;display:block" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentElement.style.display=\'none\'"></div>';
+          html += '<div class="maiji-sel">'
+            + '<button class="active" onclick="vaacSat(\'' + sid + '\',\'' + sat('as') + '\',this)">Ash RGB（火山灰）</button>'
+            + '<button onclick="vaacSat(\'' + sid + '\',\'' + sat('ir') + '\',this)">赤外</button>'
+            + '<button onclick="vaacSat(\'' + sid + '\',\'' + sat('tc') + '\',this)">トゥルーカラー</button></div>';
         }
         // Advisory text
         if (e.text) {
@@ -1586,6 +1591,13 @@ async function loadVaac() {
 }
 
 // ── Active volcanoes (indexj.html red triangles): list + Leaflet map ──
+function vaacSat(id, url, btn) {
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const im = document.getElementById(id);
+  if (im) { im.parentElement.style.display = ''; im.src = url; }
+}
+
 function renderActive(entries) {
   const el = document.getElementById('vaac-active-content');
   if (!entries || !entries.length) {
