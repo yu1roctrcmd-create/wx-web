@@ -1507,7 +1507,16 @@ async function loadVaac() {
     const active = data.vaac_active || [];
 
     // Active volcanoes (indexj.html red triangles) → map + list
-    renderActive(active);
+    // Alaska VAAC が発表中（NO FURTHER ではない）の火山も赤で追加。座標は火山名で参照リストから引く
+    const akAct = alaska.filter(e => !/NXT ADVISORY:\s*NO FURTHER/i.test(e.text || '')).map(e => {
+      const nm = (e.volcano || '').toLowerCase();
+      const ref = VOLC_REF.find(r => r[0].toLowerCase().split('/').some(x => nm.includes(x) || x.includes(nm)));
+      return ref ? { volcano: (e.volcano || ref[0]).toUpperCase(), volcano_jp: '', advisory_nr: 'Alaska VAAC',
+                     obs_time: e.issued || '', issued_time: e.issued || '', lat: ref[1], lon: ref[2],
+                     text: e.text || '', text_url: e.text_url || '' } : null;
+    }).filter(Boolean);
+    const jpNames = new Set(active.map(a => (a.volcano || '').toLowerCase()));
+    renderActive(active.concat(akAct.filter(a => !jpNames.has(a.volcano.toLowerCase()))));
 
     // Banner: show if any advisory is NOT "no further advisories"
     const hasActive = [...tokyo, ...alaska].some(e =>
