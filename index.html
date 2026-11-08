@@ -902,8 +902,15 @@
 
   <div class="grp">東京VAAC 情報表示マップ — Active火山</div>
   <div class="card" style="overflow:hidden;padding:0">
-    <div id="vaac-map" style="width:100%;height:300px;background:#0d1117"></div>
-    <div style="font-size:10px;color:var(--muted);padding:6px 12px">🔺 VAA発表中の火山（indexj.html 準拠）</div>
+    <div class="maiji-sel" id="vaac-jump">
+      <button onclick="vaacJump('ak',this)">アラスカ・アリューシャン</button>
+      <button onclick="vaacJump('kam',this)">カムチャツカ</button>
+      <button onclick="vaacJump('jp',this)">日本</button>
+      <button onclick="vaacJump('sea',this)">東南アジア</button>
+      <button onclick="vaacJump('all',this)" class="active">全体</button>
+    </div>
+    <div id="vaac-map" style="width:100%;height:380px;background:#0d1117"></div>
+    <div style="font-size:10px;color:var(--muted);padding:6px 12px">🔺 赤＝VAA発表中（東京VAAC indexj.html 準拠） ／ 灰＝主要活火山（アリューシャン・カムチャツカ）</div>
   </div>
 
   <div class="grp" style="margin-top:6px">🔴 Active — VAA発表中の火山</div>
@@ -1588,30 +1595,67 @@ function renderActive(entries) {
   renderVaacMap(entries || []);
 }
 
+// 主要活火山（アリューシャン/アラスカ・カムチャツカ）— 場所把握用の参照データ
+const VOLC_REF = [
+ ['Spurr',61.299,-152.251],['Redoubt',60.485,-152.743],['Iliamna',60.032,-153.09],['Augustine',59.363,-153.43],
+ ['Katmai/Novarupta',58.279,-154.982],['Mageik',58.195,-155.254],['Martin',58.172,-155.361],['Trident',58.236,-155.1],
+ ['Peulik',57.75,-156.37],['Ukinrek',57.833,-156.517],['Aniakchak',56.88,-158.17],['Veniaminof',56.17,-159.39],
+ ['Pavlof',55.42,-161.894],['Dutton',55.19,-162.27],['Shishaldin',54.756,-163.97],['Isanotski',54.77,-163.73],
+ ['Fisher',54.67,-164.35],['Westdahl',54.52,-164.65],['Akutan',54.134,-165.986],['Makushin',53.887,-166.923],
+ ['Bogoslof',53.93,-168.03],['Okmok',53.43,-168.13],['Vsevidof',53.13,-168.69],['Kagamil',52.97,-169.72],
+ ['Carlisle',52.89,-170.06],['Cleveland',52.825,-169.945],['Yunaska',52.646,-170.629],['Amukta',52.5,-171.25],
+ ['Seguam',52.31,-172.51],['Korovin',52.38,-174.15],['Kasatochi',52.177,-175.508],['Great Sitkin',52.077,-176.111],
+ ['Kanaga',51.92,-177.168],['Tanaga',51.885,-178.146],['Gareloi',51.79,-178.795],['Semisopochnoi/Cerberus',51.93,179.6],
+ ['Little Sitkin',51.95,178.536],['Kiska',52.1,177.6],
+ ['Sheveluch',56.653,161.36],['Klyuchevskoy',56.056,160.642],['Bezymianny',55.972,160.595],['Tolbachik',55.83,160.39],
+ ['Kizimen',55.13,160.32],['Krasheninnikov',54.595,160.272],['Karymsky',54.049,159.443],['Zhupanovsky',53.59,159.15],
+ ['Koryaksky',53.32,158.712],['Avachinsky',53.256,158.83],['Gorely',52.558,158.03],['Mutnovsky',52.453,158.195],
+ ['Kambalny',51.3,156.87],
+];
+const VAAC_VIEWS = { ak:[[56,-165+360],4], kam:[[55,160],5], jp:[[34,138],5], sea:[[10,122],5], all:[[40,160],3] };
+function _wl(lon) { return lon < 0 ? lon + 360 : lon; }   // 太平洋中心: 西半球側を +360 で連続表示
+function vaacJump(k, btn) {
+  document.querySelectorAll('#vaac-jump button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const v = VAAC_VIEWS[k]; if (window._vaacMap && v) window._vaacMap.setView(v[0], v[1]);
+}
 function renderVaacMap(entries) {
   if (typeof L === 'undefined') return;
   const pts = entries.filter(e => e.lat != null && e.lon != null);
   if (!window._vaacMap) {
-    const map = L.map('vaac-map', { attributionControl:false, zoomControl:true }).setView([25, 150], 2);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:8, minZoom:1 }).addTo(map);
+    const map = L.map('vaac-map', { attributionControl:false, zoomControl:true, worldCopyJump:false }).setView([40, 160], 3);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:10, minZoom:2 }).addTo(map);
     window._vaacMap = map;
     window._vaacMarkers = [];
   }
   const map = window._vaacMap;
   (window._vaacMarkers || []).forEach(m => map.removeLayer(m));
   window._vaacMarkers = [];
+  const act = pts.map(e => [e.lat, _wl(e.lon)]);
+  // 参照火山（灰色▲＋名前）。Active と同位置のものは省略
+  VOLC_REF.forEach(([name, lat, lon]) => {
+    const lo = _wl(lon);
+    if (act.some(a => Math.abs(a[0]-lat) < 0.3 && Math.abs(a[1]-lo) < 0.3)) return;
+    const icon = L.divIcon({
+      html: '<div style="white-space:nowrap;color:#475569;font-size:13px;line-height:1">▲<span style="font-size:10px;color:#1e293b;background:rgba(255,255,255,.78);padding:0 3px;border-radius:3px;margin-left:2px;font-weight:600">' + esc(name) + '</span></div>',
+      className: '', iconSize: [0,0], iconAnchor: [6,10],
+    });
+    window._vaacMarkers.push(L.marker([lat, lo], { icon, zIndexOffset: -500 }).addTo(map));
+  });
+  // Active（赤▲、名前付き）
   const latlngs = [];
   pts.forEach(e => {
+    const lo = _wl(e.lon);
     const icon = L.divIcon({
-      html: '<div style="color:#dc2626;font-size:22px;line-height:1;text-shadow:0 0 3px #000">▲</div>',
-      className: '', iconSize: [22,22], iconAnchor: [11,20],
+      html: '<div style="white-space:nowrap;color:#dc2626;font-size:24px;line-height:1;text-shadow:0 0 3px #fff">▲<span style="font-size:11px;color:#fff;background:#dc2626;padding:1px 5px;border-radius:3px;margin-left:3px;font-weight:700;text-shadow:none">' + esc(e.volcano || '?') + '</span></div>',
+      className: '', iconSize: [0,0], iconAnchor: [10,20],
     });
-    const m = L.marker([e.lat, e.lon], { icon }).addTo(map)
+    const m = L.marker([e.lat, lo], { icon, zIndexOffset: 1000 }).addTo(map)
       .bindPopup('<b>' + esc(e.volcano || '?') + '</b><br>' + esc(e.advisory_nr || '') + '<br>' + esc(e.obs_time || ''));
     window._vaacMarkers.push(m);
-    latlngs.push([e.lat, e.lon]);
+    latlngs.push([e.lat, lo]);
   });
-  if (latlngs.length === 1)      map.setView(latlngs[0], 4);
+  if (latlngs.length === 1)      map.setView(latlngs[0], 5);
   else if (latlngs.length > 1)   map.fitBounds(latlngs, { padding:[40,40], maxZoom:5 });
   setTimeout(() => map.invalidateSize(), 120);
 }
