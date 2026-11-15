@@ -555,6 +555,11 @@
     <div class="img-wrap"><img class="wx-img" id="hko-128-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 
+  <div class="grp" style="margin-top:6px">シンガポール レーダー 240km (MSS)</div>
+  <div class="card">
+    <div class="card-label">240km range<span class="ts" id="sg-240-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="sg-240-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
   </div>
   <div class="subsec">
   <div class="grp" style="margin-top:6px">台湾レーダー — 中央気象署 (CWA)</div>
@@ -1056,8 +1061,8 @@ document.querySelectorAll('.tab').forEach(btn => {
 // ── 鮮度表示の統一: 全カードに時刻 + 経過時間、古いものは色で警告 ──
 function tsParse(s) {
   let m;
-  if ((m = s.match(/(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2})\s*(Z|JST|HKT)/))) {
-    const off = m[6] === 'JST' ? 9 : (m[6] === 'HKT' ? 8 : 0);
+  if ((m = s.match(/(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2})\s*(Z|JST|HKT|SGT)/))) {
+    const off = m[6] === 'JST' ? 9 : ((m[6] === 'HKT' || m[6] === 'SGT') ? 8 : 0);
     return Date.UTC(+m[1], +m[2]-1, +m[3], +m[4]-off, +m[5]);
   }
   if ((m = s.match(/^(\d{2}):(\d{2})Z/))) {
@@ -1125,6 +1130,28 @@ document.addEventListener('click', e => {
   if (t.classList && t.classList.contains('wx-img') && t.src && t.naturalWidth > 0) openLightbox(t.currentSrc || t.src);
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// ── Singapore MSS 240km レーダー（SGT=UTC+8, 5分毎。最新を新しい順に探索）──
+function setSgRadar() {
+  const img = document.getElementById('sg-240-img'), tsEl = document.getElementById('sg-240-ts');
+  if (!img) return;
+  const STEP = 300000, cands = [];
+  let t = Date.now() + 8*3600000; t -= t % STEP;
+  for (let i = 0; i < 10; i++) {
+    const d = new Date(t - i*STEP);
+    const k = d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+pad(d.getUTCHours())+pad(d.getUTCMinutes());
+    cands.push({ url: 'https://www.weather.gov.sg/files/rainarea/240km/dpsri_240km_' + k + '0000dBR.dpsri.png',
+      ts: d.getUTCFullYear()+'/'+pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+' HKT' });
+  }
+  let i = 0;
+  (function next() {
+    if (i >= cands.length) { imgErr(img); return; }
+    const c = cands[i++];
+    img.onload = () => { if (tsEl) tsEl.textContent = c.ts.replace('HKT','SGT'); img.onload = null; img.onerror = null; };
+    img.onerror = next;
+    img.src = c.url;
+  })();
+}
 
 // ── TSAS1 広域雲情報（metair.go.jp, 毎時。最新を新しい順に探索）──
 function setTsas() {
@@ -1461,6 +1488,7 @@ function setDynamicUrls(force) {
 
   setSakuraVagfn();
   setTsas();
+  setSgRadar();
 
   // PGDE14
   const p = pgde14Url();
