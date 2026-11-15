@@ -157,6 +157,10 @@
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/fbjp/fbjp.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
+    <div class="card-label">JMA SIGWX FBAE — 東南アジア域 (Regional SIGWX)<span class="ts" id="fbae-ts"></span></div>
+    <div class="img-wrap" style="background:#fff;padding:4px"><img class="wx-img" id="fbae-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
     <div class="card-label">Pacific High SIGWX FL250–600 (AWC F24)</div>
     <div class="img-wrap"><img class="wx-img" src="https://aviationweather.gov/data/products/fax/F24_sigwx_hi_e.gif" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
@@ -1158,6 +1162,28 @@ function setSgRange(r) {
   })();
 }
 
+// ── JMA FBAE 東南アジア域 SIGWX（metair.go.jp, 6時間毎。最新を新しい順に探索）──
+function setFbae() {
+  const img = document.getElementById('fbae-img'), tsEl = document.getElementById('fbae-ts');
+  if (!img) return;
+  const cands = [];
+  for (let h = 0; h <= 42; h++) {
+    const d = new Date(Date.now() - h*3600000); d.setUTCMinutes(0,0,0);
+    if (d.getUTCHours() % 6) continue;
+    const k = d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+pad(d.getUTCHours());
+    cands.push({ url: 'https://www3.metair.go.jp/pict/FBAE/FBAE_RJTD_' + k + '0000.png',
+      ts: d.getUTCFullYear()+'/'+pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':00Z' });
+  }
+  let n = 0;
+  (function next() {
+    if (n >= cands.length) { imgErr(img); return; }
+    const c = cands[n++];
+    img.onload = () => { if (tsEl) tsEl.textContent = c.ts; img.onload = null; img.onerror = null; };
+    img.onerror = next;
+    img.src = c.url;
+  })();
+}
+
 // ── TSAS1 広域雲情報（metair.go.jp, 毎時。最新を新しい順に探索）──
 function setTsas() {
   const img = document.getElementById('tsas-img'), tsEl = document.getElementById('tsas-ts');
@@ -1493,6 +1519,7 @@ function setDynamicUrls(force) {
 
   setSakuraVagfn();
   setTsas();
+  setFbae();
   setSgRadar();
 
   // PGDE14
