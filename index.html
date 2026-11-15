@@ -404,6 +404,12 @@
     </div>
     <div style="font-size:10px;color:var(--muted);padding:0 10px 4px">左=約7時間前 → 右=最新（10分毎）</div>
   </div>
+  <div class="grp" style="margin-top:6px">TSAS 広域雲情報 — 雲頂高度・Cb域 (JMA)</div>
+  <div class="card">
+    <div class="card-label">TSAS1（東アジア〜西太平洋、1時間毎）<span class="ts" id="tsas-ts"></span></div>
+    <div class="img-wrap" style="background:#fff;padding:4px"><img class="wx-img" id="tsas-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+
   <div class="grp" style="margin-top:6px">衛星 (Windy)</div>
   <div class="card" style="overflow:hidden">
     <div style="position:relative;padding-bottom:75%;height:0;overflow:hidden">
@@ -1120,6 +1126,27 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
+// ── TSAS1 広域雲情報（metair.go.jp, 毎時。最新を新しい順に探索）──
+function setTsas() {
+  const img = document.getElementById('tsas-img'), tsEl = document.getElementById('tsas-ts');
+  if (!img) return;
+  const cands = [];
+  for (let h = 0; h < 6; h++) {
+    const d = new Date(Date.now() - h * 3600000); d.setUTCMinutes(0, 0, 0);
+    const ymd = d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) + pad(d.getUTCHours());
+    cands.push({ url: 'https://www3.metair.go.jp/pict/TSAS_1/QNSA22_RJTD_' + ymd + '0000.png',
+      ts: d.getUTCFullYear()+'/'+pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':00Z' });
+  }
+  let i = 0;
+  (function next() {
+    if (i >= cands.length) { imgErr(img); return; }
+    const c = cands[i++];
+    img.onload = () => { if (tsEl) tsEl.textContent = c.ts; img.onload = null; img.onerror = null; };
+    img.onerror = next;
+    img.src = c.url;
+  })();
+}
+
 // ── Windy 高度別の風（地上/850h/500h/300h/250h）──
 let _windLv = 'surface';
 function windLevel(lv, btn) {
@@ -1433,6 +1460,7 @@ function setDynamicUrls(force) {
   const cb = '?_='+(force ? Date.now() : Math.floor(Date.now()/300000));
 
   setSakuraVagfn();
+  setTsas();
 
   // PGDE14
   const p = pgde14Url();
