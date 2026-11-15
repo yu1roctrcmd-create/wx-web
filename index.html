@@ -555,10 +555,14 @@
     <div class="img-wrap"><img class="wx-img" id="hko-128-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
 
-  <div class="grp" style="margin-top:6px">シンガポール レーダー 240km (MSS)</div>
+  <div class="grp" style="margin-top:6px">シンガポール レーダー 240km / 480km (MSS)</div>
   <div class="card">
     <div class="card-label">240km range<span class="ts" id="sg-240-ts"></span></div>
     <div class="img-wrap"><img class="wx-img" id="sg-240-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">480km range<span class="ts" id="sg-480-ts"></span></div>
+    <div class="img-wrap"><img class="wx-img" id="sg-480-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   </div>
   <div class="subsec">
@@ -1132,22 +1136,23 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 // ── Singapore MSS 240km レーダー（SGT=UTC+8, 5分毎。最新を新しい順に探索）──
-function setSgRadar() {
-  const img = document.getElementById('sg-240-img'), tsEl = document.getElementById('sg-240-ts');
+function setSgRadar() { setSgRange('240'); setSgRange('480'); }
+function setSgRange(r) {
+  const img = document.getElementById('sg-' + r + '-img'), tsEl = document.getElementById('sg-' + r + '-ts');
   if (!img) return;
   const STEP = 300000, cands = [];
   let t = Date.now() + 8*3600000; t -= t % STEP;
   for (let i = 0; i < 10; i++) {
     const d = new Date(t - i*STEP);
     const k = d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+pad(d.getUTCHours())+pad(d.getUTCMinutes());
-    cands.push({ url: 'https://www.weather.gov.sg/files/rainarea/240km/dpsri_240km_' + k + '0000dBR.dpsri.png',
-      ts: d.getUTCFullYear()+'/'+pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+' HKT' });
+    cands.push({ url: 'https://www.weather.gov.sg/files/rainarea/' + r + 'km/dpsri_' + r + 'km_' + k + '0000dBR.dpsri.png',
+      ts: d.getUTCFullYear()+'/'+pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCDate())+' '+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+' SGT' });
   }
-  let i = 0;
+  let n = 0;
   (function next() {
-    if (i >= cands.length) { imgErr(img); return; }
-    const c = cands[i++];
-    img.onload = () => { if (tsEl) tsEl.textContent = c.ts.replace('HKT','SGT'); img.onload = null; img.onerror = null; };
+    if (n >= cands.length) { imgErr(img); return; }
+    const c = cands[n++];
+    img.onload = () => { if (tsEl) tsEl.textContent = c.ts; img.onload = null; img.onerror = null; };
     img.onerror = next;
     img.src = c.url;
   })();
