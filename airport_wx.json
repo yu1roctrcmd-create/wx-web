@@ -341,6 +341,14 @@
  ],
  "ZSPD": [
   {
+   "title": "【運航メモ】PVG 低シーリング・降水の落ち込み（Airport Guide 外・運航者の気づき）",
+   "text": "TAF は VIS 6000m / BKN015 が頻出だが、METAR は +RA・VIS 2000m・BKN002 程度まで断続的に落ちることがある。\n\n■ 起きやすい場面\n・停滞前線／梅雨前線が長江河口付近にあるとき（6〜7月）: 降水バンドが次々に通過し、通る間だけ VIS・雲底が落ちる。\n・東シナ海〜華中に低気圧があり、冷たい北東〜東風が入るとき（晩秋〜春）: 寒気のくさびの上を暖湿気が這い上がり、弱〜中程度の雨が持続して層雲が BKN002 前後まで下がる。\n・台風外側の降水バンド（8〜9月）。\n・春先の暖気移流（冷たい海面／地面の上を暖湿気が通る）: 低層雲・霧。\n\n■ PVG と SHA(ZSSS) の差\nPVG は海側で、湿った東風と降水バンドの影響を先に受ける。SHA は内陸側で、弱まってから来て Weak エコーのみになりやすい。\n\n■ 予想の手がかり\n地上天気図の前線・低気圧位置／850hPa の暖湿流／上海レーダーで MOD エコーが居座っているか／METAR の T-Td 2℃以内・風が東〜北東・雲底の低下傾向。TAF の TEMPO に出にくいので、EXTRA 搭載の判断材料にする。\n季節の特性と寒気の入り方から推移を予想し、結果を答え合わせして経験を積む。"
+  },
+  {
+   "title": "【運航メモ】Severe icing SIGMET への縦方向の対応",
+   "text": "横方向の回避だけでなく縦方向も共有する。最も着氷する SAT 0〜−10℃（過冷却水滴は −20℃付近まで）の高度帯を、ATC の特性（要求から許可までの時間・高度変更の可否）も含めて事前に共通認識にする。\n高度帯の目安は SIGWX →「着氷×0〜−10℃」（SIGMET 範囲と層が重なる高度）で確認。気温減率は約 2℃/1000ft（層の厚み約 5000ft が目安）。巡航が高ければ主な対象は上昇・降下・待機。"
+  },
+  {
    "title": "Weather Characteristics",
    "text": " Weather phenomena that distract flight operations are radiation fog and\n advection fog often observed from November to May. Low cloud ceiling,\n low visibility, thunder storms and typhoon are other weather distractions\n often observed from June to September.\n  It snows several times a year, a situation that deicing/anti icing required\n is not improbable."
   },
