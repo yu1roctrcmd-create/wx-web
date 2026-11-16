@@ -154,6 +154,7 @@
     <button class="subtab active" onclick="selSub('sigwx',0)">高層・国際</button>
     <button class="subtab" onclick="selSub('sigwx',1)">低高度</button>
     <button class="subtab" onclick="selSub('sigwx',2)">SIGMET (GFA)</button>
+    <button class="subtab" onclick="selSub('sigwx',3)">着氷×0〜−10℃</button>
   </div>
   <div class="subsec active">
   <div class="card">
@@ -216,6 +217,24 @@
     <div style="padding:6px 12px 8px"><a href="https://aviationweather.gov/gfa/#sigmet" target="_blank" style="font-size:11px;color:var(--accent)">AWC GFA を別タブで開く ↗</a>
       <span style="font-size:10px;color:var(--muted);margin-left:8px">全世界の SIGMET/AIRMET を地図表示（アラスカ・北米含む）。オンライン時のみ</span></div>
   </div>
+  </div>
+  <div class="subsec">
+  <div class="grp">着氷 SIGMET × 0℃〜−10℃ 層（縦方向の回避判断）</div>
+  <div id="ice-status" style="font-size:11px;color:var(--muted);padding:0 0 8px">読み込み中...</div>
+  <div class="card" style="overflow:hidden;padding:0">
+    <div class="maiji-sel" id="ice-jump">
+      <button onclick="iceJump('ea',this)" class="active">東アジア</button>
+      <button onclick="iceJump('na',this)">北米・アラスカ</button>
+      <button onclick="iceJump('eu',this)">欧州・ロシア</button>
+      <button onclick="iceJump('all',this)">全体</button>
+    </div>
+    <div id="ice-map" style="width:100%;height:340px;background:#0d1117"></div>
+    <div style="font-size:10px;color:var(--muted);padding:6px 12px">赤=SEV / 橙=MOD の着氷 SIGMET（有効なもののみ）。タップで詳細</div>
+  </div>
+  <div id="ice-list"></div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.6;padding:6px 2px">
+    ※ 0℃・−10℃の高度は <b>予報モデル値（Open-Meteo）</b>を SIGMET 中心付近で補間した目安です。AWC の FD（Wind/Temp）表は NAM 廃止により終了したため、実測や公式値ではありません。
+    着氷は SAT 0〜−10℃で最も強く、過冷却水滴は −20℃付近まで残り得ます。巡航が高い場合の主な対象は上昇・降下・待機です。</div>
   </div>
 </div><!-- /sigwx -->
 
@@ -295,7 +314,8 @@
   <div class="grp">FD Wind/Temp Aloft — Alaska</div>
   <div class="card">
     <div class="card-label">FBAK31 Alaska 6h forecast<span class="ts" id="windtemp-alaska-ts"></span></div>
-    <pre id="windtemp-alaska-pre" style="margin:0;padding:8px 10px;font-size:11px;line-height:1.6;overflow-x:auto;background:transparent;color:var(--text);white-space:pre;border:0;font-family:'Courier New',Courier,monospace">データなし（GitHub Actions 初回実行後に表示されます）</pre>
+    <pre id="windtemp-alaska-pre" style="margin:0;padding:8px 10px;font-size:11px;line-height:1.6;overflow-x:auto;background:transparent;color:var(--text);white-space:pre;border:0;font-family:'Courier New',Courier,monospace">AWC の FD（Wind/Temp）表は NAM モデル廃止により配信終了しました（2026年）。
+気温・風の代替は、SIGWX →「着氷×0〜−10℃」（モデル気温）または RADAR → Windy 高度別の風 をご利用ください。</pre>
   </div>
 
   </div>
@@ -1220,6 +1240,118 @@ function setTsas() {
   })();
 }
 
+// ── 着氷 SIGMET × 0〜−10℃ 層 ──
+const ICE_LV = [1000,975,950,925,900,850,800,700,600,500,400,300];
+const ICE_VIEWS = { ea:[[32,112],4], na:[[52,-120],3], eu:[[55,50],3], all:[[30,60],2] };
+let _iceMap = null, _iceLayers = [], _iceInit = false;
+function iceJump(k, btn) {
+  document.querySelectorAll('#ice-jump button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const v = ICE_VIEWS[k]; if (_iceMap && v) _iceMap.setView(v[0], v[1]);
+}
+function _ftTxt(ft) { return ft >= 18000 ? 'FL' + String(Math.round(ft/100)).padStart(3,'0') : Math.round(ft/100)*100 + 'ft'; }
+// 気温プロファイル → 0〜−10℃ の高度帯（ft）
+function iceBands(prof) {          // prof: [[alt_ft, T], ...] 昇順
+  const T = alt => {
+    if (alt < prof[0][0] || alt > prof[prof.length-1][0]) return null;
+    for (let i = 1; i < prof.length; i++) if (alt <= prof[i][0]) {
+      const [a1,t1] = prof[i-1], [a2,t2] = prof[i];
+      return a2 === a1 ? t1 : t1 + (t2 - t1) * (alt - a1) / (a2 - a1);
+    }
+    return null;
+  };
+  const bands = []; let cur = null;
+  for (let a = 0; a <= 45000; a += 250) {
+    const t = T(a), inb = t !== null && t <= 0 && t >= -10;
+    if (inb) { if (!cur) { cur = [a, a]; bands.push(cur); } else cur[1] = a; } else cur = null;
+  }
+  return bands;
+}
+function iceOverlap(bands, base, top) {
+  const b = (base == null || isNaN(base)) ? 0 : +base, t = (top == null || isNaN(top)) ? 45000 : +top;
+  return bands.map(x => [Math.max(x[0], b), Math.min(x[1], t)]).filter(x => x[1] - x[0] >= 250);
+}
+function icePoly(e) { return e.coords.map(c => [c[0], c[1]]); }
+function iceCentroid(e) {
+  const n = e.coords.length; let la = 0, lo = 0;
+  e.coords.forEach(c => { la += c[0]; lo += c[1]; });
+  return [la / n, lo / n];
+}
+async function initIce() {
+  if (_iceMap) { setTimeout(() => _iceMap.invalidateSize(), 150); }
+  if (_iceInit) return;
+  _iceInit = true;
+  const st = document.getElementById('ice-status'), list = document.getElementById('ice-list');
+  if (typeof L === 'undefined') { st.textContent = '地図ライブラリを読み込めませんでした（オフライン）'; return; }
+  _iceMap = L.map('ice-map', { attributionControl:false }).setView(ICE_VIEWS.ea[0], ICE_VIEWS.ea[1]);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:8, minZoom:2 }).addTo(_iceMap);
+  setTimeout(() => _iceMap.invalidateSize(), 150);
+
+  let data;
+  try {
+    const r = await fetch('metar_latest.json?_=' + Date.now()); if (!r.ok) throw 0; data = await r.json();
+  } catch (e) { st.textContent = 'SIGMET データを取得できませんでした'; return; }
+  const nowS = Date.now() / 1000;
+  const items = (data.ice_sigmets || []).filter(e => !e.to || e.to > nowS);
+  if (!items.length) { st.textContent = '現在有効な着氷 SIGMET はありません（データ生成 ' + esc(data.updated_utc || '?') + '）'; return; }
+
+  // 範囲を先に描画
+  items.forEach((e, i) => {
+    const sev = /SEV/i.test(e.qual || '');
+    e._poly = L.polygon(icePoly(e), { color: sev ? '#dc2626' : '#f59e0b', weight: 2, fillOpacity: .25 }).addTo(_iceMap);
+    e._poly.on('click', () => { const el = document.getElementById('ice-card-' + i); if (el) el.scrollIntoView({ behavior:'smooth', block:'center' }); });
+  });
+  st.textContent = '有効な着氷 SIGMET ' + items.length + ' 件 ／ 気温（モデル）を取得中... （データ生成 ' + (data.updated_utc || '?') + '）';
+
+  // Open-Meteo: 全 SIGMET 中心を 1 リクエスト
+  const cs = items.map(iceCentroid);
+  const hv = ['temperature_2m'].concat(ICE_LV.map(l => 'temperature_' + l + 'hPa'), ICE_LV.map(l => 'geopotential_height_' + l + 'hPa')).join(',');
+  let res = null, hourIdx = new Date().getUTCHours(), modelTs = '';
+  try {
+    const u = 'https://api.open-meteo.com/v1/forecast?latitude=' + cs.map(c => c[0].toFixed(2)).join(',')
+      + '&longitude=' + cs.map(c => c[1].toFixed(2)).join(',') + '&hourly=' + hv + '&forecast_days=1&timezone=GMT';
+    const r = await fetch(u); if (!r.ok) throw 0;
+    const j = await r.json(); res = Array.isArray(j) ? j : [j];
+    modelTs = (res[0].hourly.time[hourIdx] || '').replace('T', ' ') + 'Z';
+  } catch (e) { /* 気温なしでも SIGMET は表示 */ }
+
+  let html = '';
+  items.forEach((e, i) => {
+    const sev = /SEV/i.test(e.qual || '');
+    let band = null, line = '';
+    if (res && res[i] && res[i].hourly) {
+      const h = res[i].hourly, prof = [[0, h.temperature_2m[hourIdx]]];
+      ICE_LV.forEach(l => {
+        const g = h['geopotential_height_' + l + 'hPa'][hourIdx], t = h['temperature_' + l + 'hPa'][hourIdx];
+        if (g != null && t != null && g > 0) prof.push([g * 3.28084, t]);
+      });
+      prof.sort((a, b) => a[0] - b[0]);
+      const bands = iceBands(prof), ov = iceOverlap(bands, e.base, e.top);
+      band = ov;
+      line = '<div style="font-size:11px;color:var(--muted);margin-top:4px">0〜−10℃ 層（モデル ' + esc(modelTs) + '）: '
+        + (bands.length ? bands.map(b => _ftTxt(b[0]) + '–' + _ftTxt(b[1])).join(' , ') : '該当なし') + '</div>';
+      line += ov.length
+        ? '<div style="font-size:12px;font-weight:700;color:#f87171;margin-top:4px">⚠ 着氷が最も強い高度（SIGMET∩層）: ' + ov.map(b => _ftTxt(b[0]) + '–' + _ftTxt(b[1])).join(' , ') + '</div>'
+          + '<div style="font-size:11px;color:var(--text);margin-top:2px">縦の回避目安: 層の上（' + _ftTxt(Math.max.apply(null, bands.map(b => b[1]))) + ' 超、ただし −20℃付近まで過冷却水滴あり）または層の下（0℃ 高度より下）。上昇・降下は層を速く抜ける。</div>'
+        : '<div style="font-size:12px;color:var(--green);margin-top:4px">SIGMET の高度帯は 0〜−10℃ 層と重なりません（−10℃より低温側／0℃より上）</div>';
+    } else {
+      line = '<div style="font-size:11px;color:var(--muted);margin-top:4px">気温データを取得できませんでした（オフライン等）</div>';
+    }
+    // 地図ラベル
+    const c = cs[i];
+    e._poly.bindPopup('<b>' + esc(e.id) + '</b> ' + esc(e.qual || '') + '<br>' + (e.base == null ? 'SFC' : _ftTxt(e.base)) + '–' + (e.top == null ? '?' : _ftTxt(e.top))
+      + (band && band.length ? '<br><b style="color:#dc2626">着氷最強 ' + band.map(b => _ftTxt(b[0]) + '–' + _ftTxt(b[1])).join(', ') + '</b>' : ''));
+    const valid = e.to ? new Date(e.to * 1000).toISOString().slice(5, 16).replace('T', ' ') + 'Z' : '?';
+    html += '<div class="card" id="ice-card-' + i + '" style="margin-bottom:8px"><div class="card-label" style="color:' + (sev ? '#f87171' : 'var(--warn)') + '">'
+      + esc(e.id) + ' <span style="font-weight:400;text-transform:none;color:var(--muted)">' + esc(e.qual || '') + ' ICE</span></div>'
+      + '<div style="padding:8px 12px"><div style="font-size:12px">SIGMET 高度: <b>' + (e.base == null || e.base === 0 ? 'SFC' : _ftTxt(e.base)) + ' – ' + (e.top == null ? '?' : _ftTxt(e.top)) + '</b>'
+      + ' ／ 有効〜 ' + valid + (e.dir ? ' ／ ' + esc(e.dir) + ' ' + esc(e.spd || '') : '') + '</div>' + line
+      + '<details style="margin-top:6px"><summary style="font-size:11px;color:var(--accent);cursor:pointer">原文</summary><pre class="atis-pre">' + esc(e.raw || '') + '</pre></details></div></div>';
+  });
+  list.innerHTML = html;
+  st.textContent = '有効な着氷 SIGMET ' + items.length + ' 件' + (modelTs ? '（気温: Open-Meteo モデル ' + modelTs + '）' : '') + ' ／ データ生成 ' + (data.updated_utc || '?');
+}
+
 // ── Windy 高度別の風（地上/850h/500h/300h/250h）──
 let _windLv = 'surface';
 function windLevel(lv, btn) {
@@ -1239,6 +1371,7 @@ function selSub(sec, i) {
   bar.querySelectorAll('.subtab').forEach((b, j) => b.classList.toggle('active', j === i));
   sect.querySelectorAll(':scope > .subsec').forEach((s, j) => s.classList.toggle('active', j === i));
   if (window._vaacMap && sec === 'vaac') setTimeout(() => window._vaacMap.invalidateSize(), 150);
+  if (sec === 'sigwx' && i === 3) initIce();
 }
 
 // ── iMOC レーダーアメダス（エリア jp/sjp × 予測 0=実況〜15=+15h）──
