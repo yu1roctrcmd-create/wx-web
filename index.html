@@ -113,6 +113,9 @@
     #lightbox-close{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 14px);
       width:46px;height:46px;line-height:42px;text-align:center;font-size:26px;font-weight:700;color:#fff;
       background:#dc2626;border:2px solid #fff;border-radius:50%;box-shadow:0 3px 14px rgba(0,0,0,.7);cursor:pointer;z-index:2}
+    .apwx summary{cursor:pointer;font-size:11px;font-weight:600;color:var(--warn);padding:4px 0}
+    .apwx-t{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:8px 0 2px;text-transform:uppercase}
+    .apwx-p{white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.6}
     #lightbox-hint{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);left:0;right:0;text-align:center;color:#fff;font-size:11px;pointer-events:none;
       text-shadow:0 1px 4px #000}
     #lightbox-hint span{background:rgba(0,0,0,.65);padding:5px 12px;border-radius:14px}
@@ -1309,6 +1312,28 @@ function setSakuraVagfn() {
 }
 
 // ── n-kishou.com: try up to 3 fallback timestamps ──
+// ── 空港気象特性（NCA Airport Guide 1-2 Weather Characteristics 抜粋, airport_wx.json）──
+let _apwx = null;
+async function loadApWx() {
+  if (!_apwx) {
+    try {
+      const r = await fetch('airport_wx.json?_=' + Math.floor(Date.now()/3600000));
+      if (!r.ok) throw 0;
+      _apwx = await r.json();
+    } catch (e) { return; }
+  }
+  document.querySelectorAll('[data-apwx-icao]').forEach(el => {
+    const secs = _apwx[el.dataset.apwxIcao];
+    if (!secs) { el.style.display = 'none'; return; }
+    let h = '<details class="apwx"><summary>📖 空港気象特性（Airport Guide）</summary>';
+    secs.forEach(sec => {
+      h += '<div class="apwx-t">' + esc(sec.title) + '</div><pre class="atis-pre apwx-p">' + esc(sec.text) + '</pre>';
+    });
+    el.innerHTML = h + '</details>';
+    el.style.display = 'block';
+  });
+}
+
 // ── 低高度 悪天予想図（エリア fbtk/fbsp/fbsn/fbos/fbok × FT 03/06/09）──
 let _llArea = 'fbtk', _llFt = '03';
 function setLowLevel() {
@@ -1885,12 +1910,14 @@ function loadMetar() {
       html += '</div></div>';
       html += '<div class="atis-body" data-atis-icao="' + icao + '" style="display:none"></div>';
       html += '<div class="atis-body" data-wx-icao="' + icao + '" style="display:none"></div>';
+      html += '<div class="atis-body" data-apwx-icao="' + icao + '" style="display:none"></div>';
     });
     html += '</div>';
   });
   el.innerHTML = html;
   loadAtisData();
   loadWxData();
+  loadApWx();
 }
 
 // ── METAR/TAF: metar_latest.json（wx-data 30分毎）を各空港行に展開 ──
