@@ -115,6 +115,7 @@
       background:#dc2626;border:2px solid #fff;border-radius:50%;box-shadow:0 3px 14px rgba(0,0,0,.7);cursor:pointer;z-index:2}
     .apwx summary{cursor:pointer;font-size:11px;font-weight:600;color:var(--warn);padding:4px 0}
     .apwx-t{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin:8px 0 2px;text-transform:uppercase}
+    .apwx-en summary{cursor:pointer;font-size:10px;color:var(--muted);padding:2px 0}
     .apwx-p{white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.6}
     #lightbox-hint{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);left:0;right:0;text-align:center;color:#fff;font-size:11px;pointer-events:none;
       text-shadow:0 1px 4px #000}
@@ -1604,7 +1605,12 @@ async function loadApWx() {
     if (!secs) { el.style.display = 'none'; return; }
     let h = '<details class="apwx"><summary>📖 空港気象特性（Airport Guide）</summary>';
     secs.forEach(sec => {
-      h += '<div class="apwx-t">' + esc(sec.title) + '</div><pre class="atis-pre apwx-p">' + esc(sec.text) + '</pre>';
+      if (sec.ja_text) {   // 日本語訳を主表示、原文は折りたたみ
+        h += '<div class="apwx-t">' + esc(sec.ja_title || sec.title) + '</div><pre class="atis-pre apwx-p">' + esc(sec.ja_text) + '</pre>'
+          + '<details class="apwx-en"><summary>原文 (English)</summary><div class="apwx-t">' + esc(sec.title) + '</div><pre class="atis-pre apwx-p">' + esc(sec.text) + '</pre></details>';
+      } else {
+        h += '<div class="apwx-t">' + esc(sec.title) + '</div><pre class="atis-pre apwx-p">' + esc(sec.text) + '</pre>';
+      }
     });
     el.innerHTML = h + '</details>';
     el.style.display = 'block';
