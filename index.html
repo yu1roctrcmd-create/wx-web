@@ -252,23 +252,14 @@
     <div class="img-wrap"><img class="wx-img" src="https://www.data.jma.go.jp/airinfo/data/pict/ajpn_cmnt/qyya86-0.png" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
-    <div class="card-label">アジア太平洋 地上天気図<span class="ts" id="sfc-chart-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img" id="sfc-chart-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
-    <div class="maiji-sel" id="sfc-chart-sel">
-      <button class="active" onclick="selSfcChart('asas',this)">実況 (ASAS)</button>
-      <button onclick="selSfcChart('fsas24',this)">24h予想</button>
-      <button onclick="selSfcChart('fsas48',this)">48h予想</button>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-label">アジア太平洋 カラー地上天気図 (JMA)<span class="ts" id="sfc-color-ts"></span></div>
+    <div class="card-label">アジア太平洋 地上天気図（気象庁 公式カラー）<span class="ts" id="sfc-color-ts"></span></div>
     <div class="img-wrap" style="background:#fff;padding:4px"><img class="wx-img" id="sfc-color-img" referrerpolicy="no-referrer" loading="lazy"><div class="err">取得できませんでした</div></div>
     <div class="maiji-sel" id="sfc-color-sel">
       <button class="active" onclick="sfcColor('now',this)">実況</button>
       <button onclick="sfcColor('ft24',this)">24h予想</button>
       <button onclick="sfcColor('ft48',this)">48h予想</button>
     </div>
-    <div style="font-size:10px;color:var(--muted);padding:2px 12px 8px">陸地=薄緑 ／ <b style="color:#ef4444">高気圧 H=赤</b> ／ <b style="color:#3b82f6">低気圧 L=青</b>（気象庁の標準色と逆に入れ替え） ／ 寒冷前線=青・温暖前線=赤</div>
+    <div style="font-size:10px;color:var(--muted);padding:2px 12px 8px">気象庁 公式（実況 ASAS／24h・48h 予想）。陸地=薄緑、高気圧 H=青・低気圧 L=赤、寒冷前線=青・温暖前線=赤</div>
   </div>
   <div class="card">
     <div class="card-label">太平洋地上天気図 (NOAA OPC)</div>
@@ -1442,37 +1433,7 @@ document.addEventListener('load', e => {
   isoApply(im);
 }, true);
 
-// ── 気象庁カラー天気図: 高気圧H=赤 / 低気圧L=青 に入れ替え（前線の色は維持）──
-function hlSwap(d, W, H) {
-  const N = W * H, cls = new Uint8Array(N);   // 1=赤系, 2=青系
-  for (let i = 0; i < N; i++) {
-    const r = d[i*4], g = d[i*4+1], b = d[i*4+2];
-    if (r > 185 && g < 135 && b < 135 && r - g > 80) cls[i] = 1;
-    else if (b > 185 && r < 115 && g < 140 && b - r > 90) cls[i] = 2;
-  }
-  const seen = new Uint8Array(N); let n = 0;
-  for (let s = 0; s < N; s++) {
-    if (!cls[s] || seen[s]) continue;
-    const c = cls[s], st = [s], pts = []; seen[s] = 1;
-    let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1, thick = false;
-    while (st.length) {
-      const p = st.pop(), x = p % W, y = (p - x) / W; pts.push(p);
-      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
-      if (!thick && x > 0 && y > 0 && x < W-1 && y < H-1 && cls[p-1] === c && cls[p+1] === c && cls[p-W] === c && cls[p+W] === c) thick = true;
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
-        const nx = x + dx, ny = y + dy;
-        if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
-        const q = ny * W + nx; if (cls[q] === c && !seen[q]) { seen[q] = 1; st.push(q); }
-      }
-    }
-    if (Math.max(x1 - x0, y1 - y0) + 1 > 26 || pts.length < 12 || !thick) continue;   // 前線など長いものは対象外
-    pts.forEach(p => { const t = d[p*4]; d[p*4] = d[p*4+2]; d[p*4+2] = t; });
-    n++;
-  }
-  return n;
-}
-
-// カラー地上天気図（JMA bosai weather_map, CORS 許可）を取得 → H/L 色を入れ替えて表示
+// ── 気象庁 公式カラー地上天気図（bosai weather_map, アジア域: now=ASAS / ft24 / ft48）──
 let _sfcColorKey = 'now';
 async function loadSfcColor() {
   const img = document.getElementById('sfc-color-img'), tsEl = document.getElementById('sfc-color-ts');
@@ -1484,13 +1445,9 @@ async function loadSfcColor() {
     const list = await lr.json(), arr = list.asia && list.asia[_sfcColorKey];
     const file = arr && arr[arr.length - 1]; if (!file) throw 0;
     const m = file.match(/_C_010000_(\d{4})(\d{2})(\d{2})(\d{2})/);
-    const src = new Image(); src.crossOrigin = 'anonymous';
-    await new Promise((res, rej) => { src.onload = res; src.onerror = rej; src.src = 'https://www.jma.go.jp/bosai/weather_map/data/png/' + file; });
-    const cv = document.createElement('canvas'); cv.width = src.naturalWidth; cv.height = src.naturalHeight;
-    const g = cv.getContext('2d'); g.drawImage(src, 0, 0);
-    const id = g.getImageData(0, 0, cv.width, cv.height); hlSwap(id.data, cv.width, cv.height); g.putImageData(id, 0, 0);
     img.style.display = ''; if (err) err.style.display = 'none';
-    img.src = cv.toDataURL('image/png');
+    img.onerror = () => imgErr(img);
+    img.src = 'https://www.jma.go.jp/bosai/weather_map/data/png/' + file;
     if (tsEl && m) tsEl.textContent = m[1]+'/'+m[2]+'/'+m[3]+' '+m[4]+':00Z';
   } catch (e) { imgErr(img); }
 }
@@ -1639,14 +1596,6 @@ function llArea(c, btn) {
 function llFt(f, btn) {
   document.querySelectorAll('#ll-ft-sel button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active'); _llFt = f; setLowLevel();
-}
-
-// ── アジア太平洋 地上天気図（実況 asas / 24h fsas24 / 48h fsas48 切替）──
-let _sfcChartCode = 'asas';
-function selSfcChart(code, btn) {
-  document.querySelectorAll('#sfc-chart-sel button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active'); _sfcChartCode = code;
-  setNkishou(document.getElementById('sfc-chart-img'), document.getElementById('sfc-chart-ts'), code, [3,9,15,21]);
 }
 
 function setNkishou(imgEl, tsEl, code, validJstHours) {
@@ -1848,7 +1797,6 @@ function setDynamicUrls(force) {
   }
 
   // n-kishou charts with fallback
-  if (document.getElementById('sfc-chart-img')) setNkishou(document.getElementById('sfc-chart-img'), document.getElementById('sfc-chart-ts'), _sfcChartCode, [3,9,15,21]);
   setLowLevel();
   setNkishou(document.getElementById('aupq35-img'),  document.getElementById('aupq35-ts'),  'aupq35',  [9,21]);
   setNkishou(document.getElementById('axjp140-img'), document.getElementById('axjp140-ts'), 'axjp140', [9,21]);
