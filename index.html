@@ -379,10 +379,10 @@
 
   </div>
   <div class="subsec">
-  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 断面図 (経度選択)</div>
+  <div class="grp" style="margin-top:6px">JMA 三十分大気解析 断面図 (経度選択) ー 薄赤の太線＝−20℃</div>
   <div class="card">
     <div class="card-label">断面図<span class="ts" id="maiji-cs-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-int" id="maiji-cs-img" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="img-wrap"><img class="wx-img maiji-int" id="maiji-cs-img" crossorigin="anonymous" data-isoable referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
     <div class="maiji-sel" id="maiji-cs-sel">
       <button onclick="selMaijiC(150,this)" class="active">145°E</button>
       <button onclick="selMaijiC(152,this)">140°E</button>
@@ -397,19 +397,19 @@
   <div class="grp" style="margin-top:6px">JMA 三十分大気解析 縦断図 (ルート別)</div>
   <div class="card">
     <div class="card-label">東京-福岡<span class="ts" id="maiji-c105-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="105" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" crossorigin="anonymous" data-isoable data-code="105" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
     <div class="card-label">東京-稚内<span class="ts" id="maiji-c103-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="103" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" crossorigin="anonymous" data-isoable data-code="103" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
     <div class="card-label">東京-鹿児島<span class="ts" id="maiji-c106-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="106" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" crossorigin="anonymous" data-isoable data-code="106" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   <div class="card">
     <div class="card-label">石垣-東京<span class="ts" id="maiji-c107-ts"></span></div>
-    <div class="img-wrap"><img class="wx-img maiji-c" data-code="107" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
+    <div class="img-wrap"><img class="wx-img maiji-c" crossorigin="anonymous" data-isoable data-code="107" referrerpolicy="no-referrer" loading="lazy" onerror="imgErr(this)"><div class="err">取得できませんでした</div></div>
   </div>
   </div>
 </div><!-- /upper -->
@@ -1351,6 +1351,86 @@ async function initIce() {
   list.innerHTML = html;
   st.textContent = '有効な着氷 SIGMET ' + items.length + ' 件' + (modelTs ? '（気温: Open-Meteo モデル ' + modelTs + '）' : '') + ' ／ データ生成 ' + (data.updated_utc || '?');
 }
+
+// ── 断面図: −20℃ 等温線を検出（JMA の画像そのものから）──
+// 等温線=(255,128,128)、等温線ラベル=(255,0,0)。ラベル「0」から 0℃線、
+// その真上にある 2 桁ラベル（−20）から −20℃線をたどる。失敗時は null。
+function isoFind20(d, W, H) {
+  const X0 = 60, X1 = 750, Y0 = 30, Y1 = 430;
+  const px = (x, y) => { const i = (y * W + x) * 4; return [d[i], d[i+1], d[i+2]]; };
+  const isLine = (x, y) => { const p = px(x, y); return p[0] >= 245 && p[1] >= 112 && p[1] <= 145 && p[2] >= 112 && p[2] <= 145; };
+  const isLab  = (x, y) => { const p = px(x, y); return p[0] >= 245 && p[1] <= 40 && p[2] <= 40; };
+  // ラベル: 赤を横に3px膨張させて連結成分化
+  const w = X1 - X0 + 1, h = Y1 - Y0 + 1, m = new Uint8Array(w * h);
+  for (let y = Y0; y <= Y1; y++) for (let x = X0; x <= X1; x++) if (isLab(x, y))
+    for (let k = -3; k <= 3; k++) for (let j = -2; j <= 2; j++) { const xx = x + k - X0, yy = y + j - Y0; if (xx >= 0 && xx < w && yy >= 0 && yy < h) m[yy * w + xx] = 1; }
+  const seen = new Uint8Array(w * h), labs = [];
+  for (let s = 0; s < m.length; s++) {
+    if (!m[s] || seen[s]) continue;
+    const st = [s]; seen[s] = 1; let x0 = 1e9, x1 = -1, y0 = 1e9, y1 = -1, n = 0;
+    while (st.length) {
+      const c = st.pop(), cx = c % w, cy = (c - cx) / w; n++;
+      if (cx < x0) x0 = cx; if (cx > x1) x1 = cx; if (cy < y0) y0 = cy; if (cy > y1) y1 = cy;
+      [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx, dy]) => {
+        const nx = cx + dx, ny = cy + dy;
+        if (nx >= 0 && nx < w && ny >= 0 && ny < h) { const q = ny * w + nx; if (m[q] && !seen[q]) { seen[q] = 1; st.push(q); } }
+      });
+    }
+    const bw = x1 - x0 + 1 - 6, bh = y1 - y0 + 1 - 4;   // 膨張分を戻す
+    if (bh >= 9 && bh <= 18 && bw >= 5 && bw <= 30) labs.push({ cx: X0 + (x0 + x1) / 2, cy: Y0 + (y0 + y1) / 2, w: bw, x0: X0 + x0 + 3, x1: X0 + x1 - 3 });
+  }
+  const zero = labs.filter(l => l.w <= 11).sort((a, b) => b.cy - a.cy)[0];
+  if (!zero) return null;
+  const cand = labs.filter(l => l.w >= 14 && l.cy < zero.cy - 40 && Math.abs(l.cx - zero.cx) <= 80).sort((a, b) => b.cy - a.cy)[0];
+  if (!cand) return null;
+  // 線をたどる
+  const colHits = (x, yc, win) => { let best = null; for (let dy = 0; dy <= win; dy++) for (const sg of [1, -1]) {
+    const y = yc + sg * dy; if (y >= Y0 && y <= Y1 && isLine(x, y)) { best = y; break; } if (best !== null) break; } return best; };
+  const startY = (x) => colHits(x, Math.round(cand.cy), 7);
+  const walk = (x, y, step) => {
+    const out = []; let slope = 0, miss = 0, lastY = y;
+    for (let xx = x; xx >= X0 && xx <= X1; xx += step) {
+      const yy = colHits(xx, Math.round(lastY + slope), 5);
+      if (yy === null) { miss++; if (miss > 40) break; lastY += slope; out.push([xx, Math.round(lastY)]); continue; }
+      slope = miss === 0 ? Math.max(-4, Math.min(4, (yy - lastY) * 0.5 + slope * 0.5)) : 0;
+      miss = 0; lastY = yy; out.push([xx, yy]);
+    }
+    return out;
+  };
+  let sx = null, sy = null;
+  for (let o = 2; o <= 18 && sy === null; o++) {
+    for (const x of [cand.x0 - o, cand.x1 + o]) { const y = startY(x); if (y !== null) { sx = x; sy = y; break; } }
+  }
+  if (sy === null) return null;
+  const r = walk(sx, sy, 1), l = walk(sx, sy, -1).reverse();
+  return { pts: l.concat(r), label: cand, zero };
+}
+function isoApply(img) {
+  try {
+    const W = img.naturalWidth, H = img.naturalHeight; if (!W || !H) return;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d'); g.drawImage(img, 0, 0);
+    const res = isoFind20(g.getImageData(0, 0, W, H).data, W, H);
+    if (!res || res.pts.length < 60) return;
+    g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.strokeStyle = 'rgba(255,90,90,.38)'; g.lineWidth = 11; g.beginPath();
+    res.pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
+    g.restore();
+    g.font = 'bold 13px sans-serif'; g.fillStyle = '#dc2626'; g.textBaseline = 'bottom';
+    const lp = res.pts[Math.floor(res.pts.length * 0.12)];
+    g.fillText('−20℃', lp[0], lp[1] - 8);
+    img.dataset.iso = '1';
+    img.src = cv.toDataURL('image/png');
+  } catch (e) { /* CORS 等で読めない場合は元画像のまま */ }
+}
+
+// 断面図・縦断図（type C）の画像が読み込まれたら −20℃ 線を薄赤でハイライト
+document.addEventListener('load', e => {
+  const im = e.target;
+  if (!(im instanceof HTMLImageElement) || !im.hasAttribute('data-isoable')) return;
+  if (!im.currentSrc || im.currentSrc.startsWith('data:')) return;
+  isoApply(im);
+}, true);
 
 // ── Windy 高度別の風（地上/850h/500h/300h/250h）──
 let _windLv = 'surface';
