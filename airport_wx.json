@@ -2,341 +2,495 @@
  "EDDF": [
   {
    "title": "Weather Characteristics",
-   "text": " Low clouds tend to accumulate because the area is surrounded by\n mountains, and nearby rivers produce radiation fog that can persist for long\n periods of time depending on the wind direction.\n  Depending on the wind direction, these conditions may persist for a long\n period of time. This type of weather phenomenon is most likely from late fall\n to winter."
+   "text": " Low clouds tend to accumulate because the area is surrounded by\n mountains, and nearby rivers produce radiation fog that can persist for long\n periods of time depending on the wind direction.\n  Depending on the wind direction, these conditions may persist for a long\n period of time. This type of weather phenomenon is most likely from late fall\n to winter.",
+   "ja_title": "気象の特徴",
+   "ja_text": "周囲を山に囲まれているため低い雲がたまりやすく、近くの河川から発生する放射霧は風向によって長時間残ることがある。\n風向によっては、こうした状態が長く続くことがある。この種の現象は晩秋から冬にかけて最も起こりやすい。"
   },
   {
    "title": "Wind",
-   "text": " The wind direction is influenced by Mount Taunus to the north of the airport,\n and winds from the southwest and northeast predominate throughout the\n year.\n  The seasonal variations are as follows.\n - In winter, southwesterly winds are predominant and wind speeds are\n relatively high.\n - In spring, the proportion of northeasterly winds increases.\n - In summer, there are no characteristic prevailing winds.\n - In autumn, southwesterly winds prevail and wind speed increases."
+   "text": " The wind direction is influenced by Mount Taunus to the north of the airport,\n and winds from the southwest and northeast predominate throughout the\n year.\n  The seasonal variations are as follows.\n - In winter, southwesterly winds are predominant and wind speeds are\n relatively high.\n - In spring, the proportion of northeasterly winds increases.\n - In summer, there are no characteristic prevailing winds.\n - In autumn, southwesterly winds prevail and wind speed increases.",
+   "ja_title": "風",
+   "ja_text": "風向は空港の北にあるタウヌス山地の影響を受け、年間を通じて南西風と北東風が卓越する。\n季節ごとの変化は次のとおり。\n- 冬: 南西風が卓越し、風速は比較的強い。\n- 春: 北東風の割合が増える。\n- 夏: 特徴的な卓越風はない。\n- 秋: 南西風が卓越し、風速が強まる。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " The average annual temperature is 9.5°C, with a series of days below zero\n in winter.\n  The maximum temperature in summer is 24°C, which is quite cool.\n  However, precipitation is low, less than half that of Tokyo."
+   "text": " The average annual temperature is 9.5°C, with a series of days below zero\n in winter.\n  The maximum temperature in summer is 24°C, which is quite cool.\n  However, precipitation is low, less than half that of Tokyo.",
+   "ja_title": "気温と降水",
+   "ja_text": "年平均気温は9.5℃で、冬は氷点下の日が続く。\n夏の最高気温は24℃で、かなり涼しい。\nただし降水量は少なく、東京の半分に満たない。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " The highest probability of Ceiling less than 300ft and Visibility less than\n 1,200m is from October to February,\n  The highest probability is around 6:00 a.m. in October, at 20%."
+   "text": " The highest probability of Ceiling less than 300ft and Visibility less than\n 1,200m is from October to February,\n  The highest probability is around 6:00 a.m. in October, at 20%.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "雲底300ft未満かつ視程1,200m未満となる確率が最も高いのは10月から2月。\n最も確率が高いのは10月の午前6時ごろで、20％。"
   }
  ],
  "EHAM": [
   {
    "title": "Weather Characteristics",
-   "text": " Strongly affected by proximity to the North Sea, visibility is often reduced\n during the winter due to drizzle with low ceiling. Conditions usually\n improve in the afternoon."
+   "text": " Strongly affected by proximity to the North Sea, visibility is often reduced\n during the winter due to drizzle with low ceiling. Conditions usually\n improve in the afternoon.",
+   "ja_title": "気象の特徴",
+   "ja_text": "北海に近いことの影響が強く、冬は低い雲を伴う霧雨のため視程がしばしば低下する。通常は午後に回復する。"
   },
   {
    "title": "Wind",
-   "text": " Prevailing winds are South Westerly or North Easterly.\n\n  Winter:\n - WNW～NW. Generally gloomy weather. Low cloud, fog, and drizzle\n feed in from the North Sea.\n - S～SW～W. Low visibility and low ceiling due to moist air flow from the\n North Sea.\n - NNW～ENE. Generally, good weather.\n - ESE～SSE. Wetlands are situated in this direction. Smoke dispersed by\n the industrial region reduces visibility remarkably, especially during\n winter when the air is stable and humid.\n\n  Summer:\n - WNW～NW. Generally good weather. Unstable air may cause showers\n or thunderstorms.\n - NNW～ENE. Unstable air causes showers and thunderstorms.\n - SE. Frequent thunderstorms.\n\n  Spring or Autumn:\n - SW, sometimes NW gusty winds prevail when the season changes."
+   "text": " Prevailing winds are South Westerly or North Easterly.\n\n  Winter:\n - WNW～NW. Generally gloomy weather. Low cloud, fog, and drizzle\n feed in from the North Sea.\n - S～SW～W. Low visibility and low ceiling due to moist air flow from the\n North Sea.\n - NNW～ENE. Generally, good weather.\n - ESE～SSE. Wetlands are situated in this direction. Smoke dispersed by\n the industrial region reduces visibility remarkably, especially during\n winter when the air is stable and humid.\n\n  Summer:\n - WNW～NW. Generally good weather. Unstable air may cause showers\n or thunderstorms.\n - NNW～ENE. Unstable air causes showers and thunderstorms.\n - SE. Frequent thunderstorms.\n\n  Spring or Autumn:\n - SW, sometimes NW gusty winds prevail when the season changes.",
+   "ja_title": "風",
+   "ja_text": "卓越風は南西または北東。\n\n冬:\n- WNW～NW: 全般にどんよりした天気。北海から低い雲・霧・霧雨が流れ込む。\n- S～SW～W: 北海からの湿った気流により、視程・雲底とも低い。\n- NNW～ENE: 全般に良い天気。\n- ESE～SSE: この方向には湿地帯がある。工業地帯の煙が拡散して視程を著しく下げる。特に大気が安定して湿った冬に顕著。\n\n夏:\n- WNW～NW: 全般に良い天気。大気が不安定だとシャワーや雷雨になることがある。\n- NNW～ENE: 不安定な大気でシャワーや雷雨になる。\n- SE: 雷雨が多い。\n\n春・秋:\n- 季節の変わり目には、SW、ときにNWの突風が卓越する。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " Winter temperature is mild, averaging between 0℃ and 7℃. Summer\n temperature is moderately warm but rarely hot. Average is 13℃ to 22℃.\n  Amsterdam’s average annual precipitation is less than 760mm. Most of\n this precipitation is drizzle or light rain, making cloudy and damp days\n common during the cooler months of OCT through MAR."
+   "text": " Winter temperature is mild, averaging between 0℃ and 7℃. Summer\n temperature is moderately warm but rarely hot. Average is 13℃ to 22℃.\n  Amsterdam’s average annual precipitation is less than 760mm. Most of\n this precipitation is drizzle or light rain, making cloudy and damp days\n common during the cooler months of OCT through MAR.",
+   "ja_title": "気温と降水",
+   "ja_text": "冬の気温は穏やかで、平均0℃～7℃。夏は適度に暖かく、めったに暑くならない。平均13℃～22℃。\nアムステルダムの年間降水量は760mm未満。降水の大部分は霧雨か弱い雨で、涼しい10月から3月にかけては曇って湿った日が多い。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " Fog:\n - Dense fog is often caused by surrounding wetlands when landing in\n winter (NOV～MAR) during early morning (0600～1000Z) and may\n require low visibility approach procedures.\n\n Snow:\n - Snowfall is possible from NOV to APR, but more likely between DEC\n and FEB. Probability of snowfall is relatively low at 5-7%."
+   "text": " Fog:\n - Dense fog is often caused by surrounding wetlands when landing in\n winter (NOV～MAR) during early morning (0600～1000Z) and may\n require low visibility approach procedures.\n\n Snow:\n - Snowfall is possible from NOV to APR, but more likely between DEC\n and FEB. Probability of snowfall is relatively low at 5-7%.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "霧:\n- 冬（11月～3月）の早朝（0600～1000Z）の着陸時に、周辺の湿地帯が原因で濃霧がしばしば発生し、低視程進入方式が必要になることがある。\n\n雪:\n- 降雪は11月から4月にかけてあり得るが、12月から2月に多い。降雪確率は5～7％と比較的低い。"
   }
  ],
  "KDFW": [
   {
    "title": "Weather Characteristics",
-   "text": " Dallas has a humid subtropical climate. It is in a region that tends to\n receive warm, dry winds from the north and west in the summer, bringing\n temperatures well over 38 °C.\n  When only temperature itself is accounted for, the north central Texas\n region is one of the hottest in the United States during the summer\n months.\n\n  Winters in Dallas are generally mild to warm, with normal daytime highs\n ranging from 13 °C to 21 °C and normal nighttime lows falling between\n −1 °C and 7 °C.\n  However, strong cold fronts known as \"Blue Northers\" sometimes pass\n through the Dallas region, plummeting nightly lows below −4 °C for a few\n days at a time and keeping daytime highs around 4 °C.\n\n  Spring and autumn bring pleasant weather to the area. Springtime\n weather can be quite volatile, but temperatures are mild.\n  In the spring, cool fronts moving south from Canada collide with warm,\n humid air streaming in from the Gulf Coast. When these fronts meet over\n north central Texas, severe thunderstorms are generated with\n spectacular lightning shows, torrents of rain, hail, and occasionally,\n tornadoes.\n  Autumn weather (Late SEP-Early DEC) is also generally pleasant, and\n unlike springtime, major storms rarely form in the area."
+   "text": " Dallas has a humid subtropical climate. It is in a region that tends to\n receive warm, dry winds from the north and west in the summer, bringing\n temperatures well over 38 °C.\n  When only temperature itself is accounted for, the north central Texas\n region is one of the hottest in the United States during the summer\n months.\n\n  Winters in Dallas are generally mild to warm, with normal daytime highs\n ranging from 13 °C to 21 °C and normal nighttime lows falling between\n −1 °C and 7 °C.\n  However, strong cold fronts known as \"Blue Northers\" sometimes pass\n through the Dallas region, plummeting nightly lows below −4 °C for a few\n days at a time and keeping daytime highs around 4 °C.\n\n  Spring and autumn bring pleasant weather to the area. Springtime\n weather can be quite volatile, but temperatures are mild.\n  In the spring, cool fronts moving south from Canada collide with warm,\n humid air streaming in from the Gulf Coast. When these fronts meet over\n north central Texas, severe thunderstorms are generated with\n spectacular lightning shows, torrents of rain, hail, and occasionally,\n tornadoes.\n  Autumn weather (Late SEP-Early DEC) is also generally pleasant, and\n unlike springtime, major storms rarely form in the area.",
+   "ja_title": "気象の特徴",
+   "ja_text": "ダラスは温暖湿潤気候。夏は北や西からの暖かく乾いた風が入りやすく、気温が38℃をはるかに超えることがある。\n気温だけで見ると、テキサス州中北部は夏に米国でも最も暑い地域の一つ。\n\nダラスの冬は一般に温暖で、日中の平年の最高気温は13℃～21℃、夜間の最低気温は−1℃～7℃。\nただし「ブルー・ノーザー」と呼ばれる強い寒冷前線が通過することがあり、夜間の最低気温が−4℃を下回り、日中の最高気温が4℃前後にとどまる日が数日続く。\n\n春と秋は心地よい天気。春の天気はかなり変わりやすいが、気温は穏やか。\n春はカナダから南下する涼しい前線が、メキシコ湾岸から流れ込む暖かく湿った空気とぶつかる。この前線がテキサス中北部上空で出会うと、激しい雷雨が発生し、壮観な雷、豪雨、ひょう、ときに竜巻を伴う。\n秋（9月下旬～12月上旬）も一般に心地よく、春と違って大きな嵐はほとんど発生しない。"
   },
   {
    "title": "Wind",
-   "text": " The wind is predominantly from the south, and average wind speed is\n about 10kt. However, a very strong north wind may blow in the winter\n season."
+   "text": " The wind is predominantly from the south, and average wind speed is\n about 10kt. However, a very strong north wind may blow in the winter\n season.",
+   "ja_title": "風",
+   "ja_text": "風は主に南風で、平均風速は約10kt。ただし冬には非常に強い北風が吹くことがある。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "Month-long Mean maximum Mean minimum Average\n average temperature temperature precipitation\n JAN 11℃ 0℃ 40mm\n FEB 14℃ 1℃ 50mm\n MAR 19℃ 6℃ 60mm\n APR 24℃ 11℃ 80mm\n MAY 28℃ 16℃ 110mm\n JUN 32℃ 20℃ 80mm\n JUL 35℃ 22℃ 60mm\n AUG 35℃ 21℃ 50mm\n\n SEP 30℃ 18℃ 80mm\n OCT 25℃ 12℃ 80mm\n NOV 19℃ 6℃ 40mm\n DEC 13℃ 1℃ 40mm\n\n  Snow accumulation is usually seen in the city at least once every winter,\n and snowfall generally occurs 1-2 days out of the year for an annual\n average of 1.8 inches (4.6cm)."
+   "text": "Month-long Mean maximum Mean minimum Average\n average temperature temperature precipitation\n JAN 11℃ 0℃ 40mm\n FEB 14℃ 1℃ 50mm\n MAR 19℃ 6℃ 60mm\n APR 24℃ 11℃ 80mm\n MAY 28℃ 16℃ 110mm\n JUN 32℃ 20℃ 80mm\n JUL 35℃ 22℃ 60mm\n AUG 35℃ 21℃ 50mm\n\n SEP 30℃ 18℃ 80mm\n OCT 25℃ 12℃ 80mm\n NOV 19℃ 6℃ 40mm\n DEC 13℃ 1℃ 40mm\n\n  Snow accumulation is usually seen in the city at least once every winter,\n and snowfall generally occurs 1-2 days out of the year for an annual\n average of 1.8 inches (4.6cm).",
+   "ja_title": "気温と降水",
+   "ja_text": "月別の平均最高気温・平均最低気温・平均降水量:\n 1月 11℃ 0℃ 40mm\n 2月 14℃ 1℃ 50mm\n 3月 19℃ 6℃ 60mm\n 4月 24℃ 11℃ 80mm\n 5月 28℃ 16℃ 110mm\n 6月 32℃ 20℃ 80mm\n 7月 35℃ 22℃ 60mm\n 8月 35℃ 21℃ 50mm\n 9月 30℃ 18℃ 80mm\n 10月 25℃ 12℃ 80mm\n 11月 19℃ 6℃ 40mm\n 12月 13℃ 1℃ 40mm\n\n市内では、積雪が毎冬少なくとも1回は見られる。降雪は一般に年に1～2日で、年間の平均積雪は1.8インチ（4.6cm）。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " Because there are many lakes, dense fog might be generated from early\n winter to early spring. It generates just before sunrise and usually\n disappears with the rise of temperature."
+   "text": " Because there are many lakes, dense fog might be generated from early\n winter to early spring. It generates just before sunrise and usually\n disappears with the rise of temperature.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "湖が多いため、初冬から早春にかけて濃霧が発生することがある。日の出直前に発生し、気温の上昇とともに通常は消える。"
   },
   {
    "title": "Others",
-   "text": " Dallas County has experienced up to 5 tornadoes per year with typically\n 2 per year since 2000.\n\n  Bird hazard exists year-round. Bird strikes are particularly common\n during South Flow."
+   "text": " Dallas County has experienced up to 5 tornadoes per year with typically\n 2 per year since 2000.\n\n  Bird hazard exists year-round. Bird strikes are particularly common\n during South Flow.",
+   "ja_title": "その他",
+   "ja_text": "ダラス郡では2000年以降、年間最大5回、通常は年2回の竜巻が発生している。\n\nバードハザードは一年中ある。特に南流（South Flow）時にバードストライクが多い。"
   }
  ],
  "KJFK": [
   {
    "title": "Weather Characteristics",
-   "text": " Located in the mid-latitude zone on the US East Coast, the region which\n houses JFK is severely affected by the extra-tropical cyclones that\n develop rapidly in the coastal sea area in winter. Additionally, low sea\n surface temperatures are distributed throughout the neighboring sea\n areas off the coast. Due to these environmental factors, significant\n weather conditions such as snowfall induced by lows and sea fog are\n observed at JFK.\n  Other phenomena that could impede flight operation in this area include\n heat thunderstorms, frontal thunderstorms, frontal fog and radiation fog.\n East Coast weather brings to the area hot and humid summers. In winter,\n the area is covered by cold waves which travel southward from the high-\n latitude zones of the continent.\n  There will be hurricanes from summer to autumn. SWAP operations take\n effect when massive thunderstorms are developed surrounding New\n York areas"
+   "text": " Located in the mid-latitude zone on the US East Coast, the region which\n houses JFK is severely affected by the extra-tropical cyclones that\n develop rapidly in the coastal sea area in winter. Additionally, low sea\n surface temperatures are distributed throughout the neighboring sea\n areas off the coast. Due to these environmental factors, significant\n weather conditions such as snowfall induced by lows and sea fog are\n observed at JFK.\n  Other phenomena that could impede flight operation in this area include\n heat thunderstorms, frontal thunderstorms, frontal fog and radiation fog.\n East Coast weather brings to the area hot and humid summers. In winter,\n the area is covered by cold waves which travel southward from the high-\n latitude zones of the continent.\n  There will be hurricanes from summer to autumn. SWAP operations take\n effect when massive thunderstorms are developed surrounding New\n York areas",
+   "ja_title": "気象の特徴",
+   "ja_text": "JFK は米国東海岸の中緯度帯に位置し、冬に沿岸の海域で急速に発達する温帯低気圧の影響を強く受ける。さらに、沖合の海域一帯は海面水温が低い。こうした環境要因から、JFK では低気圧による降雪や海霧といった顕著な気象が見られる。\nこのほか運航の妨げになり得る現象として、熱雷、前線性雷雨、前線霧、放射霧がある。東海岸の気象により、夏は高温多湿。冬は大陸の高緯度地域から南下する寒波に覆われる。\n夏から秋にかけてハリケーンが来る。ニューヨーク周辺で大規模な雷雨が発達すると、SWAP（悪天回避手順）が発動される。"
   },
   {
    "title": "Wind",
-   "text": " The most frequent wind direction throughout the year is South (14.6%),\n followed by West (9.0%) and NW (8.9%). South winds start to blow with\n high frequency in later March and become prevalent during April through\n October. The frequency peaks in June at 28.4%.\n  South sea breezes prevail as local winds during the warm period.\n Normally, sea breezes start to blow around noon and peak at 1500-\n 1600LT. Their wind speed is 7 to 16kt.\n  During winter, with cold air flow from Canada, wind blows from W to NW.\n Wind can be up to 25kt or more while blowing rearward of the low\n pressure system.\n  Southerly winds blow during spring season with a high pressure system\n in southern region. Strong southerly winds can be expected during\n summer with stronger high pressure system in the southern region, but\n this only occurs when subtropical low pressure system passes through.\n  Winds calm down when the fall season arrives."
+   "text": " The most frequent wind direction throughout the year is South (14.6%),\n followed by West (9.0%) and NW (8.9%). South winds start to blow with\n high frequency in later March and become prevalent during April through\n October. The frequency peaks in June at 28.4%.\n  South sea breezes prevail as local winds during the warm period.\n Normally, sea breezes start to blow around noon and peak at 1500-\n 1600LT. Their wind speed is 7 to 16kt.\n  During winter, with cold air flow from Canada, wind blows from W to NW.\n Wind can be up to 25kt or more while blowing rearward of the low\n pressure system.\n  Southerly winds blow during spring season with a high pressure system\n in southern region. Strong southerly winds can be expected during\n summer with stronger high pressure system in the southern region, but\n this only occurs when subtropical low pressure system passes through.\n  Winds calm down when the fall season arrives.",
+   "ja_title": "風",
+   "ja_text": "年間で最も多い風向は南（14.6％）で、次いで西（9.0％）、北西（8.9％）。南風は3月下旬から頻度が高まり、4月から10月にかけて卓越する。頻度のピークは6月で28.4％。\n暖候期の局地風は南からの海風が卓越する。通常、海風は正午ごろに吹き始め、1500～1600LT にピークとなる。風速は7～16kt。\n冬はカナダからの寒気の流入でWからNWの風が吹く。低気圧の後面では、風が25kt以上になることがある。\n春は南側の高気圧に伴って南風が吹く。夏は南側の高気圧がより強いと強い南風が予想されるが、これは亜熱帯の低気圧が通過するときだけ。\n秋になると風は穏やかになる。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " The mean daily maximum is 28.3 degrees Celsius (July and August) and\n the mean day minimum is 0.0 degrees Celsius (January and February) at\n JFK. The airport is located in the coastal area and the temperature is\n affected by cold sea water.\n  Snowfalls have been observed as early as late November until end of\n\n April.\n\n  Heavy snowfall patterns can be seen during following conditions:\n - Stationary fronts formed by low pressure that are blocked by high\n pressure in Atlantic Ocean after passing the Appalachian Mountains.\n - Developed low pressure system in the Gulf of Mexico moving eastward.\n o In either case, cold air source in Canada and the Atlantic Ocean\n brings heavy snow and storms in the area.\n o The prevailing wind blows from northeast when snow falls, and landing\n into RWY4 is the most likely pattern. Significant drop in air\n temperature and strong wind with gusts from the northwest is\n expected after a cold front passes and this may limit your landing\n due to crosswind limitations.\n o Annual snowfall averages 29 days per year of which 5 days average a\n snowfall of more than 5cm."
+   "text": " The mean daily maximum is 28.3 degrees Celsius (July and August) and\n the mean day minimum is 0.0 degrees Celsius (January and February) at\n JFK. The airport is located in the coastal area and the temperature is\n affected by cold sea water.\n  Snowfalls have been observed as early as late November until end of\n\n April.\n\n  Heavy snowfall patterns can be seen during following conditions:\n - Stationary fronts formed by low pressure that are blocked by high\n pressure in Atlantic Ocean after passing the Appalachian Mountains.\n - Developed low pressure system in the Gulf of Mexico moving eastward.\n o In either case, cold air source in Canada and the Atlantic Ocean\n brings heavy snow and storms in the area.\n o The prevailing wind blows from northeast when snow falls, and landing\n into RWY4 is the most likely pattern. Significant drop in air\n temperature and strong wind with gusts from the northwest is\n expected after a cold front passes and this may limit your landing\n due to crosswind limitations.\n o Annual snowfall averages 29 days per year of which 5 days average a\n snowfall of more than 5cm.",
+   "ja_title": "気温と降水",
+   "ja_text": "JFK の日最高気温の平均は28.3℃（7月・8月）、日最低気温の平均は0.0℃（1月・2月）。空港は沿岸にあり、冷たい海水の影響で気温が左右される。\n降雪は早ければ11月下旬から、4月末までに観測されている。\n\n大雪のパターンは次の条件で見られる:\n- アパラチア山脈を越えた後の低気圧が、大西洋の高気圧にブロックされてできる停滞前線。\n- メキシコ湾で発達した低気圧が東進する場合。\n o どちらの場合も、カナダと大西洋の寒気の供給源が大雪と嵐をもたらす。\n o 降雪時は北東風が卓越し、RWY4への着陸が最も可能性の高いパターン。寒冷前線通過後は気温が大きく下がり、北西からの強い突風が予想され、横風制限により着陸が制限されることがある。\n o 年間の降雪日数は平均29日で、そのうち5cm超の降雪は平均5日。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " High chances of poor visibility (less than 1/4SM) can be expected during\n climate changes with accompanying snowfall. Sometimes the visibility\n may not increase until the temperature rises in the afternoon.\n  Sea fog can be seen when southerly winds are blowing. It is rare to have\n weather go below CAT-Ⅰ Minimum. The highest chance can be seen in\n June with 6% chance. Sea fog and frontal fog as well as radiation fog are\n the main cause of poor visibility with chances average of 20 days per\n year."
+   "text": " High chances of poor visibility (less than 1/4SM) can be expected during\n climate changes with accompanying snowfall. Sometimes the visibility\n may not increase until the temperature rises in the afternoon.\n  Sea fog can be seen when southerly winds are blowing. It is rare to have\n weather go below CAT-Ⅰ Minimum. The highest chance can be seen in\n June with 6% chance. Sea fog and frontal fog as well as radiation fog are\n the main cause of poor visibility with chances average of 20 days per\n year.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "降雪を伴う天候の変化のときは、視程不良（1/4SM未満）となる可能性が高い。午後に気温が上がるまで視程が回復しないこともある。\n南風が吹くときは海霧が見られる。CAT-Ⅰ ミニマムを下回ることはまれ。確率が最も高いのは6月で6％。視程不良の主因は海霧、前線霧、放射霧で、年平均で20日ほどある。"
   },
   {
    "title": "Others",
-   "text": " Thunderstorm Activity\n - Thunderstorms occur with a frequency of 2 to 4 days per month during\n May through September. The mean number of thunderstorm days at JFK\n is 19 days. They normally occur after 1300LT. The occurrence of\n thunderstorms which terminate landing/takeoff are concentrated between\n 1500-1900LT, with durations averaging around 30 minutes.\n\n  Bird Hazards\n - Jamaica Bay is a wildlife refuge area which supports a large number of\n birds. Departing aircraft, especially on RWY31L and 22L/R are cautioned\n about the presence of birds. A large landfill located about 3 miles west of\n the airport attracts a large number of gulls, usually flying below 500ft, but\n occasionally at altitudes above 1000ft. The VOR RWY 13L/R approach is\n directly over this landfill.\n\n  Low Level Wind Shear Alert System\n - Winds at each position will be reported when there is wind shear present.\n\n ATC example:\n Tower “NCA___ Heavy, Center field 210/15 Northwest 300/25…”\n\n JFK winter operation\n - Aviation sand and anti-snow fluid will be scattered on the runway. Snow\n removal work is only conducted for 150ft width. (RWY width 200ft)\n - RWY4L, 4R and depends on the weather 31L are the runways that have\n a priority for snow-removal. RWY4L and 4R may closed simultaneously\n to conduct snow-removal work when snowfall is heavy.\n\n Considerations to be taken during flight operations\n - Northeasterly winds are common when heavy snowfall is experienced.\n RWY4L is a long runway and it is not a factor to land with heavy weight,\n however, it is only a CAT-Ⅰ ILS equipped runway therefore when low\n visibility exists this runway may not be used for landing.\n - When departure under southwesterly wind conditions, careful runway\n selection is required for return-to-land performance calculations due to\n the displaced threshold.\n - Exercise caution on the taxiways especially where taxiways are narrow\n and under slippery conditions."
+   "text": " Thunderstorm Activity\n - Thunderstorms occur with a frequency of 2 to 4 days per month during\n May through September. The mean number of thunderstorm days at JFK\n is 19 days. They normally occur after 1300LT. The occurrence of\n thunderstorms which terminate landing/takeoff are concentrated between\n 1500-1900LT, with durations averaging around 30 minutes.\n\n  Bird Hazards\n - Jamaica Bay is a wildlife refuge area which supports a large number of\n birds. Departing aircraft, especially on RWY31L and 22L/R are cautioned\n about the presence of birds. A large landfill located about 3 miles west of\n the airport attracts a large number of gulls, usually flying below 500ft, but\n occasionally at altitudes above 1000ft. The VOR RWY 13L/R approach is\n directly over this landfill.\n\n  Low Level Wind Shear Alert System\n - Winds at each position will be reported when there is wind shear present.\n\n ATC example:\n Tower “NCA___ Heavy, Center field 210/15 Northwest 300/25…”\n\n JFK winter operation\n - Aviation sand and anti-snow fluid will be scattered on the runway. Snow\n removal work is only conducted for 150ft width. (RWY width 200ft)\n - RWY4L, 4R and depends on the weather 31L are the runways that have\n a priority for snow-removal. RWY4L and 4R may closed simultaneously\n to conduct snow-removal work when snowfall is heavy.\n\n Considerations to be taken during flight operations\n - Northeasterly winds are common when heavy snowfall is experienced.\n RWY4L is a long runway and it is not a factor to land with heavy weight,\n however, it is only a CAT-Ⅰ ILS equipped runway therefore when low\n visibility exists this runway may not be used for landing.\n - When departure under southwesterly wind conditions, careful runway\n selection is required for return-to-land performance calculations due to\n the displaced threshold.\n - Exercise caution on the taxiways especially where taxiways are narrow\n and under slippery conditions.",
+   "ja_title": "その他",
+   "ja_text": "雷雨活動\n- 雷雨は5月から9月にかけて、月に2～4日の頻度で発生する。JFK の年間の平均雷雨日数は19日。通常は1300LT以降に発生する。離着陸が中断される規模の雷雨は1500～1900LTに集中し、継続時間は平均30分程度。\n\nバードハザード\n- ジャマイカ湾は野生生物保護区で、多数の鳥が生息する。出発機、特にRWY31L と 22L/R では鳥の存在に注意。空港の約3マイル西にある大規模な埋立地には多数のカモメが集まり、通常は500ft未満を飛ぶが、1000ft超の高度を飛ぶこともある。VOR RWY 13L/R 進入はこの埋立地の真上を通る。\n\n低層ウィンドシア警報システム (LLWAS)\n- ウィンドシアがあるときは、各位置の風が通報される。\n\nATC の例:\nTower \"NCA___ Heavy, Center field 210/15 Northwest 300/25…\"\n\nJFK の冬季運用\n- 航空用の砂と防雪液が滑走路に散布される。除雪は幅150ftだけで行われる（滑走路幅は200ft）。\n- RWY4L、4R、および天候によっては31L が除雪の優先滑走路。大雪の際は、除雪のために RWY4L と 4R が同時に閉鎖されることがある。\n\n運航上の考慮事項\n- 大雪のときは北東風がよくある。RWY4L は長い滑走路で、重量が重い状態での着陸に支障はないが、CAT-Ⅰ ILS のみの装備のため、低視程時には着陸に使えないことがある。\n- 南西風での出発時は、ディスプレイスド・スレッショルドがあるため、リターン・ツー・ランド性能計算のための滑走路選択を慎重に行う必要がある。\n- 誘導路では、特に狭い箇所や滑りやすい状態のときに注意すること。"
   }
  ],
  "KLAX": [
   {
    "title": "Weather Characteristics",
-   "text": "The climate of Los Angeles is generally characterized by many sunny\n days and a dry climate. However, because it faces the Pacific Ocean, the\n climate is affected by tropical oceanic air masses during the summer."
+   "text": "The climate of Los Angeles is generally characterized by many sunny\n days and a dry climate. However, because it faces the Pacific Ocean, the\n climate is affected by tropical oceanic air masses during the summer.",
+   "ja_title": "気象の特徴",
+   "ja_text": "ロサンゼルスの気候は、晴れの日が多く乾燥しているのが特徴。ただし太平洋に面しているため、夏は熱帯性の海洋性気団の影響を受ける。"
   },
   {
    "title": "Wind",
-   "text": "Most of the year the wind is weak from the west, but it can get a little\n stronger in the afternoon due to the influence of the sea breeze as a daily\n change. This area is characterized by a strong northeast dry hot wind\n called “SANTA ANA” that occurs from midnight to dawn in autumn and\n winter. This wind often mixes dust and impairs visibility. In addition,\n sometimes the wind speed exceeds 50kt, which causes forest fires."
+   "text": "Most of the year the wind is weak from the west, but it can get a little\n stronger in the afternoon due to the influence of the sea breeze as a daily\n change. This area is characterized by a strong northeast dry hot wind\n called “SANTA ANA” that occurs from midnight to dawn in autumn and\n winter. This wind often mixes dust and impairs visibility. In addition,\n sometimes the wind speed exceeds 50kt, which causes forest fires.",
+   "ja_title": "風",
+   "ja_text": "一年の大半は西からの弱い風だが、日変化として午後は海風の影響でやや強まることがある。この地域には、秋から冬にかけて真夜中から明け方に発生する、北東の強い乾いた熱風「サンタアナ」がある。この風はしばしば砂塵を巻き込み、視程を悪化させる。また風速が50ktを超えることもあり、山火事の原因になる。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " The temperature does not change much, averaging 20°C in summer and\n 12°C in winter.\n  The amount of rainfall throughout the year is only about a quarter of that\n in Tokyo. Rain often falls in batches from January to February."
+   "text": " The temperature does not change much, averaging 20°C in summer and\n 12°C in winter.\n  The amount of rainfall throughout the year is only about a quarter of that\n in Tokyo. Rain often falls in batches from January to February.",
+   "ja_title": "気温と降水",
+   "ja_text": "気温の変化は小さく、平均は夏で20℃、冬で12℃。\n年間降水量は東京の約4分の1。雨は1月から2月にまとまって降ることが多い。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " A significant problem is visibility impairment due to fog and smog. It often\n gets worse in the morning from the end of autumn to the beginning of\n winter, but radiation fog that occurs especially in winter overlaps with\n smoke from factories to form thick smog, and if accompanied by a\n temperature inversion layer, it can last for a long time. At most, it occurs\n about 9 days a month.\n  From night to early morning, the wind that blows from the sea advects\n the fog and sometimes hits the airport.\n  In addition, there are low stratus clouds formed by the sea breeze, but\n Ceiling seems to be mostly around 800ft to 1,000ft. Generally, the normal\n pattern is to disappear with the sunrise."
+   "text": " A significant problem is visibility impairment due to fog and smog. It often\n gets worse in the morning from the end of autumn to the beginning of\n winter, but radiation fog that occurs especially in winter overlaps with\n smoke from factories to form thick smog, and if accompanied by a\n temperature inversion layer, it can last for a long time. At most, it occurs\n about 9 days a month.\n  From night to early morning, the wind that blows from the sea advects\n the fog and sometimes hits the airport.\n  In addition, there are low stratus clouds formed by the sea breeze, but\n Ceiling seems to be mostly around 800ft to 1,000ft. Generally, the normal\n pattern is to disappear with the sunrise.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "霧とスモッグによる視程障害が大きな問題。晩秋から初冬にかけて朝に悪化しやすいが、特に冬に発生する放射霧が工場の煙と重なって濃いスモッグとなり、逆転層を伴うと長時間続くことがある。多いときは月に約9日発生する。\n夜から早朝にかけて、海から吹く風が霧を移流させ、空港にかかることもある。\nこのほか、海風によって形成される低い層雲があるが、雲底はおおむね800ft～1,000ft程度。一般的なパターンは日の出とともに消える。"
   },
   {
    "title": "Others",
-   "text": "None"
+   "text": "None",
+   "ja_title": "その他",
+   "ja_text": "なし"
   }
  ],
  "KORD": [
   {
    "title": "Weather Characteristics",
-   "text": " The Midwest United States is sandwiched between the Appalachians\n and the Rocky Mountains to the east and west, but there are no\n mountain ranges that block circulation in the north-south direction.\n  Because of this, during the cold season, warm air masses rich in water\n vapor, which are the energy source for giant cumulonimbus clouds and\n tornadoes, flow in from the Gulf of Mexico, resulting in severe weather\n changes.\n  Topographically, the area around O'Hare International Airport is a plain,\n but because Lake Michigan to the east extends significantly northward,\n winds are strong throughout the year.\n  Weather phenomena that can affect operations include strong winds,\n thunderstorms, tornadoes, microbursts, snowfall, and low visibility due to\n fog."
+   "text": " The Midwest United States is sandwiched between the Appalachians\n and the Rocky Mountains to the east and west, but there are no\n mountain ranges that block circulation in the north-south direction.\n  Because of this, during the cold season, warm air masses rich in water\n vapor, which are the energy source for giant cumulonimbus clouds and\n tornadoes, flow in from the Gulf of Mexico, resulting in severe weather\n changes.\n  Topographically, the area around O'Hare International Airport is a plain,\n but because Lake Michigan to the east extends significantly northward,\n winds are strong throughout the year.\n  Weather phenomena that can affect operations include strong winds,\n thunderstorms, tornadoes, microbursts, snowfall, and low visibility due to\n fog.",
+   "ja_title": "気象の特徴",
+   "ja_text": "米国中西部は、東西をアパラチア山脈とロッキー山脈に挟まれているが、南北方向の循環をさえぎる山脈はない。\nそのため寒候期には、巨大な積乱雲や竜巻のエネルギー源となる水蒸気に富んだ暖かい気団がメキシコ湾から流れ込み、激しい天候の変化をもたらす。\n地形的にオヘア国際空港周辺は平野だが、東のミシガン湖が北に大きく延びているため、一年を通じて風が強い。\n運航に影響し得る気象現象は、強風、雷雨、竜巻、マイクロバースト、降雪、霧による低視程。"
   },
   {
    "title": "Wind",
-   "text": "Wind direction varies considerably throughout the year, but winds tend to\n blow from the west in winter and from the south from spring to autumn,\n and strong winds blow throughout the year."
+   "text": "Wind direction varies considerably throughout the year, but winds tend to\n blow from the west in winter and from the south from spring to autumn,\n and strong winds blow throughout the year.",
+   "ja_title": "風",
+   "ja_text": "風向は一年を通じてかなり変わるが、冬は西から、春から秋は南から吹く傾向があり、一年を通じて強風が吹く。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " Temperatures vary widely throughout the year, and can rise to 36°C in\n summer and drop to -30°C in winter.\n  Precipitation is particularly high in spring and summer, with May and\n June being about twice as much as January and February.\n  Rain in summer is often rain showers and sometimes thunderstorms.\n  Snowfall accounts for about half of the annual precipitation.\n  Due to the humidity inherent to Lake Michigan, heavy snow can\n sometimes occur when cold air flows into the lake from the northeast.\n  This localized heavy snowfall occurs only a few times a year."
+   "text": " Temperatures vary widely throughout the year, and can rise to 36°C in\n summer and drop to -30°C in winter.\n  Precipitation is particularly high in spring and summer, with May and\n June being about twice as much as January and February.\n  Rain in summer is often rain showers and sometimes thunderstorms.\n  Snowfall accounts for about half of the annual precipitation.\n  Due to the humidity inherent to Lake Michigan, heavy snow can\n sometimes occur when cold air flows into the lake from the northeast.\n  This localized heavy snowfall occurs only a few times a year.",
+   "ja_title": "気温と降水",
+   "ja_text": "気温の年間の変動は大きく、夏は36℃まで上がり、冬は−30℃まで下がることがある。\n降水量は特に春と夏が多く、5月と6月は1月と2月の約2倍。\n夏の雨はシャワーが多く、ときに雷雨になる。\n降雪は年間降水量の約半分を占める。\nミシガン湖の湿気のため、冷たい空気が北東から湖に流れ込むと大雪になることがある。この局地的な大雪は年に数回しか起きない。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " Visibility disturbances with visibility below 400m or ceiling 100ft are often\n caused by fog from winter to early spring.\n  In particular, March has the highest amount of fog of the year due to the\n occurrence of radiation fog, advective fog, and frontal fog.\n  In the winter, there can be advection fog from Lake Michigan, and when\n the wind is from the south, there may be thick advection fog from the\n snowfields."
+   "text": " Visibility disturbances with visibility below 400m or ceiling 100ft are often\n caused by fog from winter to early spring.\n  In particular, March has the highest amount of fog of the year due to the\n occurrence of radiation fog, advective fog, and frontal fog.\n  In the winter, there can be advection fog from Lake Michigan, and when\n the wind is from the south, there may be thick advection fog from the\n snowfields.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "視程400m未満、または雲底100ftの視程障害は、冬から早春にかけて霧が原因でよく起こる。\n特に3月は、放射霧・移流霧・前線霧が発生するため、一年で最も霧が多い。\n冬はミシガン湖からの移流霧が出ることがあり、南風のときは雪原からの濃い移流霧が出ることがある。"
   },
   {
    "title": "Others",
-   "text": " Thunderstorms occur most frequently in summer, approximately once\n every five days.\n Tornadoes, which are a phenomenon unique to the Midwest, occur most\n frequently in spring, and we also need to be careful about the\n microbursts that accompany these tornadoes.\n\n Snowfalls will start in December but have less impact on airport\n operations. The airport has a high capacity to remove snow that allows\n two runways to be operable at all times. Breaking action above Medium\n can be expected after snow removal.\n\n SWAP (Severe Weather Avoidance Plan)\n - SWAP is implemented at ORD to avoid severe or adverse weather such\n as thunderstorm on enroute and in the vicinity of ORD.\n - When SWAP is in operation, ATIS broadcasts “SWAP in effect” and\n pilots may receive the clearance deviating from the normal preferred\n inbound and outbound routes issued by Chicago Center.\n < AM NCA issue: KORD >"
+   "text": " Thunderstorms occur most frequently in summer, approximately once\n every five days.\n Tornadoes, which are a phenomenon unique to the Midwest, occur most\n frequently in spring, and we also need to be careful about the\n microbursts that accompany these tornadoes.\n\n Snowfalls will start in December but have less impact on airport\n operations. The airport has a high capacity to remove snow that allows\n two runways to be operable at all times. Breaking action above Medium\n can be expected after snow removal.\n\n SWAP (Severe Weather Avoidance Plan)\n - SWAP is implemented at ORD to avoid severe or adverse weather such\n as thunderstorm on enroute and in the vicinity of ORD.\n - When SWAP is in operation, ATIS broadcasts “SWAP in effect” and\n pilots may receive the clearance deviating from the normal preferred\n inbound and outbound routes issued by Chicago Center.\n < AM NCA issue: KORD >",
+   "ja_title": "その他",
+   "ja_text": "雷雨は夏に最も多く、約5日に1回発生する。\n竜巻は中西部特有の現象で、春に最も多く発生する。竜巻に伴うマイクロバーストにも注意が必要。\n\n降雪は12月から始まるが、空港運用への影響は小さい。空港の除雪能力は高く、常に2本の滑走路が使用可能。除雪後は Medium 以上のブレーキングアクションが期待できる。\n\nSWAP（悪天回避計画）\n- ORD では、経路上や ORD 周辺の雷雨などの悪天を避けるために SWAP が実施される。\n- SWAP 実施中は、ATIS で \"SWAP in effect\" が放送され、パイロットはシカゴ・センターから、通常の優先する進入・出発経路から外れるクリアランスを受けることがある。\n< AM NCA issue: KORD >"
   }
  ],
  "LIMC": [
   {
    "title": "Weather Characteristics",
-   "text": "• From autumn to spring the Genoa depression, a low pressure formed\n leeward of the Alps, and a Mediterranean depression occur frequently\n around the area. Alternately, a Mid Europe high pressure covers the\n area.\n • During winter, a layer of cold air about 3000 feet in thickness covers the\n basin and this layer frequently causes radiation fog over the area.\n • During summer in contrast, the Azores high covers the area and fine\n weather prevails. However, due to a thermal low that often forms in the\n basin area during daytime, unstable convection can result, generating\n thunderstorms."
+   "text": "• From autumn to spring the Genoa depression, a low pressure formed\n leeward of the Alps, and a Mediterranean depression occur frequently\n around the area. Alternately, a Mid Europe high pressure covers the\n area.\n • During winter, a layer of cold air about 3000 feet in thickness covers the\n basin and this layer frequently causes radiation fog over the area.\n • During summer in contrast, the Azores high covers the area and fine\n weather prevails. However, due to a thermal low that often forms in the\n basin area during daytime, unstable convection can result, generating\n thunderstorms.",
+   "ja_title": "気象の特徴",
+   "ja_text": "・秋から春にかけては、アルプスの風下側にできる低気圧である「ジェノバ低気圧」や地中海低気圧が、この付近でしばしば発生する。これと交互に、中欧の高気圧が覆うことがある。\n・冬は、厚さ約3000ftの冷たい空気の層が盆地を覆い、この層のために付近で放射霧がしばしば発生する。\n・夏は対照的に、アゾレス高気圧に覆われて好天が続く。ただし日中に盆地で熱的低気圧がよくできるため、不安定な対流が起き、雷雨が発生することがある。"
   },
   {
    "title": "Wind",
-   "text": "• The pressure pattern wind flow is predominantly northerly throughout the\n year. A southerly wind flow is rare. Northerly winds sometimes exceed\n 10kt wind speed, although most of the time wind is below 10kt.\n • However, local wind effects due to the proximity of the Alps are\n significant and must be carefully monitored by the flight crew:\n - In the winter the katabatic wind from the Alps can continue until 1100L\n and generally a northerly wind can be anticipated for departure\n planning.\n - In summer however, the heating of the Alps generally stops the\n katabatic wind by 0900L and a southerly flow towards the Alps begins.\n This flow can be quite strong and can override the general pressure\n pattern northerly flow. This anabatic wind combined with local summer\n thermal activity can cause significant southerly winds for departure,\n which are often gusty due to the thermal activity. Planning for a\n southerly direction departure is advised in these conditions."
+   "text": "• The pressure pattern wind flow is predominantly northerly throughout the\n year. A southerly wind flow is rare. Northerly winds sometimes exceed\n 10kt wind speed, although most of the time wind is below 10kt.\n • However, local wind effects due to the proximity of the Alps are\n significant and must be carefully monitored by the flight crew:\n - In the winter the katabatic wind from the Alps can continue until 1100L\n and generally a northerly wind can be anticipated for departure\n planning.\n - In summer however, the heating of the Alps generally stops the\n katabatic wind by 0900L and a southerly flow towards the Alps begins.\n This flow can be quite strong and can override the general pressure\n pattern northerly flow. This anabatic wind combined with local summer\n thermal activity can cause significant southerly winds for departure,\n which are often gusty due to the thermal activity. Planning for a\n southerly direction departure is advised in these conditions.",
+   "ja_title": "風",
+   "ja_text": "・気圧配置による風の流れは、年間を通じて北寄りが卓越する。南風はまれ。北風は10ktを超えることもあるが、大部分の時間は10kt未満。\n・ただしアルプスに近いことによる局地的な風の影響は大きく、乗員は注意深く監視する必要がある:\n - 冬はアルプスからの滑降風が1100Lまで続くことがあり、出発計画では一般に北風を想定できる。\n - 夏はアルプスが温められることで、滑降風は通常0900Lまでに止み、アルプスに向かう南風が始まる。この風はかなり強くなることがあり、気圧配置による全般的な北風を上回ることがある。この上昇風と夏の局地的な熱的活動が重なると、出発時にかなりの南風となり、熱的活動のため突風を伴うことが多い。こうした状況では南向き出発の計画を勧める。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "• Seasonal temperature difference is large due to the geographical\n character of a typical basin, exceeding 20℃. Summer temperatures are\n hot, with a mean maximum temperature of 28℃ in July. Temperature\n during winter is low with a mean minimum temperature of below 0℃.\n • Thunderstorms are not so frequent. They are active during May to\n August and most active in July with 10 days observed in a month.\n Thunderstorms are infrequent in winter."
+   "text": "• Seasonal temperature difference is large due to the geographical\n character of a typical basin, exceeding 20℃. Summer temperatures are\n hot, with a mean maximum temperature of 28℃ in July. Temperature\n during winter is low with a mean minimum temperature of below 0℃.\n • Thunderstorms are not so frequent. They are active during May to\n August and most active in July with 10 days observed in a month.\n Thunderstorms are infrequent in winter.",
+   "ja_title": "気温と降水",
+   "ja_text": "・典型的な盆地という地理的特徴から、季節による気温差が大きく、20℃を超える。夏は暑く、7月の平均最高気温は28℃。冬は低く、平均最低気温は0℃を下回る。\n・雷雨はそれほど多くない。5月から8月にかけて活発で、7月が最も活発で月に10日観測される。冬は雷雨はまれ。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "• Be aware of frequent fog during winter. Radiation fog forms as the\n\ntemperature drops at sunset. Normally it dissipates slowly as the sun\nrises. However, when high pressure covers the area fog may continue all\nday. This trend also applies to nearby airports. Formation of fog in\nsummer is infrequent"
+   "text": "• Be aware of frequent fog during winter. Radiation fog forms as the\n\ntemperature drops at sunset. Normally it dissipates slowly as the sun\nrises. However, when high pressure covers the area fog may continue all\nday. This trend also applies to nearby airports. Formation of fog in\nsummer is infrequent",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "・冬は霧が多いことに注意。日没後の気温低下で放射霧が発生する。通常は日の出とともにゆっくり消えるが、高気圧に覆われると霧が一日中続くことがある。この傾向は付近の空港にも当てはまる。夏の霧の発生はまれ。"
   }
  ],
  "PANC": [
   {
    "title": "Weather Characteristics",
-   "text": " Anchorage has a subarctic climate but with strong maritime influences\n that moderate temperatures. Average daytime summer temperatures\n range from approximately 55-78゜F (13 to 26℃); average daytime winter\n temperatures are about 5-30゜F (-15 to 1℃).\n  Anchorage has a frost-free growing season that averages slightly over\n 100 days.\n  Summers are typically mild (although cool compared to the contiguous\n US and even interior Alaska), and it can rain frequently."
+   "text": " Anchorage has a subarctic climate but with strong maritime influences\n that moderate temperatures. Average daytime summer temperatures\n range from approximately 55-78゜F (13 to 26℃); average daytime winter\n temperatures are about 5-30゜F (-15 to 1℃).\n  Anchorage has a frost-free growing season that averages slightly over\n 100 days.\n  Summers are typically mild (although cool compared to the contiguous\n US and even interior Alaska), and it can rain frequently.",
+   "ja_title": "気象の特徴",
+   "ja_text": "アンカレッジは亜寒帯気候だが、海洋の影響が強く気温は和らげられている。夏の日中の平均気温はおよそ55～78゜F（13～26℃）、冬の日中の平均気温は約5～30゜F（−15～1℃）。\n無霜の生育期間は平均して100日強。\n夏は一般に穏やか（米国本土やアラスカ内陸部と比べると涼しい）で、雨が降りやすい。"
   },
   {
    "title": "Wind",
-   "text": " Wind blows from N to NNE during winter, and from S during summer\n season. It blows through inlets around the airport therefore winds are not\n stable during the approach.\n  When winds are blowing from the east, the wind flow detours north and\n south of mountains which are located on the east side of the field.\n  When the wind detours to the north, it flows along Knik Arm and blows\n from northeast at Elmendorf, when it detours to the south, it flows along\n Turnagain Arm and blows from southeast at Anchorage."
+   "text": " Wind blows from N to NNE during winter, and from S during summer\n season. It blows through inlets around the airport therefore winds are not\n stable during the approach.\n  When winds are blowing from the east, the wind flow detours north and\n south of mountains which are located on the east side of the field.\n  When the wind detours to the north, it flows along Knik Arm and blows\n from northeast at Elmendorf, when it detours to the south, it flows along\n Turnagain Arm and blows from southeast at Anchorage.",
+   "ja_title": "風",
+   "ja_text": "風は冬は N～NNE から、夏は S から吹く。空港周辺の入り江を吹き抜けるため、進入中の風は安定しない。\n東風のときは、空港の東側にある山地の北と南を迂回して流れる。\n北を迂回する場合はナイク・アームに沿って流れ、エルメンドルフでは北東風になる。南を迂回する場合はターナゲイン・アームに沿って流れ、アンカレッジでは南東風になる。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " Temperature in the summer afternoon ranges between 13℃ to 26℃ and\n winter afternoon ranges between -15℃ to -1℃. Average highs and lows\n at Anchorage Airport in January is -13℃/-5℃. In July is 11℃/19℃.\n  Most rainfall can be seen from July to September with a monthly average\n up to 3 inches. The cause of this rainfall is a low-pressure system\n developed over the Bering Sea, however the rainfall doesn’t cause a\n reduction of ceiling or visibility very often.\n  However, visibility drops with snowfall. Snowfall can be seen from the\n end of September until the end of April. Average annual snowfall is 74\n inches, but up to 132 inches per year is possible. Most snowfall is\n observed around mid-December until mid-January."
+   "text": " Temperature in the summer afternoon ranges between 13℃ to 26℃ and\n winter afternoon ranges between -15℃ to -1℃. Average highs and lows\n at Anchorage Airport in January is -13℃/-5℃. In July is 11℃/19℃.\n  Most rainfall can be seen from July to September with a monthly average\n up to 3 inches. The cause of this rainfall is a low-pressure system\n developed over the Bering Sea, however the rainfall doesn’t cause a\n reduction of ceiling or visibility very often.\n  However, visibility drops with snowfall. Snowfall can be seen from the\n end of September until the end of April. Average annual snowfall is 74\n inches, but up to 132 inches per year is possible. Most snowfall is\n observed around mid-December until mid-January.",
+   "ja_title": "気温と降水",
+   "ja_text": "夏の午後の気温は13℃～26℃、冬の午後は−15℃～−1℃。アンカレッジ空港の1月の平均最高・最低気温は−13℃/−5℃、7月は11℃/19℃。\n降雨の大部分は7月から9月に見られ、月平均で最大3インチ。この降雨の原因はベーリング海で発達した低気圧だが、雲底や視程が低下することはあまり多くない。\n一方、降雪では視程が低下する。降雪は9月下旬から4月末まで見られる。年間の平均積雪は74インチだが、年によっては最大132インチになる。降雪の大部分は12月中旬から1月中旬ごろ。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " Visibility can be affected by fog. It typically occurs around the end of\n August until March and on occasion the airport can close due to heavy\n fog. Fog encounters around 0600~1000 and 1800~2000 local hours. Fog\n is thicker in the morning and may cause some effects in flight.\n  There are two types of air mass fog. Warm air mass fog forms when\n temperature is near or around 0℃ and cold air mass fog which forms\n\n when temperature is below -4℃.\n\n Warm air mass fog (Forms around end of AUG to beginning of NOV):\n - Wet and moist air flows in to Cook Inlet from the South and during night\n hours forms radiation fog. It typically forms around 0500 to 0900 Local\n hours.\n - It forms approximately six hours after the rain stops, with outside\n temperature around 0℃.\n\n Cold air mass fog (Forms around NOV to MAR):\n - It forms when part of Cook Inlet’s water surface is partially unfrozen and\n cold, dry land breeze flows over the water surface. This emits vapor\n from the water surface and flows inland with northerly wind and causes\n fog over the land surface.\n - Usually, water surface of Cook Inlet is fully frozen. However, with\n changes in high and low tide and strong current, if the ice cracks and\n the water surface is partially exposed, vapor may form into Fog Patches\n in the vicinity."
+   "text": " Visibility can be affected by fog. It typically occurs around the end of\n August until March and on occasion the airport can close due to heavy\n fog. Fog encounters around 0600~1000 and 1800~2000 local hours. Fog\n is thicker in the morning and may cause some effects in flight.\n  There are two types of air mass fog. Warm air mass fog forms when\n temperature is near or around 0℃ and cold air mass fog which forms\n\n when temperature is below -4℃.\n\n Warm air mass fog (Forms around end of AUG to beginning of NOV):\n - Wet and moist air flows in to Cook Inlet from the South and during night\n hours forms radiation fog. It typically forms around 0500 to 0900 Local\n hours.\n - It forms approximately six hours after the rain stops, with outside\n temperature around 0℃.\n\n Cold air mass fog (Forms around NOV to MAR):\n - It forms when part of Cook Inlet’s water surface is partially unfrozen and\n cold, dry land breeze flows over the water surface. This emits vapor\n from the water surface and flows inland with northerly wind and causes\n fog over the land surface.\n - Usually, water surface of Cook Inlet is fully frozen. However, with\n changes in high and low tide and strong current, if the ice cracks and\n the water surface is partially exposed, vapor may form into Fog Patches\n in the vicinity.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "視程は霧の影響を受けることがある。通常8月末から3月にかけて発生し、濃霧で空港が閉鎖されることもある。霧は現地時間の0600～1000と1800～2000ごろに発生する。霧は朝のほうが濃く、飛行に影響することがある。\n気団霧には2種類ある。暖かい気団の霧は気温が0℃前後のときにでき、冷たい気団の霧は気温が−4℃を下回るときにできる。\n\n暖かい気団の霧（8月末から11月初めに発生）:\n- 湿った空気が南からクック湾に流れ込み、夜間に放射霧を形成する。通常は現地時間0500～0900ごろに発生する。\n- 雨が止んでから約6時間後に、外気温0℃前後で発生する。\n\n冷たい気団の霧（11月から3月に発生）:\n- クック湾の水面の一部が凍っていない状態で、冷たく乾いた陸風が水面を吹き渡るときに発生する。水面から水蒸気が出て、北風とともに内陸へ流れ、陸上に霧をもたらす。\n- 通常、クック湾の水面は完全に凍結している。しかし満ち引きや強い流れで氷が割れて水面が一部露出すると、水蒸気が近傍で霧のかたまり（フォグ・パッチ）になることがある。"
   },
   {
    "title": "Others",
-   "text": " Low Altitude Turbulence\n - Mountains surround Anchorage on three sides. These cause low\n altitude turbulence during strong wind conditions.\n - It is most notable when the upper air mass is flowing from south. Due to\n geographical feature effect, southerly upper wind may change direction\n to northerly lower wind during descent. Be cautious for sudden wind\n direction and speed changes on final approach.\n - In addition, turbulence is encountered when a low-pressure system\n passes to the south of Anchorage.\n\n Temperature Inversion\n - A strong inversion layer may exist when cold air near ground level\n caused by a high-pressure air mass is changed to warm air by a\n southerly wind. The inversion layer can coincide with the thrust\n reduction height causing low speed during the climb.\n\n Fog Seeding\n - During winter season of late OCT to mid-FEB, Fog Seeding may be\n conducted by the airport authority when RVR is less than 2,500ft with\n temperature below -2℃.\n - When the fog is exceptionally thick and the temperature is below\n freezing, the airport seeds the air. They apply the cloud seeding, which\n is like dry ice crystals. It pulls the moisture out of the air and makes it\n\n fall to the ground."
+   "text": " Low Altitude Turbulence\n - Mountains surround Anchorage on three sides. These cause low\n altitude turbulence during strong wind conditions.\n - It is most notable when the upper air mass is flowing from south. Due to\n geographical feature effect, southerly upper wind may change direction\n to northerly lower wind during descent. Be cautious for sudden wind\n direction and speed changes on final approach.\n - In addition, turbulence is encountered when a low-pressure system\n passes to the south of Anchorage.\n\n Temperature Inversion\n - A strong inversion layer may exist when cold air near ground level\n caused by a high-pressure air mass is changed to warm air by a\n southerly wind. The inversion layer can coincide with the thrust\n reduction height causing low speed during the climb.\n\n Fog Seeding\n - During winter season of late OCT to mid-FEB, Fog Seeding may be\n conducted by the airport authority when RVR is less than 2,500ft with\n temperature below -2℃.\n - When the fog is exceptionally thick and the temperature is below\n freezing, the airport seeds the air. They apply the cloud seeding, which\n is like dry ice crystals. It pulls the moisture out of the air and makes it\n\n fall to the ground.",
+   "ja_title": "その他",
+   "ja_text": "低高度の乱気流\n- アンカレッジは三方を山に囲まれている。強風時にはこれが低高度の乱気流を引き起こす。\n- 上層の気団が南から流れているときに最も顕著。地形の影響で、上層の南風が降下中に低層の北風へ向きを変えることがある。最終進入での急な風向・風速の変化に注意すること。\n- また、低気圧がアンカレッジの南を通過するときにも乱気流に遭遇する。\n\n気温逆転\n- 高気圧による地表付近の冷たい空気が南風で暖気に入れ替わるとき、強い逆転層ができることがある。逆転層が推力低減高度と重なり、上昇中に速度が低くなることがある。\n\nフォグ・シーディング\n- 10月下旬から2月中旬の冬季には、RVRが2,500ft未満で気温が−2℃未満のとき、空港当局がフォグ・シーディングを行うことがある。\n- 霧が非常に濃く気温が氷点下のとき、空港は空気中に散布する。ドライアイスの結晶のような雲の種まき（クラウドシーディング）を行う。これが空気中の水分を取り除き、地面に落とす。"
   }
  ],
  "RCTP": [
   {
    "title": "Weather Characteristics",
-   "text": " The climate of southern Taipei is categorized as subtropical.\n  More than half of the annual precipitation falls in summer.\n  In winter, the Chinese air mass becomes unstable as it moves eastward,\n causing heavy rain in the mountainous areas.\n  In summer, the southwest seasonal wind prevails, when moist air coming\n from the sea is heated on the ground and ascends, causing lightning\n storms on the east side of the airport."
+   "text": " The climate of southern Taipei is categorized as subtropical.\n  More than half of the annual precipitation falls in summer.\n  In winter, the Chinese air mass becomes unstable as it moves eastward,\n causing heavy rain in the mountainous areas.\n  In summer, the southwest seasonal wind prevails, when moist air coming\n from the sea is heated on the ground and ascends, causing lightning\n storms on the east side of the airport.",
+   "ja_title": "気象の特徴",
+   "ja_text": "台北南部の気候は亜熱帯に分類される。\n年間降水量の半分以上が夏に降る。\n冬は、東進する大陸の気団が不安定になり、山岳地帯で大雨になる。\n夏は南西の季節風が卓越し、海から来る湿った空気が地表で熱せられて上昇し、空港の東側で雷雨を起こす。"
   },
   {
    "title": "Wind",
-   "text": " The most prevailing wind throughout the year is northeastern and\n relatively strong.\n  The wind direction changes seasonally, northeast or north-northeast in\n winter and southwest in summer, but in May and August, wind blows\n predominantly from the east-northeast."
+   "text": " The most prevailing wind throughout the year is northeastern and\n relatively strong.\n  The wind direction changes seasonally, northeast or north-northeast in\n winter and southwest in summer, but in May and August, wind blows\n predominantly from the east-northeast.",
+   "ja_title": "風",
+   "ja_text": "年間を通じて最も卓越する風は北東風で、比較的強い。\n風向は季節で変わり、冬は北東または北北東、夏は南西だが、5月と8月は東北東が卓越する。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " The precipitation at Taipei Taoyuan Airport is large. The annual\n precipitation is about 2,000mm.\n  It rains relatively heavily in the four-month period from December through\n March due to the seasonal wind, and from mid-May to early June due to\n the rainy season. During the period from the end of February to mid-\n March, low air temperatures are caused by cold air masses from the\n north."
+   "text": " The precipitation at Taipei Taoyuan Airport is large. The annual\n precipitation is about 2,000mm.\n  It rains relatively heavily in the four-month period from December through\n March due to the seasonal wind, and from mid-May to early June due to\n the rainy season. During the period from the end of February to mid-\n March, low air temperatures are caused by cold air masses from the\n north.",
+   "ja_title": "気温と降水",
+   "ja_text": "台北桃園空港の降水量は多い。年間降水量は約2,000mm。\n季節風のため12月から3月の4か月間と、梅雨のため5月中旬から6月初めにかけて、比較的強く降る。2月末から3月中旬にかけては、北からの寒気団のため気温が低くなる。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " Radiation fog appears at southeastern Taiwan and advection fog\n appears at Taiwan Strait.\n  Fog occurs most frequently from February to March and on 03-09L at\n Taipei Taoyuan Airport. (4.5 days per month on average)"
+   "text": " Radiation fog appears at southeastern Taiwan and advection fog\n appears at Taiwan Strait.\n  Fog occurs most frequently from February to March and on 03-09L at\n Taipei Taoyuan Airport. (4.5 days per month on average)",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "放射霧は台湾南東部に、移流霧は台湾海峡に現れる。\n霧は2月から3月に最も多く、台北桃園空港では 03-09L で発生する（月平均4.5日）。"
   },
   {
    "title": "Others",
-   "text": " Specific weather phenomena include typhoons and thunderstorms.\n Typhoons affect the area about 3 times annually on average. More than\n 70% of the typhoons that hit the area are concentrated in JUL, AUG and\n SEP.\n  Thunderstorms mainly occur during the rainy season and summer, and\n last about one hour at the longest."
+   "text": " Specific weather phenomena include typhoons and thunderstorms.\n Typhoons affect the area about 3 times annually on average. More than\n 70% of the typhoons that hit the area are concentrated in JUL, AUG and\n SEP.\n  Thunderstorms mainly occur during the rainy season and summer, and\n last about one hour at the longest.",
+   "ja_title": "その他",
+   "ja_text": "特有の気象現象は台風と雷雨。\n台風は年平均で約3回この地域に影響する。この地域を襲う台風の70％以上は7月・8月・9月に集中する。\n雷雨は主に梅雨期と夏に発生し、長くても約1時間続く。"
   }
  ],
  "RJAA": [
   {
    "title": "Weather Characteristics",
-   "text": "• Fog that forms yearly due to the location of the airport (inland on a\n plateau) with paddy fields, rivers and ponds that surround the airport\n supplying vapor.\n • Windshear is caused by sea breezes that come from three different\n directions and form a shear line by the airport.\n • In early spring, severe low level wind shear during T/O and L/D often\n formes during a strong south westerly wind.\n • It can cause some aircraft to divert."
+   "text": "• Fog that forms yearly due to the location of the airport (inland on a\n plateau) with paddy fields, rivers and ponds that surround the airport\n supplying vapor.\n • Windshear is caused by sea breezes that come from three different\n directions and form a shear line by the airport.\n • In early spring, severe low level wind shear during T/O and L/D often\n formes during a strong south westerly wind.\n • It can cause some aircraft to divert.",
+   "ja_title": "気象の特徴",
+   "ja_text": "・空港が（台地の上の）内陸にあり、周囲の水田・河川・池が水蒸気を供給するため、毎年霧が発生する。\n・3方向から来る海風が空港付近でシアライン（収束線）を形成し、ウィンドシアが起きる。\n・早春には、強い南西風のときに離着陸時の低層ウィンドシアが強く発生することが多い。\n・このため、ダイバートする機体が出ることもある。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "• Departure and Arrival may be restricted during winter due to snowfall on\n a few days and severe thunder storms form during summer."
+   "text": "• Departure and Arrival may be restricted during winter due to snowfall on\n a few days and severe thunder storms form during summer.",
+   "ja_title": "気温と降水",
+   "ja_text": "・冬は数日間の降雪で出発・到着が制限されることがあり、夏は激しい雷雨が発生する。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "• Radiation fog is likely to form due to the landform (Tone river, Kasumi\n inlet) nearby. A northerly wind causes advection fog across the Tone\n river. Often fog is formed with a northerly wind of about 4kt, mainly during\n night time to early morning and dissipates as the sun rises.\n • Be cautious when departing or arriving in early morning."
+   "text": "• Radiation fog is likely to form due to the landform (Tone river, Kasumi\n inlet) nearby. A northerly wind causes advection fog across the Tone\n river. Often fog is formed with a northerly wind of about 4kt, mainly during\n night time to early morning and dissipates as the sun rises.\n • Be cautious when departing or arriving in early morning.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "・近くの地形（利根川、霞ヶ浦）のため放射霧が発生しやすい。北風のときは利根川を越えて移流霧が発生する。霧は約4ktの北風でよく発生し、主に夜間から早朝にかけて、日の出とともに消える。\n・早朝の出発・到着には注意すること。"
   },
   {
    "title": "Turbulence",
-   "text": "• There are a lot of undulating areas around the airport. Due to these\n undulations, windshear is more likely to occur in Patterns 1 and 2.\n\n • Pattern 1: Low pressure over the Sea of Japan\n - Strong winds (210~230) from the south to southwest will blow toward a\n cold front extending from a low pressure system centered over the Sea\n of Japan. Especially at NRT 16R, there is a possibility of strong wind\n shear due to the large undulations in the valley on the west side of the\n airport. Depending on the conditions, bank landings may be noticeable.\n\n • Pattern 2: Strong westerly high and easterly low pressure system\n position after the low pressure system exits over the Pacific Ocean\n\n • This was the most frequent occurrence of FOQA Event Class 2/Class 3\n weather conditions in March. As the low pressure system moved out over\n the eastern ocean, in case of emphasize westerly high and easterly low\n pressure system position, a strong northwesterly wind was observed,\n and low-level turbulence and wind shear were observed.\n Characteristically, very dry conditions (T-TD≥15C) with no precipitation\n reduction tended to be particularly rough and were accompanied by\n BLDUs.\n • The wind speed changes observed in the FOQA were very large, difficult\n to predict, and required very challenging manipulations.\n\n • Number of Wind Shear reports by wind direction in NRT\n - In NRT, Pilot Reports of Wind\n Shear were most frequently\n observed in wind directions of\n 220° and 310~320°.\n - In the FOQA of 2023, Bank\n Landing in southwesterly winds\n (Pattern 1) and Approach Speed\n High/Low Power Approach in\n northwesterly winds (Pattern 2\n were frequently observed. Since\n seasonal fluctuations are large\n in late winter and early spring, it\n is necessary to prepare for and\n deal with approaches that take the above local effects into account.\n <FOQA REPORT Special Edition SPRING/2025>"
+   "text": "• There are a lot of undulating areas around the airport. Due to these\n undulations, windshear is more likely to occur in Patterns 1 and 2.\n\n • Pattern 1: Low pressure over the Sea of Japan\n - Strong winds (210~230) from the south to southwest will blow toward a\n cold front extending from a low pressure system centered over the Sea\n of Japan. Especially at NRT 16R, there is a possibility of strong wind\n shear due to the large undulations in the valley on the west side of the\n airport. Depending on the conditions, bank landings may be noticeable.\n\n • Pattern 2: Strong westerly high and easterly low pressure system\n position after the low pressure system exits over the Pacific Ocean\n\n • This was the most frequent occurrence of FOQA Event Class 2/Class 3\n weather conditions in March. As the low pressure system moved out over\n the eastern ocean, in case of emphasize westerly high and easterly low\n pressure system position, a strong northwesterly wind was observed,\n and low-level turbulence and wind shear were observed.\n Characteristically, very dry conditions (T-TD≥15C) with no precipitation\n reduction tended to be particularly rough and were accompanied by\n BLDUs.\n • The wind speed changes observed in the FOQA were very large, difficult\n to predict, and required very challenging manipulations.\n\n • Number of Wind Shear reports by wind direction in NRT\n - In NRT, Pilot Reports of Wind\n Shear were most frequently\n observed in wind directions of\n 220° and 310~320°.\n - In the FOQA of 2023, Bank\n Landing in southwesterly winds\n (Pattern 1) and Approach Speed\n High/Low Power Approach in\n northwesterly winds (Pattern 2\n were frequently observed. Since\n seasonal fluctuations are large\n in late winter and early spring, it\n is necessary to prepare for and\n deal with approaches that take the above local effects into account.\n <FOQA REPORT Special Edition SPRING/2025>",
+   "ja_title": "乱気流",
+   "ja_text": "・空港周辺には起伏のある地形が多い。この起伏のため、パターン1と2でウィンドシアが発生しやすい。\n\n・パターン1: 日本海の低気圧\n - 日本海の低気圧から延びる寒冷前線に向かって、南から南西（210～230）の強い風が吹く。特にNRT 16Rでは、空港西側の谷の大きな起伏のため、強いウィンドシアの可能性がある。条件によっては、バンクしての着陸が目立つことがある。\n\n・パターン2: 低気圧が太平洋に抜けた後の、西高東低の強い気圧配置\n - 3月に FOQA イベントのクラス2/クラス3の気象条件が最も多く発生したパターン。低気圧が東の海上に抜け、西高東低が強まる場合は、北西の強い風が観測され、低層の乱気流とウィンドシアが観測された。特徴として、降水を伴わない非常に乾燥した状況（T-TD≧15℃）では特に荒れる傾向があり、BLDU（地ふぶきの砂塵）を伴った。\n・FOQA で観測された風速変化は非常に大きく、予測が難しく、非常に難しい操作が必要だった。\n\n・NRT における風向別のウィンドシア報告数\n - NRTでは、ウィンドシアのパイロットレポートは風向220°と310～320°で最も多く観測されている。\n - 2023年のFOQAでは、南西風（パターン1）でのバンク着陸、北西風（パターン2）での進入速度の高低・低パワー進入が多く観測された。晩冬から早春は季節変動が大きいため、上記の局地的な影響を考慮した進入に備え、対応する必要がある。\n <FOQA REPORT Special Edition SPRING/2025>"
   },
   {
    "title": "Others",
-   "text": "• Low level wind shear advisory service is available using Doppler Radar\n and Lidar.\n < AM NCA issue: Rules and Regulations JAPAN >"
+   "text": "• Low level wind shear advisory service is available using Doppler Radar\n and Lidar.\n < AM NCA issue: Rules and Regulations JAPAN >",
+   "ja_title": "その他",
+   "ja_text": "・ドップラーレーダーとライダーを使った低層ウィンドシア・アドバイザリーサービスが利用できる。\n< AM NCA issue: Rules and Regulations JAPAN >"
   }
  ],
  "RJCC": [
   {
    "title": "Weather Characteristics",
-   "text": "• From May to August, fog may occur. In particular, fog is likely to\n develop under humid southerly to south-southeasterly winds of around\n 10 kt.\n From Autumn to Spring, radiation fog may occur on the morning\n following days when moisture is supplied to the air by precipitation or\n snowmelt caused by solar radiation. In winter, it often becomes freezing\n fog.\n • Favorable conditions for snowfall (November-April)\n - Under a west-high east-low pressure pattern, when:\n 850 hPa winds from 310–345° at ≥20 kt\n 850 hPa westerly winds ≤ 25 kt\n 850 hPa westerly winds ≥ 25 kt and unstable atmosphere\n - Snowfall associated with low-pressure systems\n When a low-pressure system passes directly over the airport or\n slightly to the north, or along the southern coast, snowfall occurs.\n • Under strong westerly winds, turbulence with upwash and downwash\n may be encountered below 3,000 ft due to mountain waves from the\n western mountains."
+   "text": "• From May to August, fog may occur. In particular, fog is likely to\n develop under humid southerly to south-southeasterly winds of around\n 10 kt.\n From Autumn to Spring, radiation fog may occur on the morning\n following days when moisture is supplied to the air by precipitation or\n snowmelt caused by solar radiation. In winter, it often becomes freezing\n fog.\n • Favorable conditions for snowfall (November-April)\n - Under a west-high east-low pressure pattern, when:\n 850 hPa winds from 310–345° at ≥20 kt\n 850 hPa westerly winds ≤ 25 kt\n 850 hPa westerly winds ≥ 25 kt and unstable atmosphere\n - Snowfall associated with low-pressure systems\n When a low-pressure system passes directly over the airport or\n slightly to the north, or along the southern coast, snowfall occurs.\n • Under strong westerly winds, turbulence with upwash and downwash\n may be encountered below 3,000 ft due to mountain waves from the\n western mountains.",
+   "ja_title": "気象の特徴",
+   "ja_text": "・5月から8月は霧が発生することがある。特に、約10ktの湿った南から南南東の風のときに霧が出やすい。\n 秋から春にかけては、降水や日射による雪解けで空気に水蒸気が供給された日の翌朝に、放射霧が発生することがある。冬は着氷性の霧（フリージングフォグ）になることが多い。\n・降雪に好都合な条件（11月～4月）\n - 西高東低の気圧配置のとき、次のいずれか:\n 850hPaの風が310～345°で20kt以上\n 850hPaの西風が25kt以下\n 850hPaの西風が25kt以上で大気が不安定\n - 低気圧に伴う降雪\n 低気圧が空港の真上、または少し北を通過するとき、あるいは南岸を通過するときに降雪がある。\n・強い西風のときは、西側の山地からの山岳波により、3,000ft以下で上昇気流・下降気流を伴う乱気流に遭遇することがある。"
   },
   {
    "title": "Wind",
-   "text": "Due to mountainous terrain to the east and west of New Chitose Airport,\n headwinds tend to prevail."
+   "text": "Due to mountainous terrain to the east and west of New Chitose Airport,\n headwinds tend to prevail.",
+   "ja_title": "風",
+   "ja_text": "新千歳空港は東西を山地に挟まれているため、向かい風が卓越しやすい。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "Summer precipitation increases from June to August.\n The highest monthly precipitation occurs in August (about 180 mm).\n The mean winter maximum temperature is around 0 to 5°C.\n The mean winter minimum temperature is around −15 to −20°C."
+   "text": "Summer precipitation increases from June to August.\n The highest monthly precipitation occurs in August (about 180 mm).\n The mean winter maximum temperature is around 0 to 5°C.\n The mean winter minimum temperature is around −15 to −20°C.",
+   "ja_title": "気温と降水",
+   "ja_text": "夏の降水は6月から8月にかけて増える。\n月降水量の最大は8月（約180mm）。\n冬の平均最高気温は0～5℃前後。\n冬の平均最低気温は−15～−20℃前後。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "Fog is expected to result in poor visibility.\n Sea fog rarely brings conditions down to landing minimums, whereas\n radiation fog can occasionally cause conditions to fall below landing\n minimums."
+   "text": "Fog is expected to result in poor visibility.\n Sea fog rarely brings conditions down to landing minimums, whereas\n radiation fog can occasionally cause conditions to fall below landing\n minimums.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "霧により視程が悪くなることが想定される。\n海霧で着陸ミニマムまで下がることはまれだが、放射霧では着陸ミニマムを下回ることがある。"
   }
  ],
  "RJFR": [
   {
    "title": "Weather Characteristics",
-   "text": "As the airport is located on an artificial island in the Suo-Nada Sea, the\n surrounding marine environment can lead to rapid changes in visibility and\n wind conditions."
+   "text": "As the airport is located on an artificial island in the Suo-Nada Sea, the\n surrounding marine environment can lead to rapid changes in visibility and\n wind conditions.",
+   "ja_title": "気象の特徴",
+   "ja_text": "空港は周防灘の人工島にあるため、周囲の海洋環境により視程や風の状態が急に変化することがある。"
   },
   {
    "title": "Wind",
-   "text": "Prevailing winds around the airport are generally easterly throughout the year.\n From autumn through winter, westerly to northwesterly winds become\n dominant, occasionally strengthening under winter monsoon conditions."
+   "text": "Prevailing winds around the airport are generally easterly throughout the year.\n From autumn through winter, westerly to northwesterly winds become\n dominant, occasionally strengthening under winter monsoon conditions.",
+   "ja_title": "風",
+   "ja_text": "空港周辺の風は、年間を通じて概して東寄りが卓越する。\n秋から冬にかけては西から北西の風が卓越し、冬の季節風のもとでは強まることもある。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "At Kitakyushu Airport, the summers are short, warm, oppressive, and mostly\n cloudy; the winters are cold, windy, and partly cloudy; and it is wet year-round.\n Over the course of the year, the temperature typically varies from 3°C to 30°C\n and is rarely below -0°C or above 33°C."
+   "text": "At Kitakyushu Airport, the summers are short, warm, oppressive, and mostly\n cloudy; the winters are cold, windy, and partly cloudy; and it is wet year-round.\n Over the course of the year, the temperature typically varies from 3°C to 30°C\n and is rarely below -0°C or above 33°C.",
+   "ja_title": "気温と降水",
+   "ja_text": "北九州空港は、夏は短く暖かく蒸し暑くて曇りがち、冬は寒く風が強く一部曇りで、年間を通じて雨が多い。\n年間の気温は通常3℃から30℃の間で変化し、0℃を下回ることや33℃を超えることはまれ。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "Fog and haze occur frequently from April to June, mainly due to advection\n fog and frontal fog caused by warm, moist air flowing over the cooler sea\n surface. These conditions may result in reduced visibility, particularly during\n early morning hours."
+   "text": "Fog and haze occur frequently from April to June, mainly due to advection\n fog and frontal fog caused by warm, moist air flowing over the cooler sea\n surface. These conditions may result in reduced visibility, particularly during\n early morning hours.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "霧とかすみ（ヘイズ）は4月から6月に多く、主に暖かく湿った空気が冷たい海面上を流れて生じる移流霧と前線霧が原因。これらにより、特に早朝に視程が低下することがある。"
   },
   {
    "title": "Others",
-   "text": "TBA"
+   "text": "TBA",
+   "ja_title": "その他",
+   "ja_text": "TBA（未定）"
   }
  ],
  "VHHH": [
   {
    "title": "Weather Characteristics",
-   "text": "• Hong Kong is located southeast of the continent of China and has a\n subtropical climate.\n • The year is roughly divided into 3 seasons, a foggy season (FEB～\n MAR), a rainy season (APR～SEP), and a dry season (OCT～JAN).\n • Seasonal winds blow from SW (APR～SEP) and from NE (OCT～\n MAR).\n • Major impediments to flight operations at HKG:\n - Sea fog in spring.\n - Thunderstorms in summer.\n - Low level wind shear caused by mountains.\n - Typhoon (MAY～NOV)."
+   "text": "• Hong Kong is located southeast of the continent of China and has a\n subtropical climate.\n • The year is roughly divided into 3 seasons, a foggy season (FEB～\n MAR), a rainy season (APR～SEP), and a dry season (OCT～JAN).\n • Seasonal winds blow from SW (APR～SEP) and from NE (OCT～\n MAR).\n • Major impediments to flight operations at HKG:\n - Sea fog in spring.\n - Thunderstorms in summer.\n - Low level wind shear caused by mountains.\n - Typhoon (MAY～NOV).",
+   "ja_title": "気象の特徴",
+   "ja_text": "・香港は中国大陸の南東に位置し、亜熱帯気候。\n・一年はおおむね3つの季節に分かれる: 霧の季節（2月～3月）、雨季（4月～9月）、乾季（10月～1月）。\n・季節風は SW（4月～9月）と NE（10月～3月）から吹く。\n・HKG での主な運航上の障害:\n - 春の海霧\n - 夏の雷雨\n - 山地による低層ウィンドシア\n - 台風（5月～11月）"
   },
   {
    "title": "Wind",
-   "text": "• An easterly wind is most frequently observed throughout the year\n except in the summer season.\n • A prominent land-sea breeze is likely to occur. NW winds prevail in the\n morning which are replaced by SW winds in the afternoon.\n • Turbulence is caused by the proximity of the hilly terrain around the\n airport. Due to this topography, when the surface wind is calm and the\n wind at 2000~3000ft is relatively strong, caution is required for\n moderate turbulence at low altitude.\n • Refer to “Local Wind Effects” (Jepp 10-1P3)."
+   "text": "• An easterly wind is most frequently observed throughout the year\n except in the summer season.\n • A prominent land-sea breeze is likely to occur. NW winds prevail in the\n morning which are replaced by SW winds in the afternoon.\n • Turbulence is caused by the proximity of the hilly terrain around the\n airport. Due to this topography, when the surface wind is calm and the\n wind at 2000~3000ft is relatively strong, caution is required for\n moderate turbulence at low altitude.\n • Refer to “Local Wind Effects” (Jepp 10-1P3).",
+   "ja_title": "風",
+   "ja_text": "・夏を除き、年間を通じて東風が最も多く観測される。\n・顕著な海陸風が発生しやすい。朝はNW風が卓越し、午後はSW風に替わる。\n・空港周辺の丘陵地に近いため乱気流が発生する。この地形のため、地上風が弱く、2000～3000ftの風が比較的強いときは、低高度での中程度の乱気流に注意が必要。\n・\"Local Wind Effects\"（Jepp 10-1P3）を参照。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "• More than 70% of the annual precipitation is concentrated in the rainy\n season.\n • The main precipitation is squalls caused by thunderstorms, and there\n are many typhoons in this season."
+   "text": "• More than 70% of the annual precipitation is concentrated in the rainy\n season.\n • The main precipitation is squalls caused by thunderstorms, and there\n are many typhoons in this season.",
+   "ja_title": "気温と降水",
+   "ja_text": "・年間降水量の70％以上が雨季に集中する。\n・主な降水は雷雨によるスコールで、この時期は台風も多い。"
   },
   {
    "title": "Visibility and Ceiling characteristics",
-   "text": "• During the foggy season, low stratus clouds often reduce visibility to\n less than 5 km. However, the visibility is rarely less than 400m."
+   "text": "• During the foggy season, low stratus clouds often reduce visibility to\n less than 5 km. However, the visibility is rarely less than 400m.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "・霧の季節には、低い層雲により視程が5km未満に低下することがよくある。ただし400m未満になることはまれ。"
   },
   {
    "title": "Others",
-   "text": " Windshear and Turbulence Warning System (WTWS)\n WTWS continuously monitors low-level wind shear and turbulence within\n 3nm of each runway threshold and over the runway.\n - Alert of wind shear, microburst and turbulence over the runway or within\n 3nm of touchdown is passed by ATC to landing aircraft.\n - Alert of wind shear and turbulence over the runway or within 2nm of the\n departure end of the runway as well as microburst over the runway or\n within 3nm of the departure end of the runway is passed by ATC to\n aircraft prior to departure.\n\n - Microburst Alert – when RWY orientated wind speed loss is 30kt or\n greater and accompanied by precipitation\n - Wind Shear Alert – when RWY orientated wind speed gain is 15kt or\n greater, or RWY oriented wind speed loss is between 15kt and 29kt, or\n RWY oriented wind speed loss is 30kt or greater and not accompanied\n by precipitation\n - Turbulence Alert – when turbulence is of a moderate or severe\n intensity (as expected to be experienced by a HEAVY category aircraft)\n < Jepp 10-1P5, AIP Hong Kong GEN 3.5 >\n\n • Tropical Cyclone Warning Signals\n Typhoon warnings are broadcast by ATIS or other means.\n The following signals are used in Hong Kong:\n\n < AIP Hong Kong GEN 3.5 >\n\n• Lightning Warning System\n - When the system predicts or detects a lightning strike on the airport\n platform, the airport authority will issue a Red Lightning Warning.\n - Ground crew will not commence push-back when a Red Lightning\n Warning is in force.\n < Jepp 10-1P5 >\n\n• FBL is used to indicate the intensity of weather phenomena,\n interference or static reports.\n (ex. “FBL RA” = “Light Rain”)\n < Jepp METEOROLOGY Meteorological Service for\n International Air Navigation / METAR and SPECI - Annex 3 >"
+   "text": " Windshear and Turbulence Warning System (WTWS)\n WTWS continuously monitors low-level wind shear and turbulence within\n 3nm of each runway threshold and over the runway.\n - Alert of wind shear, microburst and turbulence over the runway or within\n 3nm of touchdown is passed by ATC to landing aircraft.\n - Alert of wind shear and turbulence over the runway or within 2nm of the\n departure end of the runway as well as microburst over the runway or\n within 3nm of the departure end of the runway is passed by ATC to\n aircraft prior to departure.\n\n - Microburst Alert – when RWY orientated wind speed loss is 30kt or\n greater and accompanied by precipitation\n - Wind Shear Alert – when RWY orientated wind speed gain is 15kt or\n greater, or RWY oriented wind speed loss is between 15kt and 29kt, or\n RWY oriented wind speed loss is 30kt or greater and not accompanied\n by precipitation\n - Turbulence Alert – when turbulence is of a moderate or severe\n intensity (as expected to be experienced by a HEAVY category aircraft)\n < Jepp 10-1P5, AIP Hong Kong GEN 3.5 >\n\n • Tropical Cyclone Warning Signals\n Typhoon warnings are broadcast by ATIS or other means.\n The following signals are used in Hong Kong:\n\n < AIP Hong Kong GEN 3.5 >\n\n• Lightning Warning System\n - When the system predicts or detects a lightning strike on the airport\n platform, the airport authority will issue a Red Lightning Warning.\n - Ground crew will not commence push-back when a Red Lightning\n Warning is in force.\n < Jepp 10-1P5 >\n\n• FBL is used to indicate the intensity of weather phenomena,\n interference or static reports.\n (ex. “FBL RA” = “Light Rain”)\n < Jepp METEOROLOGY Meteorological Service for\n International Air Navigation / METAR and SPECI - Annex 3 >",
+   "ja_title": "その他",
+   "ja_text": "ウィンドシア・乱気流警報システム (WTWS)\nWTWS は、各滑走路スレッショルドから3nm以内および滑走路上の低層ウィンドシアと乱気流を常時監視している。\n- 滑走路上またはタッチダウンから3nm以内のウィンドシア、マイクロバースト、乱気流の警報は、ATC から着陸機に通報される。\n- 滑走路上または滑走路出発端から2nm以内のウィンドシアと乱気流、および滑走路上または出発端から3nm以内のマイクロバーストの警報は、ATC から出発前の航空機に通報される。\n\n- マイクロバースト警報: 滑走路方向の風速の減少が30kt以上で、降水を伴うとき\n- ウィンドシア警報: 滑走路方向の風速の増加が15kt以上、または滑走路方向の風速の減少が15kt～29kt、または滑走路方向の風速の減少が30kt以上で降水を伴わないとき\n- 乱気流警報: 乱気流の強度が中程度または強度（HEAVY カテゴリーの航空機が経験すると予想されるもの）のとき\n< Jepp 10-1P5, AIP Hong Kong GEN 3.5 >\n\n・熱帯低気圧警報シグナル\n台風警報は ATIS などで放送される。\n香港では次のシグナルが使われる:\n\n< AIP Hong Kong GEN 3.5 >\n\n・雷警報システム\n- システムが空港のプラットホームへの落雷を予測または検知したとき、空港当局が赤色の雷警報（Red Lightning Warning）を発令する。\n- 赤色の雷警報が出ている間は、地上作業員はプッシュバックを開始しない。\n< Jepp 10-1P5 >\n\n・FBL は、気象現象の強度、干渉、または静電気の報告を示すために使われる。\n （例: \"FBL RA\" = \"弱い雨\"）\n< Jepp METEOROLOGY Meteorological Service for International Air Navigation / METAR and SPECI - Annex 3 >"
   }
  ],
  "VTBS": [
   {
    "title": "Weather Characteristics",
-   "text": "• The climate in Bangkok, like other Asian airports, is dominated by the\n effects of the ITCZ (Intertropical Convergence Zone).\n • Bangkok's climate can be roughly divided into three seasons:\n\n 1. Southwest monsoon season (from May to October)\n Moist southwesterly winds blow from the Indian Ocean. This moist air\n destabilizes the atmosphere and causes frequent thunderstorms.\n\n 2. Northeast monsoon season (from October to February)\n Dry air from a high-pressure system in mainland China pours in.\n The season is mild with little rainfall. Thunderstorms are also rare.\n\n 3. Inter monsoon season (from February to May)\n It is the hottest season of the year. Slightly increased thunderstorm\n frequency and precipitation."
+   "text": "• The climate in Bangkok, like other Asian airports, is dominated by the\n effects of the ITCZ (Intertropical Convergence Zone).\n • Bangkok's climate can be roughly divided into three seasons:\n\n 1. Southwest monsoon season (from May to October)\n Moist southwesterly winds blow from the Indian Ocean. This moist air\n destabilizes the atmosphere and causes frequent thunderstorms.\n\n 2. Northeast monsoon season (from October to February)\n Dry air from a high-pressure system in mainland China pours in.\n The season is mild with little rainfall. Thunderstorms are also rare.\n\n 3. Inter monsoon season (from February to May)\n It is the hottest season of the year. Slightly increased thunderstorm\n frequency and precipitation.",
+   "ja_title": "気象の特徴",
+   "ja_text": "・バンコクの気候は、他のアジアの空港と同様に、ITCZ（熱帯収束帯）の影響が支配的。\n・バンコクの気候はおおむね3つの季節に分けられる:\n\n1. 南西モンスーン期（5月～10月）\nインド洋から湿った南西風が吹く。この湿った空気が大気を不安定にし、雷雨が頻発する。\n\n2. 北東モンスーン期（10月～2月）\n中国大陸の高気圧からの乾いた空気が流れ込む。穏やかな季節で降水は少ない。雷雨もまれ。\n\n3. 季節の変わり目（2月～5月）\n一年で最も暑い季節。雷雨の頻度と降水量がやや増える。"
   },
   {
    "title": "Wind",
-   "text": "• During the southwest monsoon period, southwesterly winds blow and the\n wind speed is strongest during this period.\n • During the Inter monsoon period, northeasterly winds blow, which are dry\n and have wind speeds of up to 15 knots."
+   "text": "• During the southwest monsoon period, southwesterly winds blow and the\n wind speed is strongest during this period.\n • During the Inter monsoon period, northeasterly winds blow, which are dry\n and have wind speeds of up to 15 knots.",
+   "ja_title": "風",
+   "ja_text": "・南西モンスーン期は南西風が吹き、この時期に風速が最も強くなる。\n・季節の変わり目には北東風が吹き、乾いていて、風速は最大15ktまで。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "• Precipitation increases during the southwest monsoon period and peaks\n in September. During this period, due to thunderstorms, the visibility\n temporarily drops to below the minimum, but it is rare to continue for\n more than 30 minutes.\n • As the ITCZ moves northward, the temperature peaks from March to\n April, and then remains around 30℃ until October."
+   "text": "• Precipitation increases during the southwest monsoon period and peaks\n in September. During this period, due to thunderstorms, the visibility\n temporarily drops to below the minimum, but it is rare to continue for\n more than 30 minutes.\n • As the ITCZ moves northward, the temperature peaks from March to\n April, and then remains around 30℃ until October.",
+   "ja_title": "気温と降水",
+   "ja_text": "・降水は南西モンスーン期に増え、9月にピークとなる。この時期は雷雨のため視程が一時的にミニマム未満に低下するが、30分を超えて続くことはまれ。\n・ITCZ が北上するにつれて気温は3月から4月にピークとなり、その後は10月まで30℃前後で推移する。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "• Low visibility is caused by thunderstorms during the southwest monsoon\n period and radiation fog during the northeast monsoon period.\n • Another visibility obstruction is the burning of dry grass in the fields near\n the airport, mainly during the dry season. Especially when the wind is\n weak during dry grass burning, visibility may be extremely poor."
+   "text": "• Low visibility is caused by thunderstorms during the southwest monsoon\n period and radiation fog during the northeast monsoon period.\n • Another visibility obstruction is the burning of dry grass in the fields near\n the airport, mainly during the dry season. Especially when the wind is\n weak during dry grass burning, visibility may be extremely poor.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "・低視程の原因は、南西モンスーン期は雷雨、北東モンスーン期は放射霧。\n・もう一つの視程障害は、主に乾季に空港近くの畑で行われる枯れ草の焼却。枯れ草を焼いているときに風が弱いと、視程が極端に悪くなることがある。"
   },
   {
    "title": "Others",
-   "text": "• Adverse Weather Condition Warning\n - Level 1: Thunderstorms observation reporting\n - Level 2: Thunderstorms and/or strong wind warning\n\n - Level 3: Lightning warning\n Refer to Jepp 20-1P1 for details."
+   "text": "• Adverse Weather Condition Warning\n - Level 1: Thunderstorms observation reporting\n - Level 2: Thunderstorms and/or strong wind warning\n\n - Level 3: Lightning warning\n Refer to Jepp 20-1P1 for details.",
+   "ja_title": "その他",
+   "ja_text": "・悪天候警報\n - レベル1: 雷雨の観測報告\n - レベル2: 雷雨や強風の警報\n - レベル3: 雷警報\n 詳細は Jepp 20-1P1 を参照。"
   }
  ],
  "WSSS": [
   {
    "title": "Weather Characteristics",
-   "text": "• The climate in Singapore, like other Asian airports, is dominated by the\n effects of the ITCZ (Intertropical Convergence Zone).\n\n • Southerly winds blow from May to October when the ITCZ is located in\n the north. This is the season of the southwest monsoon, and CB from\n Sumatra Island can make landfall in Singapore, and in very severe\n cases, the weather at the airport can be \"below minimum\". This\n phenomenon usually occurs between 03:00 and 09:00 in the morning\n and mostly lasts for 30 minutes.\n\n • Northerly winds blow from December to April when the ITCZ is located in\n the south. This is the season of the northeast monsoon.\n\n • Many thunderstorms occur in April and May (the ITCZ migrates from\n south to north) and in November (the ITCZ migrates from north to south).\n • The thunderstorms usually occur between 12:00 and 18:00 in the\n afternoon, and the wind direction and speed change rapidly, and visibility\n deteriorates, but it subsides in about 30 minutes."
+   "text": "• The climate in Singapore, like other Asian airports, is dominated by the\n effects of the ITCZ (Intertropical Convergence Zone).\n\n • Southerly winds blow from May to October when the ITCZ is located in\n the north. This is the season of the southwest monsoon, and CB from\n Sumatra Island can make landfall in Singapore, and in very severe\n cases, the weather at the airport can be \"below minimum\". This\n phenomenon usually occurs between 03:00 and 09:00 in the morning\n and mostly lasts for 30 minutes.\n\n • Northerly winds blow from December to April when the ITCZ is located in\n the south. This is the season of the northeast monsoon.\n\n • Many thunderstorms occur in April and May (the ITCZ migrates from\n south to north) and in November (the ITCZ migrates from north to south).\n • The thunderstorms usually occur between 12:00 and 18:00 in the\n afternoon, and the wind direction and speed change rapidly, and visibility\n deteriorates, but it subsides in about 30 minutes.",
+   "ja_title": "気象の特徴",
+   "ja_text": "・シンガポールの気候は、他のアジアの空港と同様に、ITCZ（熱帯収束帯）の影響が支配的。\n\n・5月から10月は ITCZ が北にあり、南風が吹く。これは南西モンスーンの季節で、スマトラ島からの CB がシンガポールに上陸することがあり、ごくまれに空港の天気が「ミニマム未満」になる。この現象は通常、午前3時から9時の間に起き、大部分は30分間続く。\n\n・12月から4月は ITCZ が南にあり、北風が吹く。これは北東モンスーンの季節。\n\n・雷雨は4月・5月（ITCZ が南から北へ移動）と11月（ITCZ が北から南へ移動）に多く発生する。\n・雷雨は通常、午後12時から18時の間に起き、風向・風速が急に変わり、視程が悪化するが、約30分でおさまる。"
   },
   {
    "title": "Wind",
-   "text": "• The wind from the southwest monsoon and northeast monsoon blows.\n The wind velocity is almost less than 10kt."
+   "text": "• The wind from the southwest monsoon and northeast monsoon blows.\n The wind velocity is almost less than 10kt.",
+   "ja_title": "風",
+   "ja_text": "・南西モンスーンと北東モンスーンによる風が吹く。風速はほとんど10kt未満。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "• Temperature and precipitation do not vary much throughout the year."
+   "text": "• Temperature and precipitation do not vary much throughout the year.",
+   "ja_title": "気温と降水",
+   "ja_text": "・気温と降水は、一年を通じてあまり変わらない。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "• From July to October, around 6:00 in the early morning around sunrise,\n visibility and ceilings are often low due to the effects of radiation fog.\n • During the southwest monsoon from May to October, smoke from open\n burning in Sumatra Island causes poor visibility in Singapore and\n surrounding countries, sometimes observed as HZ."
+   "text": "• From July to October, around 6:00 in the early morning around sunrise,\n visibility and ceilings are often low due to the effects of radiation fog.\n • During the southwest monsoon from May to October, smoke from open\n burning in Sumatra Island causes poor visibility in Singapore and\n surrounding countries, sometimes observed as HZ.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "・7月から10月は、日の出前後の午前6時ごろに、放射霧の影響で視程と雲底が低くなることがよくある。\n・5月から10月の南西モンスーン期には、スマトラ島での野焼きの煙により、シンガポールと周辺国で視程が悪化し、HZ として観測されることもある。"
   },
   {
    "title": "Others",
-   "text": "• None"
+   "text": "• None",
+   "ja_title": "その他",
+   "ja_text": "・なし"
   }
  ],
  "ZSAM": [
   {
    "title": "Weather Characteristics",
-   "text": "Fujian Province, including Xiamen City, is located just north of the Tropic of\n Cancer and has a subtropical humid climate. Facing the sea to the southeast\n and protected from northerly winds by the mountains in the northwest, the\n climate is mild in winter, with average temperatures above 15°C in January\n and over 30°C in July.\n In addition to rain from the southeasterly seasonal winds from the sea,\n typhoons strike from summer to autumn, resulting in annual precipitation of\n up to 1,200mm to 2,000mm at times. Typhoons are particularly common in\n July and August, and when the center of a typhoon passes through, strong\n winds accompanied by heavy rain blow. Wind speeds can reach over 70kt,\n with a record of 120kt."
+   "text": "Fujian Province, including Xiamen City, is located just north of the Tropic of\n Cancer and has a subtropical humid climate. Facing the sea to the southeast\n and protected from northerly winds by the mountains in the northwest, the\n climate is mild in winter, with average temperatures above 15°C in January\n and over 30°C in July.\n In addition to rain from the southeasterly seasonal winds from the sea,\n typhoons strike from summer to autumn, resulting in annual precipitation of\n up to 1,200mm to 2,000mm at times. Typhoons are particularly common in\n July and August, and when the center of a typhoon passes through, strong\n winds accompanied by heavy rain blow. Wind speeds can reach over 70kt,\n with a record of 120kt.",
+   "ja_title": "気象の特徴",
+   "ja_text": "廈門市を含む福建省は北回帰線のすぐ北に位置し、亜熱帯の湿潤気候。南東は海に面し、北西は山地で北風から守られているため、冬は温暖で、1月の平均気温は15℃以上、7月は30℃超。\n海からの南東の季節風による雨に加え、夏から秋にかけて台風が襲来し、年間降水量が1,200mm～2,000mmに達することもある。台風は特に7月と8月に多く、台風の中心が通過するときは、大雨を伴う強風が吹く。風速は70kt超に達し、記録は120kt。"
   },
   {
    "title": "Wind",
-   "text": "From January to April and from September to December, northeasterly to\n easterly winds prevail. The average wind speed is 3 to 4 meters per second.\n From May to June, southeasterly and southerly winds prevail.\n In July and August, the wind speed is weak, but there is a large diurnal\n change. In the morning, winds are from the west or southwest, changing to\n southeasterly in the afternoon"
+   "text": "From January to April and from September to December, northeasterly to\n easterly winds prevail. The average wind speed is 3 to 4 meters per second.\n From May to June, southeasterly and southerly winds prevail.\n In July and August, the wind speed is weak, but there is a large diurnal\n change. In the morning, winds are from the west or southwest, changing to\n southeasterly in the afternoon",
+   "ja_title": "風",
+   "ja_text": "1月から4月と9月から12月は、北東から東の風が卓越する。平均風速は毎秒3～4メートル。\n5月から6月は、南東と南の風が卓越する。\n7月と8月は風速は弱いが、日変化が大きい。朝は西または南西の風で、午後は南東に変わる。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": "Because it has a subtropical climate, the average minimum temperature is\n over 14°C even in February, and there is no snowfall.\n The maximum temperature exceeds 30°C from May to October, and hot days\n continue.\n Annual precipitation is 1132mm. It is concentrated in about six months from\n February to August."
+   "text": "Because it has a subtropical climate, the average minimum temperature is\n over 14°C even in February, and there is no snowfall.\n The maximum temperature exceeds 30°C from May to October, and hot days\n continue.\n Annual precipitation is 1132mm. It is concentrated in about six months from\n February to August.",
+   "ja_title": "気温と降水",
+   "ja_text": "亜熱帯気候のため、2月でも平均最低気温は14℃を超え、降雪はない。\n最高気温は5月から10月に30℃を超え、暑い日が続く。\n年間降水量は1132mm。2月から8月の約6か月に集中する。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": "Visibility rarely drops below 800m, and never lasts more than three hours.\n Advection fog occurs frequently from March to May."
+   "text": "Visibility rarely drops below 800m, and never lasts more than three hours.\n Advection fog occurs frequently from March to May.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "視程が800m未満に低下することはまれで、3時間を超えて続くことはない。\n移流霧は3月から5月に頻繁に発生する。"
   },
   {
    "title": "Others",
-   "text": "During the rainy season and summer, thunderstorms are common, especially\n in the mountainous areas near the A470."
+   "text": "During the rainy season and summer, thunderstorms are common, especially\n in the mountainous areas near the A470.",
+   "ja_title": "その他",
+   "ja_text": "雨季と夏は雷雨が多く、特にA470付近の山岳地帯で多い。"
   },
   {
    "title": "WX Deviation",
-   "text": "Between LJG -FQG - XLN on the A470, weather deviation of up to 5nm to\n the southeast is possible, but caution is required when making deviations as\n Taiwan's airspace is close by."
+   "text": "Between LJG -FQG - XLN on the A470, weather deviation of up to 5nm to\n the southeast is possible, but caution is required when making deviations as\n Taiwan's airspace is close by.",
+   "ja_title": "気象回避（WX Deviation）",
+   "ja_text": "A470の LJG - FQG - XLN の間では、南東側へ最大5nmの気象回避が可能だが、台湾の空域が近いため、回避の際は注意が必要。"
   }
  ],
  "ZSPD": [
@@ -350,19 +504,27 @@
   },
   {
    "title": "Weather Characteristics",
-   "text": " Weather phenomena that distract flight operations are radiation fog and\n advection fog often observed from November to May. Low cloud ceiling,\n low visibility, thunder storms and typhoon are other weather distractions\n often observed from June to September.\n  It snows several times a year, a situation that deicing/anti icing required\n is not improbable."
+   "text": " Weather phenomena that distract flight operations are radiation fog and\n advection fog often observed from November to May. Low cloud ceiling,\n low visibility, thunder storms and typhoon are other weather distractions\n often observed from June to September.\n  It snows several times a year, a situation that deicing/anti icing required\n is not improbable.",
+   "ja_title": "気象の特徴",
+   "ja_text": "運航の妨げとなる気象現象は、11月から5月にしばしば観測される放射霧と移流霧。低い雲底、低視程、雷雨、台風は、6月から9月にしばしば観測されるそのほかの障害。\n年に数回雪が降り、除氷・防氷が必要になる状況もあり得る。"
   },
   {
    "title": "Wind",
-   "text": " Surface wind varies seasonally. During winter, Northwesterly or Northerly\n wind predominates and Southerly or Southeasterly wind predominates\n during summer. Because the area is geographical close to the Yanzi\n river basin and the East China Sea, land and sea breeze effect is its\n distinguished character. The inflow of cold air with associated northerly\n wind usually causes a strong surface wind. Other causes of strong\n surface winds are Northwesterly wind flow after passage of a low\n pressure or Typhoon that are frequent in August. Surface wind speed is\n reported in m/sec and upper wind is reported in km/hr."
+   "text": " Surface wind varies seasonally. During winter, Northwesterly or Northerly\n wind predominates and Southerly or Southeasterly wind predominates\n during summer. Because the area is geographical close to the Yanzi\n river basin and the East China Sea, land and sea breeze effect is its\n distinguished character. The inflow of cold air with associated northerly\n wind usually causes a strong surface wind. Other causes of strong\n surface winds are Northwesterly wind flow after passage of a low\n pressure or Typhoon that are frequent in August. Surface wind speed is\n reported in m/sec and upper wind is reported in km/hr.",
+   "ja_title": "風",
+   "ja_text": "地上風は季節で変わる。冬はNW～Nの風が卓越し、夏は S～SE の風が卓越する。長江流域と東シナ海に地理的に近いため、海陸風の影響が際立った特徴。寒気の流入に伴う北風は、通常、強い地上風を引き起こす。そのほかの強い地上風の原因は、低気圧通過後の北西風の流れと、8月に多い台風。地上風の風速は m/sec、上空風は km/hr で報告される。"
   },
   {
    "title": "Temperature and Precipitation",
-   "text": " Average number of days with rain per year is 170 days and the amount\n of rainfall is 1,100mm that is a little less than the amount in Tokyo. Most\n rain falls are observed in June and September and the amount of rainfall\n decreases during the winter season. Average temperature is almost the\n same as it is in Tokyo."
+   "text": " Average number of days with rain per year is 170 days and the amount\n of rainfall is 1,100mm that is a little less than the amount in Tokyo. Most\n rain falls are observed in June and September and the amount of rainfall\n decreases during the winter season. Average temperature is almost the\n same as it is in Tokyo.",
+   "ja_title": "気温と降水",
+   "ja_text": "年間の降雨日数の平均は170日で、降水量は1,100mm と東京よりやや少ない。降雨の大部分は6月と9月に観測され、冬は降水量が減る。平均気温は東京とほぼ同じ。"
   },
   {
    "title": "Visibility and Ceiling Characteristics",
-   "text": " The airport is built on flat land surrounded by rivers, ponds and sea. Due\n to the humid condition of the location, the formation of radiation fog that\n lasts until 1～2hours after sunrise is frequent from October to May. The\n formation of advection fog is common in spring, it can form at all hours\n and has a tendency to deteriorate from midnight to early morning.\n  Visibility is often reduced by the presence of haze even when the sky is\n clear."
+   "text": " The airport is built on flat land surrounded by rivers, ponds and sea. Due\n to the humid condition of the location, the formation of radiation fog that\n lasts until 1～2hours after sunrise is frequent from October to May. The\n formation of advection fog is common in spring, it can form at all hours\n and has a tendency to deteriorate from midnight to early morning.\n  Visibility is often reduced by the presence of haze even when the sky is\n clear.",
+   "ja_title": "視程と雲底の特徴",
+   "ja_text": "空港は河川・池・海に囲まれた平地に造られている。湿潤な立地のため、10月から5月は日の出後1～2時間まで続く放射霧が頻繁に発生する。移流霧は春に一般的で、あらゆる時間帯に発生し、真夜中から早朝にかけて悪化する傾向がある。\n空が晴れていても、ヘイズにより視程が低下することがよくある。"
   }
  ]
 }
