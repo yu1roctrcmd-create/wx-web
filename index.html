@@ -153,6 +153,7 @@
   <div class="subtabs" data-sub="sigwx">
     <button class="subtab active" onclick="selSub('sigwx',0)">高層・国際</button>
     <button class="subtab" onclick="selSub('sigwx',1)">低高度</button>
+    <button class="subtab" onclick="selSub('sigwx',2)">SIGMET (GFA)</button>
   </div>
   <div class="subsec active">
   <div class="card">
@@ -204,6 +205,17 @@
     </div>
   </div>
   <div style="font-size:11px;color:var(--muted);padding:4px 2px">FBTK=東日本 / FBSP=北海道 / FBSN=東北 / FBOS=西日本 / FBOK=沖縄（SFC–FL150, 3時間毎）</div>
+  </div>
+  <div class="subsec">
+  <div class="grp">SIGMET — AWC Graphical Forecasts for Aviation</div>
+  <div class="card" style="overflow:hidden">
+    <div style="position:relative;padding-bottom:130%;height:0;overflow:hidden">
+      <iframe src="https://aviationweather.gov/gfa/#sigmet" loading="lazy" allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#fff"></iframe>
+    </div>
+    <div style="padding:6px 12px 8px"><a href="https://aviationweather.gov/gfa/#sigmet" target="_blank" style="font-size:11px;color:var(--accent)">AWC GFA を別タブで開く ↗</a>
+      <span style="font-size:10px;color:var(--muted);margin-left:8px">全世界の SIGMET/AIRMET を地図表示（アラスカ・北米含む）。オンライン時のみ</span></div>
+  </div>
   </div>
 </div><!-- /sigwx -->
 
