@@ -2,7 +2,8 @@
 """
 Lightweight wx-web data exporter.
 
-Fetches only what the wx-web viewer actually consumes — VAAC advisories,
+Fetches only what the wx-web viewer actually consumes — VAAC advisories
+(Tokyo/Alaska/London/Toulouse),
 FD wind/temp (Alaska) and METAR/TAF — and writes /tmp/metar_latest.json.
 
 No Playwright / Chromium / PDF / email. Designed to run every 30 min so the
@@ -27,6 +28,8 @@ from src.fetchers.vaac import (
     fetch_tokyo_vaac,
     fetch_alaska_vaac,
     fetch_tokyo_vaac_active,
+    fetch_london_vaac,
+    fetch_toulouse_vaac,
 )
 
 logging.basicConfig(
@@ -99,6 +102,8 @@ def export() -> str:
     tokyo_vaac   = fetch_tokyo_vaac()
     alaska_vaac  = fetch_alaska_vaac()
     tokyo_active = fetch_tokyo_vaac_active()
+    london_vaac  = fetch_london_vaac()
+    tls_vaac     = fetch_toulouse_vaac()
     ice_sigmets  = fetch_ice_sigmets()
 
     out: dict = {
@@ -111,6 +116,8 @@ def export() -> str:
         "vaac_active": tokyo_active,   # red-triangle volcanoes from indexj.html TOP
         "vaac_tokyo":  [_vaac_entry(e) for e in (tokyo_vaac  or [])],
         "vaac_alaska": [_vaac_entry(e) for e in (alaska_vaac or [])],
+        "vaac_london":   london_vaac or [],     # Met Office (primary source)
+        "vaac_toulouse": tls_vaac or [],        # Meteo-France (primary source)
     }
     for route_data in weather.get("routes", {}).values():
         for icao, m in route_data.get("metars", {}).items():
@@ -123,9 +130,10 @@ def export() -> str:
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
 
-    log.info("wx-data written: %s  (%d METAR, %d TAF, VAAC active=%d tokyo=%d alaska=%d)",
+    log.info("wx-data written: %s  (%d METAR, %d TAF, VAAC active=%d tokyo=%d alaska=%d london=%d toulouse=%d)",
              OUT_PATH, len(out["metar"]), len(out["taf"]),
-             len(out["vaac_active"]), len(out["vaac_tokyo"]), len(out["vaac_alaska"]))
+             len(out["vaac_active"]), len(out["vaac_tokyo"]), len(out["vaac_alaska"]),
+             len(out["vaac_london"]), len(out["vaac_toulouse"]))
     return OUT_PATH
 
 

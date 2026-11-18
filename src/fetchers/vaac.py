@@ -351,3 +351,113 @@ def fetch_tokyo_vaac_active() -> list[dict]:
 
     log.info("Tokyo VAAC active: %d volcano(es)", len(results))
     return results
+
+
+# ── European VAACs (primary sources) ──────────────────────────────────────────
+#   London   VAAC (Met Office):    va-advisories/ list → per-advisory page (text + VAG png)
+#   Toulouse VAAC (Météo-France):  vaac.meteo.fr/advisory/ list → {id}_vaa.txt / {id}_vag.png
+_EU_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
+          "(KHTML, like Gecko) Version/17.0 Safari/605.1.15")
+_LONDON_BASE = "https://www.metoffice.gov.uk"
+_LONDON_LIST = f"{_LONDON_BASE}/services/transport/aviation/regulated/international-aviation/vaac/va-advisories/"
+_TLS_LIST    = "https://vaac.meteo.fr/advisory/"
+
+
+def _eu_get(url: str) -> str:
+    r = _SESSION.get(url, timeout=_TIMEOUT, headers={"User-Agent": _EU_UA})
+    r.raise_for_status()
+    return r.text
+
+
+def _eu_entry(vaac: str, text: str, issued: str, img_url: str | None, page_url: str) -> dict:
+    text = text.strip()
+    lat, lon = _psn_to_latlon(text)
+    st = re.search(r"STATUS:\s*([A-Z]+)", text)
+    vm = re.search(r"VOLCANO:\s*(.+)", text)
+    return {
+        "vaac":     vaac,
+        "volcano":  (vm.group(1).strip() if vm else None),   # e.g. "VESUVIUS 211020"
+        "psn":      _parse_psn(text),
+        "lat": lat, "lon": lon,
+        "status":   (st.group(1) if st else ""),               # EXER / TEST / "" (=operational)
+        "issued":   issued,                                    # ISO-8601 UTC
+        "text":     text,
+        "img_url":  img_url,
+        "text_url": page_url,
+    }
+
+
+def fetch_london_vaac(n: int = 4) -> list[dict]:
+    """Latest advisory per volcano from the Met Office London VAAC page (newest first)."""
+    try:
+        html = _eu_get(_LONDON_LIST)
+    except Exception as exc:
+        log.warning("London VAAC list fetch failed: %s", exc)
+        return []
+    rows = re.findall(
+        r'<td>([^<]+)</td>\s*<td><time datetime="([^"]+)"[^>]*>.*?</time></td>\s*'
+        r'<td><a[^>]*href="([^"#]+)#vaa"', html, re.S)
+    rows.sort(key=lambda r: r[1], reverse=True)
+    seen: set[str] = set()
+    out: list[dict] = []
+    for vol, dt, href in rows:
+        key = vol.strip().upper()
+        if key in seen:
+            continue
+        seen.add(key)
+        url = href if href.startswith("http") else _LONDON_BASE + href
+        try:
+            page = _eu_get(url)
+        except Exception as exc:
+            log.warning("London VAAC advisory fetch failed (%s): %s", key, exc)
+            continue
+        m = re.search(r'id="text-content"(.*?)<div id="image-content"', page, re.S)
+        body = m.group(1) if m else ""
+        lines = ["VA ADVISORY"]
+        for blk in re.findall(r'<div class="text-alert">(.*?)</div>', body, re.S):
+            t = re.sub(r"<[Bb][Rr]\s*/?>", " ", blk)
+            t = re.sub(r"<[^>]+>", "", t)
+            t = re.sub(r"\s+", " ", t.replace("&amp;", "&")).strip()
+            if t:
+                lines.append(t)
+        im = re.search(r'id="image-content".*?<img src="([^"]+)"', page, re.S)
+        img = im.group(1) if im else None
+        if img and img.startswith("/"):
+            img = _LONDON_BASE + img
+        iso = dt if dt.count(":") == 2 else dt.replace("Z", ":00Z")
+        out.append(_eu_entry("LONDON", "\n".join(lines), iso, img, url))
+        log.info("London VAAC [%s] %s", iso, key)
+        if len(out) >= n:
+            break
+    log.info("London VAAC: %d advisory(ies)", len(out))
+    return out
+
+
+def fetch_toulouse_vaac(n: int = 4) -> list[dict]:
+    """Latest advisory per volcano from vaac.meteo.fr (newest first)."""
+    try:
+        html = _eu_get(_TLS_LIST)
+    except Exception as exc:
+        log.warning("Toulouse VAAC list fetch failed: %s", exc)
+        return []
+    ids = set(re.findall(r'advisory/(\d{4})/((\d+)_(\d{14}))/', html))
+    ids = sorted(ids, key=lambda t: t[3], reverse=True)       # by YYYYMMDDhhmmss
+    seen: set[str] = set()
+    out: list[dict] = []
+    for year, aid, vol_no, ts in ids:
+        if vol_no in seen:
+            continue
+        seen.add(vol_no)
+        base = f"https://vaac.meteo.fr/advisory/{year}/{aid}/{aid}"
+        try:
+            text = _eu_get(base + "_vaa.txt")
+        except Exception as exc:
+            log.warning("Toulouse VAAC text fetch failed (%s): %s", aid, exc)
+            continue
+        iso = f"{ts[:4]}-{ts[4:6]}-{ts[6:8]}T{ts[8:10]}:{ts[10:12]}:{ts[12:14]}Z"
+        out.append(_eu_entry("TOULOUSE", text, iso, base + "_vag.png", base + "/"))
+        log.info("Toulouse VAAC [%s] %s", iso, aid)
+        if len(out) >= n:
+            break
+    log.info("Toulouse VAAC: %d advisory(ies)", len(out))
+    return out

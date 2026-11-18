@@ -1016,10 +1016,11 @@
       <button onclick="vaacJump('kam',this)">カムチャツカ</button>
       <button onclick="vaacJump('jp',this)">日本</button>
       <button onclick="vaacJump('sea',this)">東南アジア</button>
+      <button onclick="vaacJump('eu',this)">欧州・アイスランド</button>
       <button onclick="vaacJump('all',this)" class="active">全体</button>
     </div>
     <div id="vaac-map" style="width:100%;height:380px;background:#0d1117"></div>
-    <div style="font-size:10px;color:var(--muted);padding:6px 12px">🔺 赤＝VAA発表中（東京VAAC indexj.html 準拠） ／ 灰＝主要活火山（アリューシャン・カムチャツカ）</div>
+    <div style="font-size:10px;color:var(--muted);padding:6px 12px">🔺 赤＝VAA発表中（東京VAAC indexj.html 準拠） ／ 灰＝主要活火山（アリューシャン・カムチャツカ・アイスランド・地中海・カナリア）。London/Toulouse VAAC の発表中（演習 EXER/TEST 除く）も赤</div>
   </div>
 
   <div class="grp" style="margin-top:6px">🔴 Active — VAA発表中の火山</div>
@@ -1057,6 +1058,12 @@
   <div class="grp" style="margin-top:6px">Alaska VAAC</div>
   <div id="vaac-alaska-content"></div>
 
+  <div class="grp" style="margin-top:6px">London VAAC（Met Office）— アイスランド・英国・北大西洋東部</div>
+  <div id="vaac-london-content"></div>
+
+  <div class="grp" style="margin-top:6px">Toulouse VAAC（Météo-France）— 欧州大陸・地中海・アフリカ・中東</div>
+  <div id="vaac-toulouse-content"></div>
+
   <div class="grp" style="margin-top:6px">外部リンク</div>
   <div style="display:flex;flex-direction:column;gap:10px">
     <a href="https://ds.data.jma.go.jp/svd/vaac/data/vaac_list.html"
@@ -1070,6 +1077,18 @@
        style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
       <div style="font-size:13px;font-weight:600;color:var(--accent)">Alaska Volcano Observatory (AVO) ↗</div>
       <div style="font-size:11px;color:var(--muted);margin-top:3px">アラスカ火山観測所 — アラスカ・北太平洋火山活動情報</div>
+    </a>
+    <a href="https://www.metoffice.gov.uk/services/transport/aviation/regulated/international-aviation/vaac/va-advisories/"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">London VAAC 一覧 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">Met Office — VAA / VAG（アイスランド・英国周辺）</div>
+    </a>
+    <a href="https://vaac.meteo.fr/advisory/"
+       target="_blank"
+       style="display:block;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);text-decoration:none">
+      <div style="font-size:13px;font-weight:600;color:var(--accent)">Toulouse VAAC 一覧 ↗</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">Météo-France — VAA / VAG（欧州大陸・地中海・アフリカ）</div>
     </a>
   </div>
 
@@ -1918,6 +1937,8 @@ async function loadVaac() {
           + '<div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">'
           + '<a href="https://ds.data.jma.go.jp/svd/vaac/data/vaac_list.html" target="_blank" style="color:#fecaca;font-weight:700">→ Tokyo VAAC 公式で確認 ↗</a>'
           + '<a href="https://avo.alaska.edu/volcano/index" target="_blank" style="color:#fecaca;font-weight:700">→ Alaska VAAC (AVO) 公式で確認 ↗</a>'
+          + '<a href="https://www.metoffice.gov.uk/services/transport/aviation/regulated/international-aviation/vaac/va-advisories/" target="_blank" style="color:#fecaca;font-weight:700">→ London VAAC 公式 ↗</a>'
+          + '<a href="https://vaac.meteo.fr/advisory/" target="_blank" style="color:#fecaca;font-weight:700">→ Toulouse VAAC 公式 ↗</a>'
           + '</div></div>';
       } else {
         fresh.innerHTML =
@@ -1929,6 +1950,11 @@ async function loadVaac() {
     const tokyo  = data.vaac_tokyo  || [];
     const alaska = data.vaac_alaska || [];
     const active = data.vaac_active || [];
+    const london = data.vaac_london   || [];
+    const tls    = data.vaac_toulouse || [];
+    // 演習・試験報（STATUS: EXER/TEST、本文に EXERCISE）は Active 扱いしない
+    const isDrill = e => /^(EXER|TEST)$/i.test(e.status || '') || /STATUS:\s*(EXER|TEST)\b/i.test(e.text || '');
+    const isLive  = e => !isDrill(e) && !/NXT ADVISORY:\s*NO FURTHER/i.test(e.text || '');
 
     // Active volcanoes (indexj.html red triangles) → map + list
     // Alaska VAAC が発表中（NO FURTHER ではない）の火山も赤で追加。座標は火山名で参照リストから引く
@@ -1939,14 +1965,25 @@ async function loadVaac() {
                      obs_time: e.issued || '', issued_time: e.issued || '', lat: ref[1], lon: ref[2],
                      text: e.text || '', text_url: e.text_url || '' } : null;
     }).filter(Boolean);
+    // London / Toulouse VAAC 発表中（座標は PSN から）。同じ火山は新しい方のみ
+    const euAct = [];
+    [...london, ...tls].filter(e => isLive(e) && e.lat != null)
+      .sort((a, b) => (b.issued || '').localeCompare(a.issued || ''))
+      .forEach(e => {
+        const nm = (e.volcano || '?').replace(/\s+\d{4,}$/, '').toUpperCase();
+        if (euAct.some(x => x.volcano === nm)) return;
+        euAct.push({ volcano: nm, volcano_jp: '', advisory_nr: e.vaac + ' VAAC',
+                     obs_time: e.issued || '', issued_time: e.issued || '', lat: e.lat, lon: e.lon,
+                     text: e.text || '', text_url: e.text_url || '' });
+      });
     const jpNames = new Set(active.map(a => (a.volcano || '').toLowerCase()));
-    renderActive(active.concat(akAct.filter(a => !jpNames.has(a.volcano.toLowerCase()))));
+    renderActive(active.concat(akAct.filter(a => !jpNames.has(a.volcano.toLowerCase())), euAct));
 
     // Banner: show if any advisory is NOT "no further advisories"
     const hasActive = [...tokyo, ...alaska].some(e =>
       !/NO FURTHER ADV/i.test(e.text || '') &&
       !/NXT ADVISORY: NO FURTHER/i.test(e.text || '')
-    );
+    ) || euAct.length > 0;
     if (hasActive || active.length) document.getElementById('vaac-banner').style.display = 'block';
 
     function renderEntries(entries, containerId) {
@@ -1957,14 +1994,16 @@ async function loadVaac() {
       }
       let html = '';
       entries.forEach(e => {
-        const isActive = !/NXT ADVISORY: NO FURTHER/i.test(e.text || '');
-        const titleColor = isActive ? 'var(--warn)' : 'var(--green)';
-        const issued = e.issued
-          ? e.issued.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3')
-          : (e.issued_utc || '');
+        const drill = isDrill(e);
+        const isActive = !drill && !/NXT ADVISORY: NO FURTHER/i.test(e.text || '');
+        const titleColor = isActive ? 'var(--warn)' : (drill ? 'var(--muted)' : 'var(--green)');
+        const issued = !e.issued ? (e.issued_utc || '')
+          : /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.issued) ? e.issued.slice(0, 16).replace('T', ' ') + 'Z'
+          : e.issued.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3');
         html += '<div class="card" style="margin-bottom:14px">';
         html += '<div class="card-label" style="color:' + titleColor + '">';
-        html += (e.volcano || 'Unknown Volcano').toUpperCase();
+        html += esc((e.volcano || 'Unknown Volcano').toUpperCase());
+        if (drill) html += ' <span style="font-size:9px;font-weight:700;color:#fbbf24;border:1px solid #fbbf24;border-radius:3px;padding:0 4px;margin-left:4px">' + esc((e.status || 'EXER').toUpperCase()) + ' 演習</span>';
         if (e.psn) html += ' &nbsp;<span style="font-weight:400;text-transform:none;color:var(--muted)">' + esc(e.psn) + '</span>';
         html += '<span style="margin-left:auto;font-weight:400;text-transform:none;color:var(--muted);font-size:10px">' + issued + '</span>';
         html += '</div>';
@@ -1992,7 +2031,7 @@ async function loadVaac() {
           html += esc(e.text) + '</pre>';
         }
         html += '<div style="padding:6px 12px 8px;border-top:1px solid var(--border)">';
-        if (e.text_url) html += '<a href="' + esc(e.text_url) + '" target="_blank" style="font-size:11px;color:var(--accent)">Text ↗</a>';
+        if (e.text_url) html += '<a href="' + esc(e.text_url) + '" target="_blank" style="font-size:11px;color:var(--accent)">' + (e.vaac ? e.vaac.charAt(0) + e.vaac.slice(1).toLowerCase() + ' VAAC 公式ページ' : 'Text') + ' ↗</a>';
         html += '</div>';
         html += '</div>';
       });
@@ -2001,6 +2040,8 @@ async function loadVaac() {
 
     renderEntries(tokyo,  'vaac-tokyo-content');
     renderEntries(alaska, 'vaac-alaska-content');
+    renderEntries(london, 'vaac-london-content');
+    renderEntries(tls,    'vaac-toulouse-content');
 
   } catch(e) {
     status.innerHTML =
@@ -2010,6 +2051,8 @@ async function loadVaac() {
       + '<div style="margin-top:9px;display:flex;flex-direction:column;gap:6px">'
       + '<a href="https://ds.data.jma.go.jp/svd/vaac/data/vaac_list.html" target="_blank" style="color:#fecaca;font-weight:700">→ Tokyo VAAC 公式 ↗</a>'
       + '<a href="https://avo.alaska.edu/volcano/index" target="_blank" style="color:#fecaca;font-weight:700">→ Alaska VAAC (AVO) 公式 ↗</a>'
+      + '<a href="https://www.metoffice.gov.uk/services/transport/aviation/regulated/international-aviation/vaac/va-advisories/" target="_blank" style="color:#fecaca;font-weight:700">→ London VAAC 公式 ↗</a>'
+      + '<a href="https://vaac.meteo.fr/advisory/" target="_blank" style="color:#fecaca;font-weight:700">→ Toulouse VAAC 公式 ↗</a>'
       + '</div></div>';
   }
 }
@@ -2066,9 +2109,14 @@ const VOLC_REF = [
  ['Kizimen',55.13,160.32],['Krasheninnikov',54.595,160.272],['Karymsky',54.049,159.443],['Zhupanovsky',53.59,159.15],
  ['Koryaksky',53.32,158.712],['Avachinsky',53.256,158.83],['Gorely',52.558,158.03],['Mutnovsky',52.453,158.195],
  ['Kambalny',51.3,156.87],
+ // 欧州（London / Toulouse VAAC）
+ ['Hekla',63.983,-19.666],['Katla',63.633,-19.083],['Eyjafjallajokull',63.633,-19.633],['Grimsvotn',64.416,-17.316],
+ ['Bardarbunga',64.633,-17.516],['Askja',65.033,-16.783],['Reykjanes',63.88,-22.42],['Beerenberg',71.08,-8.16],
+ ['Etna',37.748,14.999],['Stromboli',38.789,15.213],['Vulcano',38.404,14.962],['Vesuvius',40.821,14.426],
+ ['Campi Flegrei',40.827,14.139],['Santorini',36.404,25.396],['Teide',28.271,-16.641],['La Palma',28.57,-17.83],
 ];
-const VAAC_VIEWS = { ak:[[56,-165+360],4], kam:[[55,160],5], jp:[[34,138],5], sea:[[10,122],5], all:[[40,160],3] };
-function _wl(lon) { return lon < 0 ? lon + 360 : lon; }   // 太平洋中心: 西半球側を +360 で連続表示
+const VAAC_VIEWS = { ak:[[56,-165+360],4], kam:[[55,160],5], jp:[[34,138],5], sea:[[10,122],5], eu:[[50,-4],3], all:[[40,160],3] };
+function _wl(lon) { return lon < -30 ? lon + 360 : lon; }   // 太平洋中心: 南北米・アリューシャン側を +360。大西洋・欧州（−30°以東）はそのまま
 function vaacJump(k, btn) {
   document.querySelectorAll('#vaac-jump button').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
