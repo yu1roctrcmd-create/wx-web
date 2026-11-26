@@ -1430,8 +1430,15 @@ function isoFind20(d, W, H) {
   }
   const zero = labs.filter(l => l.w <= 11).sort((a, b) => b.cy - a.cy)[0];
   if (!zero) return null;
-  const cand = labs.filter(l => l.w >= 14 && l.cy < zero.cy - 40 && Math.abs(l.cx - zero.cx) <= 80).sort((a, b) => b.cy - a.cy)[0];
+  const above = labs.filter(l => l.w >= 14 && l.cy < zero.cy - 40 && Math.abs(l.cx - zero.cx) <= 80).sort((a, b) => b.cy - a.cy);
+  const cand = above[0];
   if (!cand) return null;
+  // −20 のラベルが隠れていると、すぐ上の −40/−60 を拾ってしまう。高さで妥当性を確認する。
+  // 縦軸は 1000ft ≒ 8.95px。0→−20℃ は実測 88〜114px（約1万〜1.3万ft）、0→−40℃ は 185px 以上。
+  // 140px（約1.56万ft）を超える、または次のラベルとの間隔の 1.6 倍を超えるなら −20 ではない → 描かない
+  const g1 = zero.cy - cand.cy;
+  if (g1 > 140) return null;
+  if (above[1]) { const g2 = cand.cy - above[1].cy; if (g2 > 20 && g1 > 1.6 * g2) return null; }
   // 線をたどる
   const colHits = (x, yc, win) => { let best = null; for (let dy = 0; dy <= win; dy++) for (const sg of [1, -1]) {
     const y = yc + sg * dy; if (y >= Y0 && y <= Y1 && isLine(x, y)) { best = y; break; } if (best !== null) break; } return best; };
