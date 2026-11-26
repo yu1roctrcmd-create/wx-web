@@ -1469,12 +1469,12 @@ function isoApply(img) {
     const res = isoFind20(g.getImageData(0, 0, W, H).data, W, H);
     if (!res || res.pts.length < 60) return;
     g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
-    g.strokeStyle = 'rgba(255,90,90,.38)'; g.lineWidth = 11; g.beginPath();
+    g.strokeStyle = 'rgba(220,38,38,.7)'; g.lineWidth = 3; g.beginPath();
     res.pts.forEach((p, i) => i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])); g.stroke();
     g.restore();
     g.font = 'bold 13px sans-serif'; g.fillStyle = '#dc2626'; g.textBaseline = 'bottom';
     const lp = res.pts[Math.floor(res.pts.length * 0.12)];
-    g.fillText('−20℃', lp[0], lp[1] - 8);
+    g.fillText('−20℃', lp[0], lp[1] - 4);
     img.dataset.iso = '1';
     img.src = cv.toDataURL('image/png');
   } catch (e) { /* CORS 等で読めない場合は元画像のまま */ }
